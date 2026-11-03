@@ -26,7 +26,7 @@
 |---|---|---|
 | SPI flash 固化 | [`deliver/logs/fv_flash.out`](deliver/logs/fv_flash.out) | `pds_cpu130_20261102.sbit` 烧写 7.7 s，done bit = 1 |
 | 固化后读回 | `cpu130_20261103_rb.sfc` | 读回与源文件 md5 相同：`89f4e1f0…` |
-| 冷启动 | [`deliver/logs/fv_boot.txt`](deliver/logs/fv_boot.txt) | Linux 6.18.60 启动，`VEXIIYESHEN-OK` |
+| 固化后启动 | [`deliver/logs/fv_boot.txt`](deliver/logs/fv_boot.txt) | Linux 6.18.60 启动，`VEXIIYESHEN-OK` |
 | GUI 启动 | [`deliver/logs/bootsel_C_live_20261104.log`](deliver/logs/bootsel_C_live_20261104.log) | `YGUI-BOOT` / `YGUI-PRESENT async` / `GPU-UNIT-ON` |
 | CoreMark | [`deliver/logs/bootsel_C_live_20261104b.log`](deliver/logs/bootsel_C_live_20261104b.log) | ITERS=20000，crcfinal `0x382f`，`Correct operation validated` |
 
