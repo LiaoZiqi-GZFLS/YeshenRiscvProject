@@ -1,0 +1,164 @@
+/dts-v1/;
+
+/ {
+	#address-cells = <0x01>;
+	#size-cells = <0x01>;
+	compatible = "spinal,vexiiriscv";
+	model = "spinal,vexiiriscv_vexiiyeshenlinux";
+
+	chosen {
+		bootargs = "rootwait console=ttyS0,115200 earlycon=sbi root=/dev/ram0 init=/init";
+		stdout-path = "/serial@f0001000";
+		linux,initrd-start = <0x83000000>;
+		linux,initrd-end = <0x83800000>;
+	};
+
+	cpus {
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		timebase-frequency = <0x5f5e100>;
+
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "riscv";
+			riscv,isa = "rv32imac";
+			mmu-type = "riscv,sv32";
+			riscv,isa-base = "rv32i";
+			riscv,isa-extensions = "i\0m\0a\0c\0zicsr\0zifencei\0zicbom\0zbb\0zbs";
+			riscv,cbom-block-size = <0x40>;
+			reg = <0x00>;
+			status = "okay";
+
+			interrupt-controller {
+				#interrupt-cells = <0x01>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+				phandle = <0x02>;
+			};
+		};
+	};
+
+	memory@80400000 {
+		device_type = "memory";
+		reg = <0x80400000 0xfc00000 0xa0000000 0x10000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <0x01>;
+		#size-cells = <0x01>;
+		ranges;
+
+		npu_arena@80400000 {
+			reg = <0x80400000 0x1c00000>;
+			no-map;
+		};
+	};
+
+	serial@f0001000 {
+		compatible = "ns16550a";
+		reg = <0xf0001000 0x20>;
+		reg-shift = <0x02>;
+		clock-frequency = <0x5f5e100>;
+		current-speed = <0x1c200>;
+		interrupt-parent = <0x01>;
+		interrupts = <0x01>;
+		status = "okay";
+	};
+
+	interrupt-controller@f0c00000 {
+		compatible = "sifive,plic-1.0.0\0sifive,fu540-c000-plic\0riscv,plic0";
+		reg = <0xf0c00000 0x4000000>;
+		interrupt-controller;
+		#address-cells = <0x00>;
+		#interrupt-cells = <0x01>;
+		interrupts-extended = <0x02 0x0b 0x02 0x09>;
+		riscv,ndev = <0x05>;
+		phandle = <0x01>;
+	};
+
+	ethernet@f0003000 {
+		compatible = "litex,liteeth";
+		reg = <0xf0003000 0x100 0xf0004000 0x100 0xf0008000 0x3000>;
+		reg-names = "mac\0mdio\0buffer";
+		interrupt-parent = <0x01>;
+		interrupts = <0x02>;
+		litex,rx-slots = <0x04>;
+		litex,tx-slots = <0x02>;
+		litex,slot-size = <0x800>;
+		local-mac-address = [02 00 00 00 00 01];
+		status = "okay";
+	};
+
+	npu@f000c000 {
+		compatible = "y1,yunet-npu";
+		reg = <0xf000c000 0x4000>;
+		interrupt-parent = <0x01>;
+		interrupts = <0x03>;
+		status = "okay";
+	};
+
+	dma@f0006000 {
+		compatible = "y1,dma-engine";
+		reg = <0xf0006000 0x100>;
+		interrupt-parent = <0x01>;
+		interrupts = <0x04>;
+		status = "okay";
+	};
+
+	syscon@f0007400 {
+		compatible = "syscon";
+		reg = <0xf0007400 0x100>;
+		phandle = <0x03>;
+	};
+
+	reboot {
+		compatible = "syscon-reboot";
+		regmap = <0x03>;
+		offset = <0x98>;
+		value = <0x01>;
+	};
+
+	gpio@f0002000 {
+		compatible = "yeshen,ctp-gpio";
+		reg = <0xf0002000 0x1000>;
+		gpio-controller;
+		#gpio-cells = <0x02>;
+		ngpios = <0x0d>;
+		status = "okay";
+		phandle = <0x04>;
+	};
+
+	i2c-ctp {
+		compatible = "i2c-gpio";
+		i2c-gpio,scl-open-drain;
+		scl-gpios = <0x04 0x08 0x00>;
+		sda-gpios = <0x04 0x09 0x06>;
+		i2c-gpio,delay-us = <0x14>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		status = "okay";
+
+		touchscreen@14 {
+			compatible = "goodix,gt911";
+			reg = <0x14>;
+			interrupt-parent = <0x01>;
+			interrupts = <0x05>;
+			irq-gpios = <0x04 0x0b 0x00>;
+			reset-gpios = <0x04 0x0a 0x00>;
+			touchscreen-size-x = <0x400>;
+			touchscreen-size-y = <0x258>;
+			status = "okay";
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys-polled";
+		poll-interval = <0x14>;
+
+		key4 {
+			label = "KEY4 camera return";
+			gpios = <0x04 0x0c 0x01>;
+			linux,code = <0xb7>;
+		};
+	};
+};

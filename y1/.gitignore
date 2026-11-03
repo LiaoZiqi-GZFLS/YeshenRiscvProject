@@ -1,0 +1,12 @@
+gen/
+gen_chain8/
+verilog/
+target/
+.bsp/
+*.log
+pds/pds_*.000/
+pds/*.exit
+pds/*_report_timing/
+partA/ddr_bw_test
+__pycache__/
+build/

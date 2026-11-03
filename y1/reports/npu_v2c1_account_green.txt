@@ -1,0 +1,63 @@
+INPUT   idx=wgt_index.json units=53 (conv/dw)
+ANCHOR  MAC_TOTAL=344224000 / as_built=45075600 / impl_a=13920400 / dw_as_built=8031600
+  PASS  MAC_TOTAL == P0 锚 344,224,000
+  PASS  as-built 总拍 == P0/P0b 锚 45,075,600
+  PASS  impl_a 总拍 == SliceA 锚 13,920,400
+  PASS  dw 类 as-built == P0b 锚 8,031,600
+  PASS  A+B1 == dw_lane_account 锚 6,781,200
+  PASS  FLOOR == dw_lane_account 锚 5,278,762.5  5278762.5
+  PASS  残差 == 1,502,437.5 = A+B1 − FLOOR  1502437.5
+
+== 逐层残差价签（A+B1 实计 − 地板；只列 delta != 0 的行）==
+idx  name      type     Cin->Cout    H    W   grp  nCi  nCo tap pas   beats_AB1       floor       delta  机制
+-----------------------------------------------------------------------------------------------------------
+  0  Conv_0    dense3x3   3->16   320  320     1    1    2   9   2     1843200    691200.0   1152000.0  ci-pad(拍序)
+ 38  Conv_55   dense3x3   1->1     80   80     1    1    1   9   1       57600       900.0     56700.0  ci-pad(拍序)
+ 50  Conv_67   dense3x3   1->1     80   80     1    1    1   9   1       57600       900.0     56700.0  ci-pad(拍序)
+ 37  Conv_54   conv1x1   64->1     80   80     1    8    1   1   8       51200      6400.0     44800.0  co-tail(真多付)
+ 49  Conv_66   conv1x1   64->1     80   80     1    8    1   1   8       51200      6400.0     44800.0  co-tail(真多付)
+ 55  Conv_72   conv1x1   64->10    80   80     1    8    2   1  16      102400     64000.0     38400.0  co-tail(真多付)
+ 43  Conv_60   conv1x1   64->4     80   80     1    8    1   1   8       51200     25600.0     25600.0  co-tail(真多付)
+ 40  Conv_57   dense3x3   1->1     40   40     1    1    1   9   1       14400       225.0     14175.0  ci-pad(拍序)
+ 52  Conv_69   dense3x3   1->1     40   40     1    1    1   9   1       14400       225.0     14175.0  ci-pad(拍序)
+ 39  Conv_56   conv1x1   64->1     40   40     1    8    1   1   8       12800      1600.0     11200.0  co-tail(真多付)
+ 51  Conv_68   conv1x1   64->1     40   40     1    8    1   1   8       12800      1600.0     11200.0  co-tail(真多付)
+ 57  Conv_74   conv1x1   64->10    40   40     1    8    2   1  16       25600     16000.0      9600.0  co-tail(真多付)
+ 45  Conv_62   conv1x1   64->4     40   40     1    8    1   1   8       12800      6400.0      6400.0  co-tail(真多付)
+ 42  Conv_59   dense3x3   1->1     20   20     1    1    1   9   1        3600        56.2      3543.8  ci-pad(拍序)
+ 54  Conv_71   dense3x3   1->1     20   20     1    1    1   9   1        3600        56.2      3543.8  ci-pad(拍序)
+ 41  Conv_58   conv1x1   64->1     20   20     1    8    1   1   8        3200       400.0      2800.0  co-tail(真多付)
+ 53  Conv_70   conv1x1   64->1     20   20     1    8    1   1   8        3200       400.0      2800.0  co-tail(真多付)
+ 59  Conv_76   conv1x1   64->10    20   20     1    8    2   1  16        6400      4000.0      2400.0  co-tail(真多付)
+ 47  Conv_64   conv1x1   64->4     20   20     1    8    1   1   8        3200      1600.0      1600.0  co-tail(真多付)
+-----------------------------------------------------------------------------------------------------------
+SUM     delta = 1502437.5（必须 == 残差 1502437.5）
+RESID   conv0=1152000 ci_pad=1228800
+RESID   dense_c1_total=151200 dci_save_dense_c1=134400
+RESID   cotail_total=201600.0 cotail_c1=117600.0 cotail_c4=33600.0 cotail_c10=50400.0
+RESID   dw_fullblocks=0.0 dw_tail_free=0.0 dwtail_xpix_theory=10500.0
+RESID   by_mech co=201600.0 ci=+1300837.5 taporder=0.0
+  PASS  逐层 delta 求和 == 残差（0 遗漏）
+  PASS  dense ci-inner（本片探针）逐层复算 == 1,363,200  1363200
+  PASS  1×1 co 尾块 == 201,600  201600.0
+  PASS  dw 尾块跨像素理论值 == 10,500（另一机制）  10500.0
+  PASS  dw 尾块在地板口径下残差 = 0（空闲行免费）
+
+== 臂与时钟（fps = clk ÷ beats；budget = 实测 PnR 52.6704 MHz ÷ 10 ===
+臂                                              beats  clk@10fps  fps@50MHz    fps@PnR
+A+B1（已落 RTL）                               6781200.0    67.812MHz     7.3733     7.7671
+A+B1+DCI（本片探针）                             5418000.0    54.180MHz     9.2285     9.7214
+A+B1+DCI+1×1 co 尾块（另一机制）                   5216400.0    52.164MHz     9.5852    10.0971
+A+B1+DCI+co 尾块+dw 尾块跨像素（理论）                5205900.0    52.059MHz     9.6045    10.1174
+地板（= DCI+全 tail；dw 按 nCo）                  5278762.5    52.788MHz     9.4719     9.9778
+BUDGET  @PnR 52.6704 MHz 过 10 fps 需 beats ≤ 5267040
+GAP     A+B1 缺口 = 1514160 拍；+DCI 后仍缺 = 150960 拍；+co 尾块后余量 = +50640 拍
+CLOCK   过 10 fps 所需 npu_clk：A+B1 ≥ 67.8 MHz；+DCI ≥ 54.2 MHz；+co 尾块 ≥ 52.2 MHz；地板 ≥ 52.8 MHz
+CLOCK   实测 PnR（B1 网表）= 52.6704 MHz ⇒ A+B1 = 7.7671 fps；+DCI = 9.7214 fps；+co 尾块 = 10.0971 fps
+  PASS  A+B1+DCI == 5,418,000 拍  5418000
+  PASS  A+B1+DCI+co 尾块 == 5,216,400 拍  5216400
+  PASS  单做 DCI 在实测 PnR 上限下**到不了** 10 fps（缺口 150960 拍）
+  PASS  +co 尾块后才过 10 fps 预算（余量 50640 拍）
+  PASS  地板本身 = 52.79 MHz > 实测 52.6704 MHz（0.22% 之外）——诚实边界
+
+RESULT: PASS

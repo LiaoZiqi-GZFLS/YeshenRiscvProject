@@ -1,0 +1,16 @@
+#!/bin/sh
+# getty_ixon -- 起 getty 之前先把控制台的**软件流控关掉**，再 exec getty。
+#
+# 为什么要包一层（2026-10-08 实测定案）：控制台 tty 的默认 termios 来自内核的
+# `tty_std_termios`（`c_iflag = ICRNL | IXON`）⇒ 只要 RX 流里出现一个杂散 0x13(^S)，
+# tty 就**停发**（输出队列满 ⇒ shell/getty 阻塞在 write ⇒ 不读输入 ⇒ 什么都不回显），
+# 而硬件完全空闲（LSR=0x60 THRE/TEMT=1、IIR=0xC1、IER=0x05）。
+#
+# ⚠️ 只在 `/etc/profile` 里关是不够的：本工程实测卡死发生在 `buildroot login:` **之前**
+#    （那时 profile 还没跑）。而 busybox getty 会 `tcgetattr` 后**继承**当前设置再改
+#    （只动速度/它关心的位）⇒ 在 exec 之前设 `-ixon` 能一路带到登录提示符 ✓。
+#
+# `/etc/profile` 里那条 `stty -ixon -ixoff` 保留作为第二层（登录后再钉一遍）。
+# stdin 就是控制台 tty ⇒ 直接 stty 即可；非 tty 时静默失败。
+stty -ixon -ixoff 2>/dev/null
+exec /sbin/getty -L ttyS0 115200 vt100

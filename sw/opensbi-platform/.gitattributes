@@ -1,0 +1,6 @@
+# 这棵平台目录是给 **Linux 上的 OpenSBI 构建**吃的（直接拷进 <opensbi>/platform/<name>/），
+# 必须保持 LF —— `objects.mk` / `Kconfig` 里混进 CR 会变成
+# `FW_JUMP_ADDR=0x80400000\r` 这种带 \r 的 make 变量值（Task 10 实测过同类事故：
+# `configs/rv64imac.sh` 的 FLAGS 变成 `-DISA=rv64imac^M`）。
+# 上层 `sw/buildroot-external/.gitattributes` 只管那棵子树，这里单独钉一份同类规则。
+* -text

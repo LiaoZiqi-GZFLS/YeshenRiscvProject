@@ -1,0 +1,75 @@
+== run_cipack_ab: NPU v2 切片 C-1（dense ci-inner 探针：Base / Dci / DciMut5 + 两条负对照）==
+   tb=rtl_test/CiPackTb.v  nl=gen/CiPackBase.v gen/CiPackDci.v gen/CiPackDciMut5.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog
+---- [0] 前置：逐层价签工具现跑 + 网表 md5 ----
+   c_tail_account.py RESULT: PASS（A+B1 6,781,200 / 残差 1,502,437.5 全分解）
+   MD5 gen/CiPackBase.v = 239412a002293f33f304fcd2f25e646c
+   MD5 gen/CiPackDci.v = 41d003eff21da8d721d54752ed67a5d6
+   MD5 gen/CiPackDciMut5.v = d01595af6ca5796acfa8d6b43dd22e4c
+---- [1] 向量 + 黄金（真表权重）+ 负对照预测 ----
+    MODEL_OK job=conv0: 两实现 acc 逐点相等（wide_exec_ref.conv_acc 现跑）；黄金 distinct=12
+    PRED job=conv0 NEG_NO8=5 NEG_MUT5=6 WDIFF_NO8=48(期望 48) md5x=be49c145
+    MODEL_OK job=c1: 两实现 acc 逐点相等（wide_exec_ref.conv_acc 现跑）；黄金 distinct=35
+    PRED job=c1 NEG_NO8=3 NEG_MUT5=44 WDIFF_NO8=1(期望 1) md5x=71373471
+    MODEL_OK job=dw8: 冻结 multipass_ref.build_one(8,8,8) 现跑（d_whole=0, distinct=86）
+---- [1b] 编译（一份 TB，三份探针网表各编一份；Base 需要 -DBASE）----
+    三份都编译 OK
+    check_dangling: 三份网表 0 悬空
+---- [1c]+[2]+[6] 正对照（逐字节）+ 拍数（实测 vs 预测）+ 两档互等 ----
+    CIPACK RTL imgW=8
+    CIPACK BEATS=1152 BEATS_TOTAL=1152 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+SHAPE conv0 base  MISMATCH=0 BEATS=1152(预测 1152) MODEID=0
+    CIPACK RTL imgW=8
+    CIPACK BEATS=384 BEATS_TOTAL=384 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+SHAPE conv0 dci   MISMATCH=0 BEATS=384(预测 384) 实测比=3.00× MODEID=1
+CONSIST conv0 base==dci: 0
+    CIPACK RTL imgW=8
+    CIPACK BEATS=1152 BEATS_TOTAL=1152 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+    CIPACK RTL imgW=8
+    CIPACK BEATS=384 BEATS_TOTAL=384 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+GARB   conv0 两档在 lane≥3 喂垃圾下仍 == 黄金（补位 lane 免费：权重零填负责）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=1152 BEATS_TOTAL=1152 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+NEGCTL-A conv0 base  MISMATCH=5 == 预测（发火）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=384 BEATS_TOTAL=384 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+NEGCTL-A conv0 dci   MISMATCH=5 == 预测（发火）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=384 BEATS_TOTAL=384 passes_run=2 pix_total=128 pix_expect=128 extra_total=0 pass_bad=0
+NEGCTL-B conv0 mut5  MISMATCH=6 == 预测（发火）
+SURG   conv0 mut5 == gold_mut（外科式翻绿口径）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=576 BEATS_TOTAL=576 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+SHAPE c1 base  MISMATCH=0 BEATS=576(预测 576) MODEID=0
+    CIPACK RTL imgW=8
+    CIPACK BEATS=64 BEATS_TOTAL=64 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+SHAPE c1 dci   MISMATCH=0 BEATS=64(预测 64) 实测比=9.00× MODEID=1
+CONSIST c1 base==dci: 0
+    CIPACK RTL imgW=8
+    CIPACK BEATS=576 BEATS_TOTAL=576 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+    CIPACK RTL imgW=8
+    CIPACK BEATS=64 BEATS_TOTAL=64 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+GARB   c1 两档在 lane≥1 喂垃圾下仍 == 黄金（补位 lane 免费：权重零填负责）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=576 BEATS_TOTAL=576 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+NEGCTL-A c1 base  MISMATCH=3 == 预测（发火）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=64 BEATS_TOTAL=64 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+NEGCTL-A c1 dci   MISMATCH=3 == 预测（发火）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=64 BEATS_TOTAL=64 passes_run=1 pix_total=64 pix_expect=64 extra_total=0 pass_bad=0
+NEGCTL-B c1 mut5  MISMATCH=44 == 预测（发火）
+SURG   c1 mut5 == gold_mut（外科式翻绿口径）
+    CIPACK RTL imgW=8
+    CIPACK BEATS=32 BEATS_TOTAL=32 passes_run=1 pix_total=32 pix_expect=32 extra_total=0 pass_bad=0
+SHAPE dw8 base MISMATCH=0 BEATS=32(预测 32)
+    CIPACK RTL imgW=8
+    CIPACK BEATS=32 BEATS_TOTAL=32 passes_run=1 pix_total=32 pix_expect=32 extra_total=0 pass_bad=0
+SHAPE dw8 dci MISMATCH=0 BEATS=32(预测 32)
+CONSIST dw8 base==dci: 0
+==========================================================================
+jobs = conv0 c1 dw8（真表 Conv_0 3→16 / Conv_67 1→1 / 冻结 dw 8→8）
+正对照   = 每作业 Base/Dci == 黄金（MISMATCH=0）；两档 Y 逐字节互等；GARB 档不变
+拍数实测 = Base 9 拍/像素/趟；Dci dense 3（conv0，3.00×）/ 1（c1，9.00×）；dw8 = 1
+负对照 A = 第 9 抽头切除 ⇒ 两档 MISMATCH 恰 == 预测（>0）
+负对照 B = c3 lane 5 路由改错 ⇒ MISMATCH 恰 == 预测；突变输出 == gold_mut（外科式）
+RESULT: PASS

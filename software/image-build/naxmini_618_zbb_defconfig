@@ -1,0 +1,122 @@
+# Build options
+BR2_CCACHE=y
+BR2_CCACHE_DIR="$(HOME)/.buildroot-ccache-saxon_default"
+# Target options
+BR2_riscv=y
+BR2_RISCV_32=y
+# Instruction Set Extensions
+# Task 22 NOTE: buildroot 2025.02 RENAMED this option family (the old
+# BR2_RISCV_ISA_CUSTOM_RVM/_RVA/_RVC=<y> no longer exists):
+# old BR2_RISCV_ISA_CUSTOM_RVM=y -> new BR2_RISCV_ISA_RVM=y
+# old BR2_RISCV_ISA_CUSTOM_RVA=y -> new BR2_RISCV_ISA_RVA=y
+# old BR2_RISCV_ISA_CUSTOM_RVC=y -> new BR2_RISCV_ISA_RVC=y
+# old BR2_RISCV_ISA_CUSTOM_RVF/RVD=y -> new BR2_RISCV_ISA_RVF/RVD=y
+# (evidence: buildroot 2025.02.18 arch/Config.in.riscv lines 17 / 25-44 / 80-101)
+BR2_riscv_custom=y
+BR2_RISCV_ISA_RVM=y
+BR2_RISCV_ISA_RVA=y
+BR2_RISCV_ISA_RVC=y
+BR2_RISCV_ABI_ILP32=y
+# ★ 2026-11-02：核已开 Zbb+Zbs（gen_core 9b738e97 起）⇒ 用户态也按这个 ISA 编。
+# 只改这一行：BR2_RISCV_ISA_EXTRA 会被 buildroot 追加到工具链/目标包的所有 -march。
+# 产物只能配 Zbb 版比特流（cpu130 / mem1g 及之后）。
+BR2_RISCV_ISA_EXTRA="zbb_zbs"
+# Patches
+# Task 22 NOTE (3rd round): enabled to carry the zicsr/zifencei kernel patch.
+# Buildroot looks for global patches in
+# <dir>/<packagename>/<packageversion>/ else <dir>/<packagename>/
+# (Config.in help text of BR2_GLOBAL_PATCH_DIR; implemented by
+# pkg-patch-hash-dirs in package/pkg-utils.mk line 163-164, consumed by the
+# .stamp_patched rule in package/pkg-generic.mk line 239-241). Our kernel
+# package is "linux" with version "dev" (BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION),
+# so the patch lives in sw/buildroot-external/patches/linux/. Files are fed to
+# support/scripts/apply-patches.sh, which runs
+# patch -F0 -g0 -p1 --no-backup-if-mismatch -t -N
+# hence a git-format / unified-diff file with a/ b/ prefixes is required.
+# Without this the toolchain default -march=rv64imac_zicsr_zifencei never
+# reaches the kernel: arch/riscv/Makefile hardcodes its own -march. See
+# patches/linux/0001-riscv-fix-build-with-binutils-2.38.patch (backport of
+# Linux v6.0 commit 6df2a016c0c8, riscv: fix build with binutils 2.38).
+BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_NAXMINI_PATH)/patches"
+# GCC
+# Task 22 NOTE: buildroot 2025.02 dropped BR2_GCC_VERSION_10_X (choices are
+# 12.x / 13.x / 14.x, default 13.x). We take the default 13.x (13.4.0).
+# Fallback if the (older, litex-rebase) kernel trips on new GCC: 12.x.
+BR2_GCC_VERSION_13_X=y
+# C library: uClibc-ng -- PINNED ON PURPOSE, do not delete
+# Task 22 NOTE (2nd round): buildroot 2025.02 defaults the C library choice to glibc
+# (toolchain/toolchain-buildroot/Config.in line 25: default BR2_TOOLCHAIN_BUILDROOT_GLIBC).
+# Our rootfs is busybox + initramfs, and the toolchain that T22 already built
+# (output/host/binutils + output/build/host-gcc-initial-13.4.0, tuple
+# riscv64-buildroot-linux-uclibc) was configured for uClibc-ng, so the choice has to be
+# pinned explicitly rather than inherited from a default.
+# This line is load bearing in a non-obvious way: while the kernel-header series below was
+# still broken (2.6.x), glibc was NOT selectable for riscv64 at all -- package/glibc/Config.in
+# line 40 needs BR2_TOOLCHAIN_HEADERS_AT_LEAST_5_0 -- so the C library choice silently fell
+# through to uClibc-ng. Fixing the series alone removes that accidental pin and would have
+# flipped the C library to glibc, i.e. a different toolchain tuple / rootfs, without saying so.
+BR2_TOOLCHAIN_BUILDROOT_UCLIBC=y
+# Kernel headers
+# Task 22 NOTE (2nd round): the first choice (Kernel Headers) already defaults to AS_KERNEL when
+# BR2_LINUX_KERNEL=y (package/linux-headers/Config.in.host line 5), i.e. the headers are
+# built from the very same source as the kernel (SpinalHDL/linux dev). Keep it, and say
+# so explicitly so a later default change cannot silently decouple headers from kernel.
+# What is NOT covered by any default is the SECOND choice, "Custom kernel headers series"
+# (Config.in.host lines 110-118): for a custom git/tarball kernel Buildroot cannot know the
+# series, so it falls back to BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_REALLY_OLD ("2.6.x").
+# That makes toolchain/Config.in line 659 declare BR2_TOOLCHAIN_HEADERS_AT_LEAST="2.6", and
+# the post-staging check in helpers.mk runs STRICT because BR2_TOOLCHAIN_HEADERS_LATEST is
+# unset -- hence the 2026-09-30 failure:
+# Incorrect selection of kernel headers: expected 2.6.x, got 5.10.x
+# FIX = declare the series the kernel source really is. Measured on the tree Buildroot had
+# already fetched (output/build/linux-headers-dev/Makefile, from github.com/SpinalHDL/linux
+# branch dev): VERSION=5 PATCHLEVEL=10 SUBLEVEL=1 => 5.10.x, so select the 5.10 series.
+# Upstream precedent for this exact pattern: configs/stm32mp157a_dk1_defconfig,
+# configs/armadeus_apf28_defconfig, configs/stm32f469_disco_sd_defconfig.
+# CAUTION: with AS_KERNEL the check is STRICT, so this series must equal the kernel X.Y
+# exactly; if the SpinalHDL/linux dev branch ever moves to another 5.x/6.x line, this line
+# (and nothing else) has to be bumped together with it.
+# BR2_KERNEL_HEADERS_AS_KERNEL is not set
+BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_6_18=y
+# System
+BR2_TARGET_GENERIC_GETTY=y
+BR2_TARGET_GENERIC_GETTY_PORT="console"
+# ★ 2026-10-07：给 root \U00008bbe\U000053e3\U00004ee4 —— dropbear **\U000062d2\U00007edd\U00007a7a\U000053e3\U00004ee4\U0000767b\U00005f55**\U0000ff0c\U0000800c\U0000539f /etc/shadow \U000091cc root \U0000662f\U00007a7a\U00007684
+# \U0000ff08`root::::::::`\U0000ff09\U0000ff0c\U00006240\U00004ee5\U00004e0d\U000052a0\U00008fd9\U0000884c ssh \U00004e00\U00005b9a\U0000767b\U00004e0d\U00004e0a。\U0000526f\U00004f5c\U00007528\U0000ff1a**\U00004e32\U000053e3\U000063a7\U00005236\U000053f0\U0000767b\U00005f55\U00004e5f\U00008981\U00008f93\U0000540c\U00004e00\U00004e2a\U000053e3\U00004ee4**。
+# \U0000ff08buildroot \U00004f1a\U0000628a\U00005b83 hash \U0000540e\U00005199\U00008fdb\U000076ee\U00006807 /etc/shadow\U0000ff1b\U0000672c rootfs \U0000662f initramfs\U0000ff0c\U00006bcf\U00006b21\U00004e0a\U00007535\U000090fd\U00004ece\U0000955c\U000050cf\U00006765。\U0000ff09
+BR2_TARGET_GENERIC_ROOT_PASSWD="yeshen"
+BR2_LINUX_KERNEL_DTS_SUPPORT=y
+BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/linux/linux618.dts"
+# OpenSBI
+# Task 22 NOTE: BR2_TARGET_OPENSBI_PLAT / _PLAT_PATH still exist and are unchanged
+# (PLAT is a buildroot option; PLAT_PATH is OUR external-tree symbol driving the
+# copy hook in package/opensbi-ext/opensbi-ext.mk). What changed is on the OpenSBI
+# side (1.6): the platform dir now needs Kconfig + configs/defconfig + objects.mk,
+# and the old config.mk is pulled in by an -include line in objects.mk. See
+# boards/naxmini/opensbi/ and the Task 22 section of the probe record doc.
+BR2_TARGET_OPENSBI=y
+# OpenSBI pinned to 1.6: the out-of-tree platform.c is written against the v1.6 ABI;
+# buildroot 2026.02 defaults to 1.7, which fails to compile it
+# ("control reaches end of non-void function", uart8250_init signature drift).
+BR2_TARGET_OPENSBI_CUSTOM_VERSION=y
+BR2_TARGET_OPENSBI_CUSTOM_VERSION_VALUE="1.6"
+BR2_TARGET_OPENSBI_PLAT="out-of-tree"
+BR2_TARGET_OPENSBI_PLAT_PATH="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/opensbi"
+# Filesystem
+BR2_TARGET_ROOTFS_CPIO=y
+# Kernel 6.18 (mainline tarball). Generated by hand from naxmini_defconfig;
+# NOTE: requires buildroot >= 2026.02 (it is the first series with kernel-headers 6.18).
+# 2025.02 tops out at 6.12 and would fail the strict headers check.
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
+BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.60.tar.xz"
+BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/linux/linux618.config"
+BR2_LINUX_KERNEL_IMAGE=y
+# Rootfs customisation
+BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/linux/rootfs_overlay"
+# Extra packages
+BR2_PACKAGE_DHRYSTONE=y
+BR2_PACKAGE_MICROPYTHON=y
+# ★ 2026-10-07：ssh \U0000670d\U000052a1\U00007aef\U0000ff08\U0000677f\U00005b50\U00005f53 TCP \U0000670d\U000052a1\U00007aef/\U00005ba2\U00006237\U00007aef\U000090fd\U00009a8c\U00008fc7 TCP \U00005df2\U0000901a\U0000ff0c\U00008fd9\U000091cc\U00008865\U00004e0a sshd\U0000ff09
+BR2_PACKAGE_DROPBEAR=y

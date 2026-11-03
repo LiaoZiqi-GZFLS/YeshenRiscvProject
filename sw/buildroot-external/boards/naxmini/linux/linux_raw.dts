@@ -1,0 +1,349 @@
+/dts-v1/;
+##include <dt-bindings/gpio/gpio.h>
+##include <dt-bindings/input/input.h>
+##include <dt-bindings/interrupt-controller/irq.h>
+
+/*
+ * NaxYeshenLinux / NaxMiniSoC 设备树（模板：由 naxmini_setup.sh 经 cpp 预处理生成 linux.dts）
+ *
+ * 与上游 `boards/naxriscv_sim/linux/linux_raw.dts` 的差异（= 主 spec §5.4 的五处改动）：
+ *   1) model / compatible 换成本板名（日志辨认）；
+ *   2) memory@80400000 的 reg = 0x80400000 + 0x0FC00000（内核可用窗口，与装载链一致）；
+ *      ★ Task 22 修：节点名原来写成 `memory@80000000`，与本节点自己的 reg 首格
+ *        `0x80400000` 不一致（dtc 会告警）。Linux 只读 reg 不读节点名 ⇒ 纯外观修正。
+ *   3) chosen：bootargs 指向 ttyS0（16550）+ initrd 起止；stdout-path 指向我们的 16550；
+ *   4) 新增 serial@f0001000（ns16550a，reg-shift=2，clock-frequency=100MHz，115200）；
+ *   5) timebase-frequency = 100000000（= soc_clk）。
+ *   ★ 6)（Y1-C2.2c，2026-10-08）新增 npu@f000c000（Y1 自研 YuNet CNN 加速器的 16 KiB 寄存器窗，
+ *      PLIC 源 3）；并把 plic 的 `riscv,ndev` 2→3 跟上 `PlicAlite.NDEV`。
+ *   ★ 7)（Y1-DMA Phase-2b，2026-10-13）新增 dma@f0006000（Y1 通用 DMA 引擎的 **256 B** CSR 窗，
+ *      PLIC 源 4）；并把 plic 的 `riscv,ndev` 3→4 跟上 `PlicAlite.NDEV` 3→4。
+ *   ★ 8)（2026-10-30 CTP 搬进主线）新增 gpio@f0002000（`yeshen,ctp-gpio`，13 线，驱动见
+ *      patches/linux/0003-*）+ i2c-ctp（`i2c-gpio` 位操作）+ touchscreen@14（`goodix,gt911`，
+ *      PLIC **源 5**）；并把 plic 的 `riscv,ndev` 4→5 跟上 `PlicAlite.NDEV` 4→5。
+ *      GPIO 位映射（与 board/yeshen_mini_board_top.v 逐位一致）：
+ *        bit8 SCL（**推挽**，面板侧无上拉）/ bit9 SDA（真开漏）/ bit10 RST / bit11 INT 回读 / bit12 KEY3
+ *
+ * 地址口径（与 scripts/check_addr_map.py 的台账一致，见 docs/探针记录.md「交付配置」节）：
+ *   DDR 窗口    0x8000_0000；OpenSBI(fw_jump) 0x8000_0000；
+ *   ★ Y1-C4b H2b（2026-10-12）：Image 0x8200_0000；FDT 0x82F8_0000；initrd 0x8300_0000
+ *     —— 三者**全部抬到 NPU arena 保留区 [0x8040_0000, 0x8200_0000) 之上**，
+ *        否则 no-map 的 memblock_remove 会把内核自己的 Image 从页表里抹掉（H2 的已知阻塞）；
+ *   控制台 0xF000_1000（ns16550a）；
+ *   NPU 寄存器窗 0xF000_C000（16 KiB）；DMA 寄存器窗 0xF000_6000（256 B）；
+ *   CLINT 0xF001_0000 / PLIC 0xF0C0_0000 由胶合块 YeshenSocGlue 自持
+ *   （ClintAlite / PlicAlite）——VexiiRiscv 核本身不含这两个外设。
+ *   memory@ 仍是 0x8040_0000 + 0x0FC0_0000（内核声明的 DRAM 窗，未动）；
+ *   扣掉 H2 的 arena 保留区后内核实际可用 RAM = 0x8200_0000..0x8FFF_FFFF（224 MiB）。
+ */
+
+/ {
+    ##address-cells = <0x1>;
+    ##size-cells = <0x1>;
+    compatible = "spinal,vexiiriscv";
+    model = "spinal,vexiiriscv_vexiiyeshenlinux";
+
+    chosen {
+        bootargs = "rootwait console=ttyS0,115200 earlycon=sbi root=/dev/ram0 init=/init";
+        stdout-path = "/serial@f0001000";
+        /* ★ Y1-C4b H2b：initrd 抬到 arena 保留区之上（原来 0x8100_0000..0x8180_0000
+           落在 kernel Image 旧落点旁边），与 SdLoader 装载表 / tb INITRD 逐字一致。 */
+        linux,initrd-start = <0x83000000>;
+        linux,initrd-end   = <0x83800000>;
+    };
+
+    cpus {
+        ##address-cells = <0x1>;
+        ##size-cells = <0x0>;
+        timebase-frequency = <100000000>;
+        cpu@0 {
+            device_type = "cpu";
+            compatible = "riscv";
+            riscv,isa = ISA_STR;
+            mmu-type = MMU_TYPE;
+            reg = <0>;
+            status = "okay";
+            L0: interrupt-controller {
+                ##interrupt-cells = <0x00000001>;
+                interrupt-controller;
+                compatible = "riscv,cpu-intc";
+            };
+        };
+    };
+
+    memory@80400000 {
+        device_type = "memory";
+        reg = <0x80400000 0x0FC00000>;
+    };
+
+    /* ★ 2026-10-12（Y1-C4b 任务 H2）：把 NPU 的**整帧 arena** 从内核可用 RAM 里切走。
+       依据（y1/reports/c4b_wgtdma.md / B5 的宿主整帧驱动 npu_frame_run.py --dry 实测）：
+         · 转换器产出的张量 arena（冻结地址向量）= NPU [0x0020_0000, 0x01C5_05C0)
+           = 物理 [0x8020_0000, 0x81C5_05C0)，约 29.7 MB（desc_table 的 bump 分配）；
+         · NPU 是 **28bit** 地址（NPU A 对应物理 0x8000_0000+A）=> 只能到 0x8FFF_FFFF；
+         · 而上游声明给内核的 RAM 是 0x8040_0000..0x8FFF_FFFF =>
+           arena 的大半（0x8040_0000..0x81C5_05C0）落在**内核 RAM**里，会被内核当可用内存
+           分配/覆写（`--reloc` 也躲不开：NPU 可达且非内核的窗口只有低位 4 MB）。
+       处置：在 reserved-memory 里把 [0x8040_0000, 0x8200_0000)（0x01C0_0000 = 28 MiB，
+       把 arena 末端 0x81C5_05C0 上取整到 0x8200_0000 这个干净边界）标成 **no-map** 保留区。
+         · 为什么用 reserved-memory 而不是把 memory@80400000 的**基址**往上挪：
+           这样 memory@ 的 reg、OpenSBI 的复位 PC/装载链（fw_jump@0x8000_0000）与
+           内核的 PAGE_OFFSET(0xC0000000)/NONPORTABLE 假设都保持原文不变，改动最小。
+         · 为什么 no-map：NPU 用自己的 AXI 主口**直接**写 DDR，CPU 从不需要这段的线性映射；
+           no-map 顺带保证内核不对这段做投机访问（本源码里 nomap 走 memblock_remove）。
+         · 为什么只从 0x8040_0000 起切：0x8000_0000..0x803F_FFFF 本来就不在 memory@ 的
+           reg 里（没声明 => 内核从不碰），无需再切。
+       ★ 2026-10-12（Y1-C4b 任务 H2b）：本保留区**生效的前提**是把内核 Image/FDT/initrd
+         抬到 0x8200_0000 之上（H2 已点明：原 Image@0x8040_0000 正落在被切走的窗内，
+         no-map 的 memblock_remove 会把内核自己的 Image 从 setup_vm_final 的页表里抹掉）。
+         配套改动（同一笔提交）：OpenSBI FW_JUMP_ADDR=0x8200_0000 / FW_JUMP_FDT_ADDR=0x82F8_0000、
+         本文件 chosen 的 linux,initrd-start/end = 0x8300_0000/0x8380_0000、SdLoader 装载表
+         （scripts/build_all.sh 的 mk_sd_image --entry）、tb SOC_PROG 名字表、check_addr_map.py 台账。
+       ⚠️ 往本文件加注释的硬约束（工程记忆 buildroot 三坑之坑 2）：注释里**不得出现嵌套的
+          多行注释定界符**（内层结束符会把注释提前截断，dtc 直接语法错）；本文件一律用
+          双井号写井号（cpp 之后还原成单井号），注释内容会在预处理时被整段剥掉。 */
+    reserved-memory {
+        ##address-cells = <0x1>;
+        ##size-cells = <0x1>;
+        ranges;
+
+        /* NPU 帧 arena：物理 [0x8040_0000, 0x8200_0000) = NPU [0x0040_0000, 0x0200_0000)。
+           （arena 里低于 0x8040_0000 的那 2 MB —— 物理 0x8020_0000..0x803F_FFFF —— 本就在
+             RAM 节点之外，故保留区从 RAM 的首字节 0x8040_0000 起。） */
+        npu_arena: npu_arena@80400000 {
+            reg = <0x80400000 0x01C00000>;
+            no-map;
+        };
+    };
+
+    serial@f0001000 {
+        compatible = "ns16550a";
+        reg = <0xf0001000 0x20>;
+        reg-shift = <0x2>;
+        clock-frequency = <100000000>;
+        /* ★ 2026-10-07 定案：回到 **115200**（28800 那轮判别实验已作废，结论见下）。
+           28800 实验的判决：把控制台降到 28800 后**打字仍不通** ⇒ "RX 采样余量不够"这条 (a) 被否；
+           真根因有两条（都已修，见 `etc/inittab` 与 `src/peripheral/UART.scala`）：
+             ① **tty 波特率被 getty 改掉**：内核 `tty_std_termios` 默认 `B9600`，而
+                buildroot 默认 inittab 写的是 `getty -L console 0`；busybox getty 里
+                "note: arg 0 turns into speed B0" 且 "if (speed != B0) cfsetspeed(...)"
+                ⇒ speed=0 **跳过 cfsetspeed**，`tcsetattr` 把 termios 里那份 B9600 写回硬件
+                ⇒ **端口被改成 9600**（实测：28800 读是垃圾、9600 读全是干净 ASCII）。
+                ⇒ 修法：本工程自带 `rootfs_overlay/etc/inittab`，把 getty 钉成
+                `ttyS0::respawn:/sbin/getty -L ttyS0 115200 vt100`（非 0 ⇒ cfsetspeed 生效）。
+             ② **`UARTRx` 丢背靠背字节**：起始位采样后只隔 3 个 baudTick 就采数据位（应 4），
+                且 8N1 也恒走 `sParity` 槽 ⇒ 停止位采样点晚 3/4 位、落进下一字节的起始位 ⇒ 判帧错 ⇒ 整字节丢。
+                实测签名：单字符回显 10/10，连发 10/30 个 0/10。修法与单元装置见 `sim/uartrx/`。
+           ⇒ 两边**必须同档**：内核 console（cmdline）+ 本节点 `current-speed` + getty 参数。
+              全链统一 115200（这档 OpenSBI/earlycon 也验证过是干净的）。 */
+        current-speed = <115200>;
+        /* ★ 2026-10-07（本工程**重新打开中断**；目标：让控制台能当命令行用）
+           旧注（2026-10-02）说：补上 interrupts 后 8250 改用 THRE 中断抽发送队列，而那条 THRE
+           中断"没有把队列抽干" ⇒ 用户态 tty 完全静默，所以当时退回 irq=0。现在重新打开，依据：
+             · 那次尝试在 **10-02**，而他们为 LiteEth 修的"**PLIC 双 context**"那个坑是 **10-06** 才修的
+               ⇒ 当时中断投递本身就是坏的，"THRE 没抽干队列"很可能根本不是 UART 的问题，而是
+               **中断没送到核**。本工程的 `PlicAlite` 是另写的实现，控制台 IRQ 已接 **PLIC 源 1**。
+             · RTL 侧其实已具备：`Uart16550.scala` 有 `rxPending = IER.bit0 && LSR.DR` 与
+               `threPending = IER.bit1 && 发送FIFO空`，IIR 按 16550 优先级（收到数据 0x04 > THR 空 0x02）、
+               pending 时 IIR[0]=0，16 深发送 FIFO 也在。
+             · irq=0 是硬伤：8250 只能靠备份定时器轮询（~10ms 级），而 115200 一字符 87us ⇒ **RX 必丢**
+               （实测：发 5 字节只到 1 个乱码字节）⇒ 交互式登录不可用。
+           判据（可翻红）：login 提示符下送 **200 字节已知串**，要求 tty **回显逐字节一致**，再登入跑命令。
+           负控 = 上面那版 irq=0 的镜像（已实测：5 字节只回 1 个乱码字节）。
+           回退：若 tty 又静默 ⇒ 按"先加观测再盲调"，在胶合块里给 PLIC 源 1 的 claim/complete 与
+           UART `irqPending` 各加 sticky 计数，一次烧分清"UART 没拉线"还是"PLIC 没送到"。 */
+        interrupt-parent = <&plic>;
+        interrupts = <1>;
+        status = "okay";
+    };
+
+    /* ★ 2026-10-02 新增：PLIC。之前 DT 里没有它 ⇒ serial 无从引用 ⇒ 无中断。 */
+    plic: interrupt-controller@f0c00000 {
+        compatible = "sifive,plic-1.0.0", "sifive,fu540-c000-plic", "riscv,plic0";
+        reg = <0xf0c00000 0x4000000>;
+        interrupt-controller;
+        /* ⚠️ 必须是 `##`（cpp 前导 `#` 的转义写法，同本文件其余处）：写成单个 `#`
+           会被 cpp 当成非法预处理指令而**静默丢掉** ⇒ DTB 里没有 `#interrupt-cells`
+           ⇒ `of_irq.c:113` 找不到 cell 数、`of_irq_parse_raw` 失败 ⇒ 8250 拿到 `irq = 0`。
+           （2026-10-02 实测：反编译 DTB 确认该节点缺这两条属性。） */
+        ##address-cells = <0x0>;
+        ##interrupt-cells = <0x1>;
+        /* ★ 2026-10-06（LiteEth 落地时抓出）：这里必须写**两个** context，且顺序 = (M-ext, S-ext)。
+           依据：
+             · 硬件侧 `rtl/NaxSocMini.v:4371/4373`
+                 `naxes_0_mei_thread_gateways_0_flag = plic.io_targets[0]`   → context 0 = **M 模式**
+                 `naxes_0_sei_thread_gateways_0_flag = plic.io_targets[1]`   → context 1 = **S 模式**
+             · 驱动侧 `drivers/irqchip/irq-sifive-plic.c:314-330`：
+                 `of_irq_parse_one(node, i, &parent)` 用**下标 i** 当 PLIC context 号；
+                 `if (parent.args[0] != RV_IRQ_EXT) continue;` —— `RV_IRQ_EXT = 9`（S 模式外部中断），
+                 **M-ext（11）那条会被跳过**，且跳过的 context 不推进下标。
+            ⇒ 只写 `<&L0 11>` 时：Linux 找不到任何可用 context ⇒ `plic_handlers[cpu].present=0`
+              ⇒ 任何 `enable_irq()` 都走 `WARN_ON_ONCE(cpu >= nr_cpu_ids)` + 往**未初始化的
+              enable_base** 写 ⇒ `store access fault` ⇒ `Kernel panic - not syncing: Fatal exception in interrupt`
+              （2026-10-06 实测：`ip link set eth0 up` 触发，badaddr=0xffff_ffd0_0400_7000）。
+            ⇒ 写 `<&L0 11 &L0 9>`：下标 0 = M-ext（被跳过、不影响），下标 1 = S-ext
+              ⇒ Linux 正好用上硬件 context 1 = S 模式那套 enable/priority 寄存器。
+              而且 SEI 是**硬件线**直连核（`naxes_0_sei_...`），不需要 M 模式转发。 */
+        interrupts-extended = <&L0 11 &L0 9>;
+        /* YeshenSocGlue 的 PlicAlite：NDEV = 4（源 1 = 控制台 16550、源 2 = LiteEth、源 3 = NPU、
+           源 4 = DMA）。
+           ⚠️ 必须与硬件一致：写大了 Linux 会去读写不存在的 enable 位。
+           ★ 2026-10-08（Y1-C2.2c）：原来是 2 —— NPU 并入后 `PlicAlite.NDEV` 已 2→3，这里改成 3。
+           ★ 2026-10-13（Y1-DMA Phase-2b）：DMA 并入后 `PlicAlite.NDEV` 3→4（源 4），这里改成 4，
+             并由 `scripts/check_addr_map.py` 与 RTL 的 `val NDEV` 对账。 */
+        riscv,ndev = <5>;
+    };
+
+    /* ★ 2026-10-06（LiteEth 落地）：nax/LiteX 生态网卡。
+       RTL 侧见 `board/liteeth_wrap.v` + `third_party/liteeth_mac/liteeth_mac_top.v`；
+       驱动是主线 `drivers/net/ethernet/litex/litex_liteeth.c`（补丁在
+       `sw/buildroot-external/patches/linux/0002-net-ethernet-add-LiteX-LiteEth-driver.patch`）。
+       依据官方 binding `Documentation/devicetree/bindings/net/litex,liteeth.yaml`：
+         · reg / reg-names 必须是 "mac" / "mdio" / "buffer" 三段（顺序也按这个）；段大小与
+           `board/liteeth_wrap.v` 的 localparam、`src/NaxMiniGlue.scala` 的 ETH_* 掩码**逐字一致**；
+         · `interrupts` 是**必需项** ⇒ 取 PLIC **源 2**（= `externalInterrupts` 位 2，
+           见 `NaxMiniMap.ETH_IRQ_BIT` 与 `board/nax_mini_soc.v` 的 `ext_int`）。
+       ⚠️ 「buffer」窗口内部布局由 `liteeth_wrap` 定：前 2×0x800 = rx 槽、后 2×0x800 = tx 槽
+          （驱动自己按 `litex,rx-slots`/`slot-size` 算 `tx_base = buf_base + rx_slots*slot_size`）。 */
+    liteeth: ethernet@f0003000 {
+        compatible = "litex,liteeth";
+        reg = <0xf0003000 0x100>,      // mac    （17 个 32bit CSR：字节偏移>>2 = 寄存器号）
+              <0xf0004000 0x100>,      // mdio   （本版驱动不映射；窗口占位）
+              <0xf0008000 0x3000>;     // buffer （4 rx + 2 tx × 2048 = 12 KB）
+        // ⚠️ buffer 基址**必须按窗口大小对齐**（RTL/胶合层只用一个掩码译码它）：
+        //    2026-10-07 rx 槽 2→4 后窗口 = 0x3000 ⇒ 掩码改成 `0xFFFF_C000`（0x4000 对齐）。
+        //    ⚠️ 改这里必须**同时**改 `src/YeshenSocGlue.scala` 的 `ETH_BUF_MASK`
+        //       （要重生成胶合网表）与 `board/liteeth_wrap.v` 的 `tgt_buf`/rx-tx 分界。
+        //    写成 0xF000_5000 会让后 4 KB（tx 槽）落进 DECERR ⇒ `store access fault` ⇒ panic。
+        reg-names = "mac", "mdio", "buffer";
+        interrupt-parent = <&plic>;
+        interrupts = <2>;
+        litex,rx-slots  = <4>;   // ★ 2026-10-07：2→4（背靠背突发丢包；实测收到的帧数≈槽数）
+        litex,tx-slots  = <2>;
+        litex,slot-size = <0x800>;
+        /* 固定 MAC（不用随机）：便于板上抓包/`ip neigh` 对照。
+           首字节 0x02 = 本地管理位置 1、单播 ⇒ 不会和真实厂商 OUI 撞。 */
+        local-mac-address = [02 00 00 00 00 01];
+        status = "okay";
+    };
+
+    /* ★ 2026-10-08（Y1-C2.2c）：Y1 自研小型 YuNet CNN 加速器（NPU）。
+       RTL 侧 = `board/yeshen_mini_soc.v` 例化的 `y1/gen/NpuTop.v`（主机编程块 `axilite_*` 从口）；
+       寄存器窗由 `src/YeshenSocGlue.scala` 解码（`YeshenMap.NPU_BASE` = 0xF000_C000，
+       掩码 `0xFFFF_C000` ⇒ 16 KiB）⇒ `reg` 的两格必须与那个窗口逐字对齐（根节点是
+       `#address-cells = <1>; #size-cells = <1>`，与 serial@ / ethernet@ 同姿）。
+       ⚠️ 本版**没有** Linux 驱动（用户态直接 mmap /dev/mem 编程，见 y1/ 的判据程序）：
+          写这个节点的目的是让 `reg` 与 `interrupts` 落到 DTB 里、由
+          `scripts/check_addr_map.py` 与胶合/RTL 对账 —— 正是"地址漂移最怕静默通过"的那类。
+       ⚠️ `interrupts = <3>` 必须 = 胶合 `NPU_IRQ_BIT`（板级把 `NpuTop.irq` 接进 `glue.io.npuIrq`，
+          由胶合内 PLIC 当**源 3**；源 1=控制台、源 2=LiteEth）；`riscv,ndev` 也必须随之 = 3。
+          中断是**保持电平**（done/err 抬起，主机写 CTRL.soft_reset 清源）。 */
+    npu@f000c000 {
+        compatible = "y1,yunet-npu";
+        reg = <0xf000c000 0x4000>;     // 16 KiB = 胶合 `NPU_MASK 0xFFFF_C000` 的窗
+        interrupt-parent = <&plic>;
+        interrupts = <3>;
+        status = "okay";
+    };
+
+    /* ★ 2026-10-13（Y1-DMA Phase-2b）：Y1 通用 DMA 引擎（多通道，DDR↔外设块搬运）。
+       RTL 侧 = `board/yeshen_mini_soc.v` 例化的 `y1/gen/DmaEngine.v`（AXI-Lite CSR 从口）；
+       寄存器窗由 `src/YeshenSocGlue.scala` 解码（`YeshenMap.DMA_BASE` = 0xF000_6000，
+       掩码 `0xFFFF_FF00` ⇒ **256 B**）⇒ `reg` 两格必须与那个窗口逐字对齐
+       （根节点 `#address-cells = <1>; #size-cells = <1>`，与 npu@ / serial@ 同姿）。
+       ⚠️ 本版**没有** Linux 驱动（用户态直接 mmap /dev/mem 编程）：写这个节点的目的是让
+          `reg` 与 `interrupts` 落到 DTB 里、由 `scripts/check_addr_map.py` 与胶合/RTL 对账。
+       ⚠️ `interrupts = <4>` 必须 = 胶合 `DMA_IRQ_BIT`（板级把 `DmaEngine.irq` 接进
+          `glue.io.dmaIrq`，由胶合内 PLIC 当**源 4**；源 1=控制台、源 2=LiteEth、源 3=NPU）；
+          `riscv,ndev` 也必须随之 = 4。中断是**保持电平**（GBL_DONE/GBL_ERR，主机写该通道
+          `CH_STATUS` 的 w1c 清源）。 */
+    dma@f0006000 {
+        compatible = "y1,dma-engine";
+        reg = <0xf0006000 0x100>;      // 256 B = 胶合 `DMA_MASK 0xFFFF_FF00` 的窗
+        interrupt-parent = <&plic>;
+        interrupts = <4>;
+        status = "okay";
+    };
+
+    /* ★ 2026-10-29：软件复位（`reboot` / `poweroff` 的硬件落点）。
+       RTL 链条：写 VIDEO 窗偏移 0x098 的 bit0（`video_regs` 的 RST_CTRL）
+         -> `rst_ctrl`（clk_in 27 MHz 域）在 2FF 后把请求兑现成 **20 ms** 的低有效复位
+         -> 与板级复位链相与（`soc_resetn = rst_sync2 & sys_rstn`）-> 整片 SoC 复位。
+       ⚠️ 复位**含** DDR3 IP（连带 PHY 重新校准）与胶合块的 SD 装载器，**不含**两颗板级 PLL
+          ⇒ 语义上等同冷启动，走同一条装载路径（SD 读表 -> 装内核 -> 放 CPU），
+          整次重启约 8 s（0.4 s DDR 复位脉冲 + 校准，1 s BootSel 窗口，SD 装载）。
+          DDR 必须一起复位：reboot 那一刻视频通路几乎必有一笔 DDR 读在飞，只清 SoC 会
+          让那笔 R 数据无人取、R 通道堵死（详见 `board/rst_ctrl.v` 头注释）。
+       ⚠️ `offset` 必须与 `board/cam/video_regs.v` 的 `A_RSTCTRL` 逐字一致
+          （`scripts/check_addr_map.py` 有对账）；`reg` 的基址/大小与胶合的
+          `VIDEO_BASE 0xF000_7400` / 掩码 `0xFFFF_FC00`（1 KiB）同源。
+       ⚠️ 本节点要求内核开 `CONFIG_MFD_SYSCON`（提供 "syscon" 兼容串）与
+          `CONFIG_POWER_RESET_SYSCON`（提供 "syscon-reboot"）——见 linux_raw.config。 */
+    videoregs: syscon@f0007400 {
+        compatible = "syscon";
+        reg = <0xf0007400 0x100>;
+    };
+
+    reboot {
+        compatible = "syscon-reboot";
+        regmap = <&videoregs>;
+        offset = <0x98>;
+        value = <0x1>;
+    };
+
+    /* ★ 2026-10-30：GT911 电容触摸（从 YeshenGuiTouch 搬进主线）。
+       三层：glue 的 GPIO 控制器（0xF000_2000，13 线）-> i2c-gpio 位操作 ->
+       主线 goodix 驱动。板级 bit 映射见 board/yeshen_mini_board_top.v。
+       ⚠️ 本节点要求内核开：CONFIG_GPIO_YESHEN_CTP（patches/linux/0003-*）、
+          CONFIG_I2C / CONFIG_I2C_GPIO / CONFIG_I2C_CHARDEV、
+          CONFIG_TOUCHSCREEN_GOODIX / CONFIG_INPUT_EVDEV —— 见 linux_raw.config。 */
+    gpio_ctp: gpio@f0002000 {
+        compatible = "yeshen,ctp-gpio";
+        reg = <0xf0002000 0x1000>;
+        gpio-controller;
+        ##gpio-cells = <0x2>;
+        ngpios = <13>;
+        status = "okay";
+    };
+
+    i2c_ctp: i2c-ctp {
+        compatible = "i2c-gpio";
+        /* i2c-gpio 的 SCL 走"推挽"：面板 J26 侧**没有 SCL 上拉**（YeshenGuiTouch 实测），
+           纯开漏永远拉不起 ⇒ 靠 i2c-gpio,scl-open-drain 让驱动按普通输出处理；
+           SDA 保持真开漏（高=切输入），好让 gpiochip 读面板 ACK。 */
+        i2c-gpio,scl-open-drain;
+        scl-gpios = <&gpio_ctp 8 GPIO_ACTIVE_HIGH>;
+        sda-gpios = <&gpio_ctp 9 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+        i2c-gpio,delay-us = <20>;
+        ##address-cells = <0x1>;
+        ##size-cells = <0x0>;
+        status = "okay";
+
+        touchscreen@14 {
+            compatible = "goodix,gt911";
+            reg = <0x14>;
+            interrupt-parent = <&plic>;
+            interrupts = <5>;
+            /* 面板把 INT strap 成高（FPGA 侧 INT 只作输入），器件因此应答 0x14。 */
+            irq-gpios = <&gpio_ctp 11 GPIO_ACTIVE_HIGH>;
+            /* 驱动写物理 0 = 复位、1 = 释放；RSTN 线上低有效 ⇒ 这里仍要 ACTIVE_HIGH。 */
+            reset-gpios = <&gpio_ctp 10 GPIO_ACTIVE_HIGH>;
+            touchscreen-size-x = <1024>;
+            touchscreen-size-y = <600>;
+            status = "okay";
+        };
+    };
+
+    /* ★ 2026-10-30：KEY4（B20）→ GPIO 位 12 → KEY_F13。GUI 在相机模式下
+       按此键返回桌面；轮询式（20 ms）不占用 PLIC 源，驱动不依赖中断。
+       要求内核开 CONFIG_KEYBOARD_GPIO_POLLED（见 linux_raw.config）。 */
+    gpio-keys {
+        compatible = "gpio-keys-polled";
+        poll-interval = <20>;
+        key4 {
+            label = "KEY4 camera return";
+            gpios = <&gpio_ctp 12 GPIO_ACTIVE_LOW>;
+            linux,code = <KEY_F13>;
+        };
+    };
+};

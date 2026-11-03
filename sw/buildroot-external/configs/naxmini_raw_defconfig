@@ -1,0 +1,143 @@
+## Build options
+BR2_CCACHE=y
+BR2_CCACHE_DIR="$(HOME)/.buildroot-ccache-saxon_default"
+
+## Target options
+BR2_riscv=y
+#ifdef RV32
+BR2_RISCV_32=y
+#endif
+#ifdef RV64
+BR2_RISCV_64=y
+#endif
+
+## Instruction Set Extensions
+## Task 22 NOTE: buildroot 2025.02 RENAMED this option family (the old
+##   BR2_RISCV_ISA_CUSTOM_RVM/_RVA/_RVC=<RVC> no longer exists):
+##     old BR2_RISCV_ISA_CUSTOM_RVM=y     -> new BR2_RISCV_ISA_RVM=y
+##     old BR2_RISCV_ISA_CUSTOM_RVA=y     -> new BR2_RISCV_ISA_RVA=y
+##     old BR2_RISCV_ISA_CUSTOM_RVC=RVC   -> new BR2_RISCV_ISA_RVC=y
+##     old BR2_RISCV_ISA_CUSTOM_RVF/RVD=y -> new BR2_RISCV_ISA_RVF/RVD=y
+##   (evidence: buildroot 2025.02.18 arch/Config.in.riscv lines 17 / 25-44 / 80-101)
+BR2_riscv_custom=y
+BR2_RISCV_ISA_RVM=y
+BR2_RISCV_ISA_RVA=y
+BR2_RISCV_ISA_RVC=y
+#ifdef FPU
+BR2_RISCV_ISA_RVF=y
+BR2_RISCV_ISA_RVD=y
+#endif
+#ifdef RV32
+BR2_RISCV_ABI_ILP32=y
+#endif
+#ifdef RV64
+BR2_RISCV_ABI_LP64=y
+#endif
+
+
+## Patches
+## Task 22 NOTE (3rd round): enabled to carry the zicsr/zifencei kernel patch.
+##   Buildroot looks for global patches in
+##     <dir>/<packagename>/<packageversion>/  else  <dir>/<packagename>/
+##   (Config.in help text of BR2_GLOBAL_PATCH_DIR; implemented by
+##   pkg-patch-hash-dirs in package/pkg-utils.mk line 163-164, consumed by the
+##   .stamp_patched rule in package/pkg-generic.mk line 239-241). Our kernel
+##   package is "linux" with version "dev" (BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION),
+##   so the patch lives in sw/buildroot-external/patches/linux/. Files are fed to
+##   support/scripts/apply-patches.sh, which runs
+##     patch -F0 -g0 -p1 --no-backup-if-mismatch -t -N
+##   hence a git-format / unified-diff file with a/ b/ prefixes is required.
+##   Without this the toolchain default -march=rv64imac_zicsr_zifencei never
+##   reaches the kernel: arch/riscv/Makefile hardcodes its own -march. See
+##   patches/linux/0001-riscv-fix-build-with-binutils-2.38.patch (backport of
+##   Linux v6.0 commit 6df2a016c0c8, riscv: fix build with binutils 2.38).
+BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_NAXMINI_PATH)/patches"
+
+## GCC
+## Task 22 NOTE: buildroot 2025.02 dropped BR2_GCC_VERSION_10_X (choices are
+##   12.x / 13.x / 14.x, default 13.x). We take the default 13.x (13.4.0).
+##   Fallback if the (older, litex-rebase) kernel trips on new GCC: 12.x.
+BR2_GCC_VERSION_13_X=y
+
+## C library: uClibc-ng -- PINNED ON PURPOSE, do not delete
+## Task 22 NOTE (2nd round): buildroot 2025.02 defaults the C library choice to glibc
+##   (toolchain/toolchain-buildroot/Config.in line 25: default BR2_TOOLCHAIN_BUILDROOT_GLIBC).
+##   Our rootfs is busybox + initramfs, and the toolchain that T22 already built
+##   (output/host/binutils + output/build/host-gcc-initial-13.4.0, tuple
+##   riscv64-buildroot-linux-uclibc) was configured for uClibc-ng, so the choice has to be
+##   pinned explicitly rather than inherited from a default.
+##   This line is load bearing in a non-obvious way: while the kernel-header series below was
+##   still broken (2.6.x), glibc was NOT selectable for riscv64 at all -- package/glibc/Config.in
+##   line 40 needs BR2_TOOLCHAIN_HEADERS_AT_LEAST_5_0 -- so the C library choice silently fell
+##   through to uClibc-ng. Fixing the series alone removes that accidental pin and would have
+##   flipped the C library to glibc, i.e. a different toolchain tuple / rootfs, without saying so.
+BR2_TOOLCHAIN_BUILDROOT_UCLIBC=y
+
+## Kernel headers
+## Task 22 NOTE (2nd round): the first choice (Kernel Headers) already defaults to AS_KERNEL when
+##   BR2_LINUX_KERNEL=y (package/linux-headers/Config.in.host line 5), i.e. the headers are
+##   built from the very same source as the kernel (SpinalHDL/linux dev). Keep it, and say
+##   so explicitly so a later default change cannot silently decouple headers from kernel.
+##   What is NOT covered by any default is the SECOND choice, "Custom kernel headers series"
+##   (Config.in.host lines 110-118): for a custom git/tarball kernel Buildroot cannot know the
+##   series, so it falls back to BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_REALLY_OLD ("2.6.x").
+##   That makes toolchain/Config.in line 659 declare BR2_TOOLCHAIN_HEADERS_AT_LEAST="2.6", and
+##   the post-staging check in helpers.mk runs STRICT because BR2_TOOLCHAIN_HEADERS_LATEST is
+##   unset -- hence the 2026-09-30 failure:
+##     Incorrect selection of kernel headers: expected 2.6.x, got 5.10.x
+##   FIX = declare the series the kernel source really is. Measured on the tree Buildroot had
+##   already fetched (output/build/linux-headers-dev/Makefile, from github.com/SpinalHDL/linux
+##   branch dev): VERSION=5 PATCHLEVEL=10 SUBLEVEL=1 => 5.10.x, so select the 5.10 series.
+##   Upstream precedent for this exact pattern: configs/stm32mp157a_dk1_defconfig,
+##   configs/armadeus_apf28_defconfig, configs/stm32f469_disco_sd_defconfig.
+##   CAUTION: with AS_KERNEL the check is STRICT, so this series must equal the kernel X.Y
+##   exactly; if the SpinalHDL/linux dev branch ever moves to another 5.x/6.x line, this line
+##   (and nothing else) has to be bumped together with it.
+BR2_KERNEL_HEADERS_AS_KERNEL=y
+BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_5_10=y
+
+## System
+BR2_TARGET_GENERIC_GETTY=y
+BR2_TARGET_GENERIC_GETTY_PORT="console"
+## ★ 2026-10-07：给 root 设口令 —— dropbear **拒绝空口令登录**，而原 /etc/shadow 里 root 是空的
+##   （`root::::::::`），所以不加这行 ssh 一定登不上。副作用：**串口控制台登录也要输同一个口令**。
+##   （buildroot 会把它 hash 后写进目标 /etc/shadow；本 rootfs 是 initramfs，每次上电都从镜像来。）
+BR2_TARGET_GENERIC_ROOT_PASSWD="yeshen"
+BR2_LINUX_KERNEL_DTS_SUPPORT=y
+BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/linux/linux.dts"
+
+## OpenSBI
+## Task 22 NOTE: BR2_TARGET_OPENSBI_PLAT / _PLAT_PATH still exist and are unchanged
+##   (PLAT is a buildroot option; PLAT_PATH is OUR external-tree symbol driving the
+##   copy hook in package/opensbi-ext/opensbi-ext.mk). What changed is on the OpenSBI
+##   side (1.6): the platform dir now needs Kconfig + configs/defconfig + objects.mk,
+##   and the old config.mk is pulled in by an -include line in objects.mk. See
+##   boards/naxmini/opensbi/ and the Task 22 section of the probe record doc.
+BR2_TARGET_OPENSBI=y
+BR2_TARGET_OPENSBI_PLAT="out-of-tree"
+BR2_TARGET_OPENSBI_PLAT_PATH="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/opensbi"
+
+## Filesystem
+BR2_TARGET_ROOTFS_CPIO=y
+
+## Kernel (litex-rebase branch)
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_GIT=y
+BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/SpinalHDL/linux.git"
+BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="dev"
+BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/linux/linux.config"
+BR2_LINUX_KERNEL_IMAGE=y
+
+## Rootfs customisation
+BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL_NAXMINI_PATH)/boards/naxmini/linux/rootfs_overlay"
+
+## Extra packages
+BR2_PACKAGE_DHRYSTONE=y
+BR2_PACKAGE_MICROPYTHON=y
+## ★ 2026-10-07：ssh 服务端（板子当 TCP 服务端/客户端都验过 TCP 已通，这里补上 sshd）
+BR2_PACKAGE_DROPBEAR=y
+
+
+
+

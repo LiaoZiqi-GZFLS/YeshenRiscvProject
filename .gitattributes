@@ -1,0 +1,10 @@
+* text=auto
+*.bat text eol=crlf
+*.sh text eol=lf
+*.v text eol=lf
+
+# 原厂 IP / 生成网表 / 交付二进制：按字节保存，禁止 EOL 归一化
+third_party/** -text
+y1/gen/** -text
+deliver/** -text
+aux-projects/**/third_party/** -text

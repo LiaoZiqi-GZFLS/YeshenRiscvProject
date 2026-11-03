@@ -1,0 +1,167 @@
+== 逐单元 MAC 表（67 项；几何 = wgt_index own；taps 由 TYPE 派生）==
+idx  name      type      flags  C_in C_out GROUP    H    W  taps          MACs           cum
+--------------------------------------------------------------------------------------------
+  0  Conv_0    conv3x3   plain     3   16     1  320  320     9      44236800      44236800
+  1  Conv_2    conv1x1   head     16   16     1  320  320     1      26214400      70451200
+  2  Conv_3    depthwise tail     16   16    16  320  320     9      14745600      85196800
+  3  MaxPool_5 maxpool   plain    16   16     1  160  160     -     (non-MAC)     (non-MAC)
+  4  Conv_6    conv1x1   head     16   16     1  160  160     1       6553600      91750400
+  5  Conv_7    depthwise middle   16   16    16  160  160     9       3686400      95436800
+  6  Conv_9    conv1x1   middle   16   32     1  160  160     1      13107200     108544000
+  7  Conv_10   depthwise middle   32   32    32  160  160     9       7372800     115916800
+  8  Conv_12   conv1x1   middle   32   32     1  160  160     1      26214400     142131200
+  9  Conv_13   depthwise middle   32   32    32  160  160     9       7372800     149504000
+ 10  Conv_15   conv1x1   middle   32   64     1  160  160     1      52428800     201932800
+ 11  Conv_16   depthwise tail     64   64    64  160  160     9      14745600     216678400
+ 12  MaxPool_18 maxpool   plain    64   64     1   80   80     -     (non-MAC)     (non-MAC)
+ 13  Conv_19   conv1x1   head     64   64     1   80   80     1      26214400     242892800
+ 14  Conv_20   depthwise middle   64   64    64   80   80     9       3686400     246579200
+ 15  Conv_22   conv1x1   middle   64   64     1   80   80     1      26214400     272793600
+ 16  Conv_23   depthwise tail     64   64    64   80   80     9       3686400     276480000
+ 17  MaxPool_25 maxpool   plain    64   64     1   40   40     -     (non-MAC)     (non-MAC)
+ 18  Conv_26   conv1x1   head     64   64     1   40   40     1       6553600     283033600
+ 19  Conv_27   depthwise middle   64   64    64   40   40     9        921600     283955200
+ 20  Conv_29   conv1x1   middle   64   64     1   40   40     1       6553600     290508800
+ 21  Conv_30   depthwise tail     64   64    64   40   40     9        921600     291430400
+ 22  MaxPool_32 maxpool   plain    64   64     1   20   20     -     (non-MAC)     (non-MAC)
+ 23  Conv_33   conv1x1   head     64   64     1   20   20     1       1638400     293068800
+ 24  Conv_34   depthwise middle   64   64    64   20   20     9        230400     293299200
+ 25  Conv_36   conv1x1   middle   64   64     1   20   20     1       1638400     294937600
+ 26  Conv_37   depthwise middle   64   64    64   20   20     9        230400     295168000
+ 27  Conv_39   conv1x1   middle   64   64     1   20   20     1       1638400     296806400
+ 28  Conv_40   depthwise tail     64   64    64   20   20     9        230400     297036800
+ 29  Resize_43 resize    plain    64   64     1   40   40     -     (non-MAC)     (non-MAC)
+ 30  Add_44    add       plain    64   64     1   40   40     -     (non-MAC)     (non-MAC)
+ 31  Conv_45   conv1x1   head     64   64     1   40   40     1       6553600     303590400
+ 32  Conv_46   depthwise tail     64   64    64   40   40     9        921600     304512000
+ 33  Resize_49 resize    plain    64   64     1   80   80     -     (non-MAC)     (non-MAC)
+ 34  Add_50    add       plain    64   64     1   80   80     -     (non-MAC)     (non-MAC)
+ 35  Conv_51   conv1x1   head     64   64     1   80   80     1      26214400     330726400
+ 36  Conv_52   depthwise tail     64   64    64   80   80     9       3686400     334412800
+ 37  Conv_54   conv1x1   head     64    1     1   80   80     1        409600     334822400
+ 38  Conv_55   conv3x3   tail      1    1     1   80   80     9         57600     334880000
+ 39  Conv_56   conv1x1   head     64    1     1   40   40     1        102400     334982400
+ 40  Conv_57   conv3x3   tail      1    1     1   40   40     9         14400     334996800
+ 41  Conv_58   conv1x1   head     64    1     1   20   20     1         25600     335022400
+ 42  Conv_59   conv3x3   tail      1    1     1   20   20     9          3600     335026000
+ 43  Conv_60   conv1x1   head     64    4     1   80   80     1       1638400     336664400
+ 44  Conv_61   depthwise tail      4    4     4   80   80     9        230400     336894800
+ 45  Conv_62   conv1x1   head     64    4     1   40   40     1        409600     337304400
+ 46  Conv_63   depthwise tail      4    4     4   40   40     9         57600     337362000
+ 47  Conv_64   conv1x1   head     64    4     1   20   20     1        102400     337464400
+ 48  Conv_65   depthwise tail      4    4     4   20   20     9         14400     337478800
+ 49  Conv_66   conv1x1   head     64    1     1   80   80     1        409600     337888400
+ 50  Conv_67   conv3x3   tail      1    1     1   80   80     9         57600     337946000
+ 51  Conv_68   conv1x1   head     64    1     1   40   40     1        102400     338048400
+ 52  Conv_69   conv3x3   tail      1    1     1   40   40     9         14400     338062800
+ 53  Conv_70   conv1x1   head     64    1     1   20   20     1         25600     338088400
+ 54  Conv_71   conv3x3   tail      1    1     1   20   20     9          3600     338092000
+ 55  Conv_72   conv1x1   head     64   10     1   80   80     1       4096000     342188000
+ 56  Conv_73   depthwise tail     10   10    10   80   80     9        576000     342764000
+ 57  Conv_74   conv1x1   head     64   10     1   40   40     1       1024000     343788000
+ 58  Conv_75   depthwise tail     10   10    10   40   40     9        144000     343932000
+ 59  Conv_76   conv1x1   head     64   10     1   20   20     1        256000     344188000
+ 60  Conv_77   depthwise tail     10   10    10   20   20     9         36000     344224000
+ 61  Sigmoid_85 sigmoid   plain     1    1     1    1 6400     -     (non-MAC)     (non-MAC)
+ 62  Sigmoid_93 sigmoid   plain     1    1     1    1 1600     -     (non-MAC)     (non-MAC)
+ 63  Sigmoid_101 sigmoid   plain     1    1     1    1  400     -     (non-MAC)     (non-MAC)
+ 64  Sigmoid_109 sigmoid   plain     1    1     1    1 6400     -     (non-MAC)     (non-MAC)
+ 65  Sigmoid_117 sigmoid   plain     1    1     1    1 1600     -     (non-MAC)     (non-MAC)
+ 66  Sigmoid_125 sigmoid   plain     1    1     1    1  400     -     (non-MAC)     (non-MAC)
+--------------------------------------------------------------------------------------------
+MAC_TOTAL=344224000（53 个 conv/dw 单元；非 MAC 算子不计入）
+
+== 非 MAC 算子（跳过/旁路；元素数单列，不并入 MAC）==
+idx  name      type        elements     in_bytes     per_elem
+3    MaxPool_5 maxpool       409600      1638400       max(4)
+12   MaxPool_18 maxpool       409600      1638400       max(4)
+17   MaxPool_25 maxpool       102400       409600       max(4)
+22   MaxPool_32 maxpool        25600       102400       max(4)
+29   Resize_43 resize        102400        25600            -
+30   Add_44    add           102400       102400        2-src
+33   Resize_49 resize        409600       102400            -
+34   Add_50    add           409600       409600        2-src
+61   Sigmoid_85 sigmoid         6400         6400            -
+62   Sigmoid_93 sigmoid         1600         1600            -
+63   Sigmoid_101 sigmoid          400          416            -
+64   Sigmoid_109 sigmoid         6400         6400            -
+65   Sigmoid_117 sigmoid         1600         1600            -
+66   Sigmoid_125 sigmoid          400          416            -
+NONMAC_ELEMS_TOTAL=1988000（maxpool 947200 / resize 512000 / add 512000 / sigmoid 16800）
+
+== 算力天花板（64 MAC/拍 @50 MHz）==
+常量出处：MAC_PER_BEAT=64 读 RTL（MacArray.scala 8×8）；NPU_CLK=50 MHz 读报告（npu_clock.md）；
+          SLICE_TAP_BEATS=9 读 RTL（Conv3x3Slice.ph=1..9，每像素恒 9 拍）；
+          nPasses=nCi·nCo / nCo(dw) 读 RTL（UnitExec 宽路趟编排）。
+TOTAL_MACS=344224000
+BEATS_IDEAL=5378500（= 总 MACs ÷ 64，spec 指定式）
+T_COMPUTE_IDEAL_S=0.1076  FPS_COMPUTE_IDEAL=9.30
+BEATS_ISSUED=45075600（eff/多趟路径：9 拍/像素/趟 × nPasses × 像素）
+T_COMPUTE_ISSUED_S=0.9015  FPS_COMPUTE_ISSUED=1.11
+BEATS_ISSUED_TILED=70848972（再含 tile halo 重喂：9 拍/被喂列/趟）
+T_COMPUTE_ISSUED_TILED_S=1.4170  FPS_COMPUTE_ISSUED_TILED=0.71
+注记：单切片每像素墙钟 = 11 拍（1 收列 + 9 tap + 1 出数）⇒ 单阵列墙钟上界 1.102 s/帧
+
+== ★ P0b 类账：issued 拍 × 有用 MACs × 多花倍率（类 = desc TYPE 1:1）==
+class      n    useful MACs      ideal(拍)     issued(拍)      浪费×  issued占比 类内前 3 贵（issued 拍）
+1x1       26      236339200       3692800      35049600    9.49×     77.8%  Conv_15=7372800  Conv_2=3686400  Conv_12=3686400
+dw        20       63496800        992138       8031600    8.10×     17.8%  Conv_3=1843200  Conv_16=1843200  Conv_10=921600
+dense3x3   7       44388000        693562       1994400    2.88×      4.4%  Conv_0=1843200  Conv_55=57600  Conv_67=57600
+TOTAL     53      344224000       5378500      45075600    8.38×    100.0%
+机器可读（闸门按 UNIT 行独立复算后比对）：
+CLASS 1x1 n=26 macs=236339200 ideal_milli=3692800000 issued=35049600
+CLASS dw n=20 macs=63496800 ideal_milli=992137500 issued=8031600
+CLASS dense3x3 n=7 macs=44388000 ideal_milli=693562500 issued=1994400
+
+== 绝对 issued 拍 Top-12（谁是最大的一笔浪费；倍率与绝对值分开看）==
+idx  name       type      C_in C_out    H    W    passes  taps_eff        issued    浪费×     占比
+10   Conv_15    conv1x1     32   64  160  160        32         9       7372800  9.00×  16.4%
+1    Conv_2     conv1x1     16   16  320  320         4         9       3686400  9.00×   8.2%
+8    Conv_12    conv1x1     32   32  160  160        16         9       3686400  9.00×   8.2%
+13   Conv_19    conv1x1     64   64   80   80        64         9       3686400  9.00×   8.2%
+15   Conv_22    conv1x1     64   64   80   80        64         9       3686400  9.00×   8.2%
+35   Conv_51    conv1x1     64   64   80   80        64         9       3686400  9.00×   8.2%
+0    Conv_0     conv3x3      3   16  320  320         2         9       1843200  2.67×   4.1%
+2    Conv_3     depthwise   16   16  320  320         2         9       1843200  8.00×   4.1%
+6    Conv_9     conv1x1     16   32  160  160         8         9       1843200  9.00×   4.1%
+11   Conv_16    depthwise   64   64  160  160         8         9       1843200  8.00×   4.1%
+4    Conv_6     conv1x1     16   16  160  160         4         9        921600  9.00×   2.0%
+7    Conv_10    depthwise   32   32  160  160         4         9        921600  8.00×   2.0%
+
+== ★ P0b 反事实（拍数与 fps；同 issued 口径：不含 tile halo，@npu_clk 计）==
+A = 1×1 类的抽头拍数 9 → 1（跳拍档：只留权重所在的那一拍，槽 0；数值逐字节不变）
+B = dw 类 issued → ideal（MACs/64，"用满阵列"；★ modeled 上界，需数据通路改动，见文件头警示）
+口径                              beats    s/frame  fps@50MHz  vs issued
+as-built 9拍/像素/趟           45075600.0     0.9015     1.1092          —
+A（1×1 只发 1 拍）              13920400.0     0.2784     3.5919  −31155200
+B（dw 用满阵列）                 38036137.5     0.7607     1.3145   −7039462
+A+B                         6880937.5     0.1376     7.2665  −38194662
+理想（MACs/64）                 5378500.0     0.1076     9.2963  −39697100
+A 已落 RTL（实计）                 13920400     0.2784     3.5919  −31155200
+IMPL_A fps@50MHz=3.5919（自下而上 Σ taps_eff·passes·HW；与 CF A 逐位相等是 CHECK impl_a_eq_cf_a）
+A+B 后残差 = 1.2793× ideal（类内取整：Conv_0 的 8/3、C=1 尾块的 64×、C=10 尾块 …）
+CF A_BEATS=13920400 B_BEATS=38036137.5 AB_BEATS=6880937.5 A_TAPS=1 ISSUED_BEATS=45075600
+
+== ★ P0b 时钟敏感表（**敏感度，不是测量**：fps = clk ÷ beats；PnR 实测可闭合 54.142 MHz）==
+clk        as-built          A          B        A+B         理想
+50 MHz         1.11       3.59       1.31       7.27       9.30
+FPS_CLK clk_mhz=50 issued=1.1092 A=3.5919 B=1.3145 AB=7.2665 ideal=9.2963
+60 MHz         1.33       4.31       1.58       8.72      11.16
+FPS_CLK clk_mhz=60 issued=1.3311 A=4.3102 B=1.5774 AB=8.7197 ideal=11.1555
+75 MHz         1.66       5.39       1.97      10.90      13.94
+FPS_CLK clk_mhz=75 issued=1.6639 A=5.3878 B=1.9718 AB=10.8997 ideal=13.9444
+100 MHz        2.22       7.18       2.63      14.53      18.59
+FPS_CLK clk_mhz=100 issued=2.2185 A=7.1837 B=2.6291 AB=14.5329 ideal=18.5925
+注：PnR 实测 54.142 MHz 档 ⇒ as-built 1.20 / A+B 7.87 / 理想 10.07 fps（同样只是敏感度外推）。
+
+== 逐帧流量场景（带宽侧；基 = 冻结 fuse_both 12.576 MB + 冻结 bypass 6.9456 MB）==
+注：MB = 1e6 B（与 275.9 MB/s 同口径）；bursts = 32 B 粒度请求数（measured/modeled 见报告）。
+scenario                                                      bytes  MB/frame       ms    fps@275.9
+(a) v1 as-is（宽路 tile 实测放大 + Add 4.4×）                      42298598   42.2986    153.3         6.52
+(b) +窗口片上留住（杀 nCo 重读）                                      23891671   23.8917     86.6        11.55
+(c) +平面 32B 补齐（杀 band/对齐余量）                                23830752   23.8308     86.4        11.58
+(d) +NC8HW 分块布局（字节同 c；请求 ÷4）                               23830752   23.8308     86.4        11.58
+(e) +Add 单趟化（4.4×→2.0×）                                    22601952   22.6020     81.9        12.21
+SCEN_BASE0=19521600  CONV_DELTA_A=21548198  CONV_DELTA_B=3141271  CONV_DELTA_C=3080352  ADD_DELTA=1228800
+BURSTS32 A=1321832 B=746615 C=744711 D=744711 E=706311  D_REQUESTS=C/4=186178
+WGT_PASSLOAD_BYTES=500544（modeled：Σ nPasses×576 B；冻结模型不计权重装载）

@@ -1,0 +1,74 @@
+== run_dwlane_ab: NPU v2 切片 B-1（depthwise lane 打包探针：before/after2/after1 + 两条负对照）==
+   tb=rtl_test/DwLaneTb.v  nl=gen/DwLaneBefore.v gen/DwLaneAfter2.v gen/DwLaneAfter1.v gen/DwLaneAfter1Mut5.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog
+---- [0] 前置：冻结参考自检 ----
+   参考自检 OK（multipass_ref.py --selftest）
+   MD5 gen/DwLaneBefore.v = 62ba43a8e6b0deb85d19cd7ffe3afecc
+   MD5 gen/DwLaneAfter2.v = 3bc55a822c2636293fbee210dc8b230b
+   MD5 gen/DwLaneAfter1.v = 518691e0dba3f84f44a723367add0f58
+   MD5 gen/DwLaneAfter1Mut5.v = 54371a1578b0168d43cdd6c9991cc07d
+---- [1] 向量 + 黄金（冻结 multipass_ref）+ 两条负对照的**预测值** ----
+    PRED C=8 NEG_NO8=154 NEG_MUT5=232 WDIFF_NO8=8 distinct=86 gold_md5=697d23aef2bd245e8dca53df67745cd2
+    PRED C=16 NEG_NO8=304 NEG_MUT5=451 WDIFF_NO8=16 distinct=94 gold_md5=5cf652c1e9dee21cf6f089439e35c561
+    PRED C=32 NEG_NO8=641 NEG_MUT5=941 WDIFF_NO8=32 distinct=102 gold_md5=6a103f43119b1217b7c7e2ac35691c56
+    PRED C=64 NEG_NO8=1195 NEG_MUT5=1850 WDIFF_NO8=64 distinct=113 gold_md5=5f92eb4dd612bffb363d128da571212b
+    PRED C=4 NEG_NO8=79 NEG_MUT5=109 WDIFF_NO8=4 distinct=61 gold_md5=3d51624eef71ecaf3bcf2a9c6deee9bc
+    PRED C=10 NEG_NO8=188 NEG_MUT5=289 WDIFF_NO8=10 distinct=84 gold_md5=3a2083a41b6ebd2effb4e2b830dd9d9c
+---- [1b] 编译（一份 TB，四份探针网表各编一份；BEFORE 需要 -DMODE0）----
+    四份都编译 OK
+    check_dangling: 四份网表 0 悬空
+---- [1c]+[2] 六个形状：三档正对照（逐字节）+ 拍数（实测 vs 预测）----
+SHAPE C=8 before MISMATCH=0 BEATS=288(预测 288) MODEID=0
+SHAPE C=8 after2 MISMATCH=0 BEATS=64(预测 64) MODEID=1
+SHAPE C=8 after1 MISMATCH=0 BEATS=32(预测 32) MODEID=2
+CONSIST C=8 before==after2==after1: 0/0
+NEGCTL-A C=8 before MISMATCH=154 == 预测（发火）
+NEGCTL-A C=8 after2 MISMATCH=154 == 预测（发火）
+NEGCTL-A C=8 after1 MISMATCH=154 == 预测（发火）
+NEGCTL-B C=8 mut5 MISMATCH=232 == 预测（发火）
+SHAPE C=16 before MISMATCH=0 BEATS=576(预测 576) MODEID=0
+SHAPE C=16 after2 MISMATCH=0 BEATS=128(预测 128) MODEID=1
+SHAPE C=16 after1 MISMATCH=0 BEATS=64(预测 64) MODEID=2
+CONSIST C=16 before==after2==after1: 0/0
+NEGCTL-A C=16 before MISMATCH=304 == 预测（发火）
+NEGCTL-A C=16 after2 MISMATCH=304 == 预测（发火）
+NEGCTL-A C=16 after1 MISMATCH=304 == 预测（发火）
+NEGCTL-B C=16 mut5 MISMATCH=451 == 预测（发火）
+SHAPE C=32 before MISMATCH=0 BEATS=1152(预测 1152) MODEID=0
+SHAPE C=32 after2 MISMATCH=0 BEATS=256(预测 256) MODEID=1
+SHAPE C=32 after1 MISMATCH=0 BEATS=128(预测 128) MODEID=2
+CONSIST C=32 before==after2==after1: 0/0
+NEGCTL-A C=32 before MISMATCH=641 == 预测（发火）
+NEGCTL-A C=32 after2 MISMATCH=641 == 预测（发火）
+NEGCTL-A C=32 after1 MISMATCH=641 == 预测（发火）
+NEGCTL-B C=32 mut5 MISMATCH=941 == 预测（发火）
+SHAPE C=64 before MISMATCH=0 BEATS=2304(预测 2304) MODEID=0
+SHAPE C=64 after2 MISMATCH=0 BEATS=512(预测 512) MODEID=1
+SHAPE C=64 after1 MISMATCH=0 BEATS=256(预测 256) MODEID=2
+CONSIST C=64 before==after2==after1: 0/0
+NEGCTL-A C=64 before MISMATCH=1195 == 预测（发火）
+NEGCTL-A C=64 after2 MISMATCH=1195 == 预测（发火）
+NEGCTL-A C=64 after1 MISMATCH=1195 == 预测（发火）
+NEGCTL-B C=64 mut5 MISMATCH=1850 == 预测（发火）
+SHAPE C=4 before MISMATCH=0 BEATS=288(预测 288) MODEID=0
+SHAPE C=4 after2 MISMATCH=0 BEATS=64(预测 64) MODEID=1
+SHAPE C=4 after1 MISMATCH=0 BEATS=32(预测 32) MODEID=2
+CONSIST C=4 before==after2==after1: 0/0
+NEGCTL-A C=4 before MISMATCH=79 == 预测（发火）
+NEGCTL-A C=4 after2 MISMATCH=79 == 预测（发火）
+NEGCTL-A C=4 after1 MISMATCH=79 == 预测（发火）
+NEGCTL-B C=4 mut5 MISMATCH=109 == 预测（发火）
+SHAPE C=10 before MISMATCH=0 BEATS=576(预测 576) MODEID=0
+SHAPE C=10 after2 MISMATCH=0 BEATS=128(预测 128) MODEID=1
+SHAPE C=10 after1 MISMATCH=0 BEATS=64(预测 64) MODEID=2
+CONSIST C=10 before==after2==after1: 0/0
+NEGCTL-A C=10 before MISMATCH=188 == 预测（发火）
+NEGCTL-A C=10 after2 MISMATCH=188 == 预测（发火）
+NEGCTL-A C=10 after1 MISMATCH=188 == 预测（发火）
+NEGCTL-B C=10 mut5 MISMATCH=289 == 预测（发火）
+==========================================================================
+shapes = C8 C16 C32 C64 C4 C10（真表 dw 形状 {4,10,16,32,64} + 单块基准 8）
+正对照   = 三档各自 == 冻结黄金（MISMATCH=0）；三档 Y 逐字节互等
+拍数实测 = BEFORE 9 拍/像素/趟；AFTER2 2 拍（4.50×）；AFTER1 1 拍（9.00×）
+负对照 A = 第 9 抽头切除 ⇒ 三档 MISMATCH 恰 == 预测（>0）
+负对照 B = lane 5 路由改错 ⇒ MISMATCH 恰 == 预测（>0）；正规网表 == 0
+RESULT: PASS

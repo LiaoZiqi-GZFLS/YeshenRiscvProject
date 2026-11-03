@@ -1,0 +1,80 @@
+== T-S3h/A'-3 基线证据（2026-10-16；RTL/gen 一字未动）==
+
+---- 1) 六份网表 md5（与 §3.7 记录逐字节一致）----
+979129017535dc82ab9e6d89bea31080 *gen/UnitExec.v
+618af3381eadcb4d7c6964cd4338a825 *gen/UnitExec_w32.v
+ddb9bb8addc01f94e2ea8ae8b6b898e6 *gen/UnitExec_w640.v
+b64e2c4a844f638b1bc1620c1a60af7c *gen/UnitExec_tiled.v
+5e92fbbcecdd30f7d45be373c71a3e26 *gen/LayerSched.v
+f338b37bce15287fd965d82ad92955d4 *gen/NpuTop.v
+
+---- 2) check_dangling.py（四份 UnitExec 网表）----
+file: gen/UnitExec_tiled.v
+total dangling instances: 0
+RESULT: PASS
+file: gen/UnitExec.v
+total dangling instances: 0
+RESULT: PASS
+file: gen/UnitExec_w32.v
+total dangling instances: 0
+RESULT: PASS
+file: gen/UnitExec_w640.v
+total dangling instances: 0
+RESULT: PASS
+
+---- 3) run_chain_wide_ab.sh（★ 保持先红；红签名见 ts3h_gate_red_tail.txt）----
+   JOB c16_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+   JOB c64_L4 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+   JOB c64_10_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+   JOB c64_1_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+正对照: 绿 0 / 红(POS_RED) 4
+JUDGE-RED: 宽链（chain_len ≥ 2 的宽路）在当前网表上没有通路 ——
+RESULT: FAIL
+
+---- 4) run_chaingeom_ab.sh（A'-2 判据闸门；本机需 PYTHONIOENCODING=utf-8）----
+结构       = OK（check_dangling.py：/d/code/PDS/VexiiYeshenLinux/y1/tools/../gen/LayerSched.v 零悬空）
+逐片几何   = OK（LayerSched 锁存 + UnitExec 收到；逐槽 == 各成员表值）
+段长/基址  = OK（== 冻结 wgt_index 的 aligned_bytes / 前缀和）
+帧级推进   = OK（ADVP == Σ ceil32(N_k)）；负对照①（回退 B2 旧式）已发火
+几何门     = OK（GATE=2 引擎互锁）；负对照②（槽 0 改坏）已发火（GATE=1）
+RESULT: PASS
+
+---- 5) run_chain_ab.sh（窄链；PY=venv）----
+正对照     = OK（CHAIN_FIN_MISMATCH=0：链输出 2048 B 逐字节 == 链黄金；CHAIN_LEN=4 CHAIN_LEN_REP=4 LMAX=8）
+零 DDR 中间= OK（MEM rd=2048 wr=2048 bursts=32 maxburst=16 / RD_BYTES_PEAK=2048 WR_BYTES=2048 / AR_BURSTS=16 AW_BURSTS=16 B_OK=16（三方一致）：中间三张的 3x2048 读 + 3x2048 写都不在 DDR）
+中间在片上 = OK（MID_RING_MISMATCH=0：bufs(1) 环窗 = mid0 行 6/7 + pad 行）
+行锁步     = OK（MID_ROWS=TAIL_ROWS=9 = IMG_H+1；占用性自证见 rtl/UnitExec.scala 文件头）
+负对照     = OK（bit0=1 ⇒ wr 2048->4096、DEC1_UNCHANGED_BAD=2038 ⇒ 两面发火）
+响亮 err   = OK（chainLen>8 ⇒ RTL err 且零搬运）
+RESULT: PASS
+
+---- 6) dev_map（pds/devmap_c4a_s37.log，§3.7 后基线）----
+| APM                   | 542        | 740           | 74                 
+| FF                    | 149298     | 319600        | 47                 
+| LUT                   | 124108     | 159800        | 78                 
+| DRM                   | 247.5      | 415           | 60                 
+Adm-4088 计数 = 0
+
+---- 7) 诚实记录 ----
+· run_chaingeom_ab.sh 在未设 PYTHONIOENCODING=utf-8 的 GBK 控制台下会在『负对照①』的打印处
+  UnicodeEncodeError（⇒ 假红）；设 utf-8 后 RESULT: PASS。属本机环境，不是仓库回归。
+
+---- 8) 相邻闸门抽查（本片收口时补跑；RTL 未动）----
+== run_tiling2d_wide_ab.sh（宽路 tile；1 正对照 + 3 负对照）==
+[1] 正对照 真表宽几何（C=1/4/16/64 + depthwise + Conv_0 s=2）整层逐字节 : PASS（MISMATCH=0）
+[2] 负对照① 漏一趟（tNtx-1->tNtx-2）        : PASS（MISMATCH=1274>0，定位 XMIN=32）
+[3] 负对照② 不给 halo（tWinLo+1/tWinHi-1）   : PASS（MISMATCH=631>0，错列 4 ⇒ 接缝类）
+[4] 负对照③ 共享 plane-0 索引（T-S3b）        : PASS（20×20 MISMATCH=20582>0；40×40 MISMATCH=0 不提）
+RESULT: PASS
+RESULT: PASS
+EXIT=0
+
+== run_unitexec_wide_ab.sh（宽层单单元；baseline 不受扰动）==
+RESULT: PASS
+正对照   = OK（DUT 的 DST 区逐字节 == 黄金；邻居未动；WR_BYTES == C_out*H*W；宽层 RD_PEAK=0）
+自报/信箱= OK（WIDE_ON/PASSES/RTL_M/RTL_ZPAD/RTL_ZY/RTL_LAYER == 经信箱按 LAYER_ID 灌进去的值）
+负对照 A = OK（pad 用字节 0 ⇒ 精确命中 gold_pad0、且 != 黄金）
+负对照 B = OK（bias_adj 全 0 ⇒ 精确命中 gold_nobias、且 != 黄金）
+退化守卫 = OK（黄金 distinct>1）
+RESULT: PASS
+EXIT=0

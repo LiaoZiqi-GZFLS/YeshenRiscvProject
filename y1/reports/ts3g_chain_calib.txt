@@ -1,0 +1,77 @@
+== 19 run 标定表（逐片；几何 = 本片 own；N_i 真实字节；al = ceil32(N_i)；off = blob 实际偏移；cum = run 内累计偏移）==
+run      L  片  idx  name          TYPE           C_IN→C_OUT  G    H×W     N_i     al      off       cum
+[ 1.. 2] 2 head  1  Conv_2        0x02 conv1x1   16→16     1 320×320   2304   2304      448        0
+[ 1.. 2] 2 tail  2  Conv_3        0x03 depthwise  16→16    16 320×320    144    160     2752     2304
+          head N_i=2304  LayerSched-advance(L*N_head)=4608  real=Σaligned=2464  drift=YES
+[ 4..11] 8 head  4  Conv_6        0x02 conv1x1   16→16     1 160×160   2304   2304     2912        0
+[ 4..11] 8 mid   5  Conv_7        0x03 depthwise  16→16    16 160×160    144    160     5216     2304
+[ 4..11] 8 mid   6  Conv_9        0x02 conv1x1   16→32     1 160×160   4608   4608     5376     2464
+[ 4..11] 8 mid   7  Conv_10       0x03 depthwise  32→32    32 160×160    288    288     9984     7072
+[ 4..11] 8 mid   8  Conv_12       0x02 conv1x1   32→32     1 160×160   9216   9216    10272     7360
+[ 4..11] 8 mid   9  Conv_13       0x03 depthwise  32→32    32 160×160    288    288    19488    16576
+[ 4..11] 8 mid  10  Conv_15       0x02 conv1x1   32→64     1 160×160  18432  18432    19776    16864
+[ 4..11] 8 tail 11  Conv_16       0x03 depthwise  64→64    64 160×160    576    576    38208    35296
+          head N_i=2304  LayerSched-advance(L*N_head)=18432  real=Σaligned=35872  drift=YES
+[13..16] 4 head 13  Conv_19       0x02 conv1x1   64→64     1  80×80   36864  36864    38784        0
+[13..16] 4 mid  14  Conv_20       0x03 depthwise  64→64    64  80×80     576    576    75648    36864
+[13..16] 4 mid  15  Conv_22       0x02 conv1x1   64→64     1  80×80   36864  36864    76224    37440
+[13..16] 4 tail 16  Conv_23       0x03 depthwise  64→64    64  80×80     576    576   113088    74304
+          head N_i=36864  LayerSched-advance(L*N_head)=147456  real=Σaligned=74880  drift=YES
+[18..21] 4 head 18  Conv_26       0x02 conv1x1   64→64     1  40×40   36864  36864   113664        0
+[18..21] 4 mid  19  Conv_27       0x03 depthwise  64→64    64  40×40     576    576   150528    36864
+[18..21] 4 mid  20  Conv_29       0x02 conv1x1   64→64     1  40×40   36864  36864   151104    37440
+[18..21] 4 tail 21  Conv_30       0x03 depthwise  64→64    64  40×40     576    576   187968    74304
+          head N_i=36864  LayerSched-advance(L*N_head)=147456  real=Σaligned=74880  drift=YES
+[23..28] 6 head 23  Conv_33       0x02 conv1x1   64→64     1  20×20   36864  36864   188544        0
+[23..28] 6 mid  24  Conv_34       0x03 depthwise  64→64    64  20×20     576    576   225408    36864
+[23..28] 6 mid  25  Conv_36       0x02 conv1x1   64→64     1  20×20   36864  36864   225984    37440
+[23..28] 6 mid  26  Conv_37       0x03 depthwise  64→64    64  20×20     576    576   262848    74304
+[23..28] 6 mid  27  Conv_39       0x02 conv1x1   64→64     1  20×20   36864  36864   263424    74880
+[23..28] 6 tail 28  Conv_40       0x03 depthwise  64→64    64  20×20     576    576   300288   111744
+          head N_i=36864  LayerSched-advance(L*N_head)=221184  real=Σaligned=112320  drift=YES
+[31..32] 2 head 31  Conv_45       0x02 conv1x1   64→64     1  40×40   36864  36864   300864        0
+[31..32] 2 tail 32  Conv_46       0x03 depthwise  64→64    64  40×40     576    576   337728    36864
+          head N_i=36864  LayerSched-advance(L*N_head)=73728  real=Σaligned=37440  drift=YES
+[35..36] 2 head 35  Conv_51       0x02 conv1x1   64→64     1  80×80   36864  36864   338304        0
+[35..36] 2 tail 36  Conv_52       0x03 depthwise  64→64    64  80×80     576    576   375168    36864
+          head N_i=36864  LayerSched-advance(L*N_head)=73728  real=Σaligned=37440  drift=YES
+[37..38] 2 head 37  Conv_54       0x02 conv1x1   64→1      1  80×80     576    576   375744        0
+[37..38] 2 tail 38  Conv_55       0x01 conv3x3    1→1      1  80×80       9     32   376320      576
+          head N_i=576  LayerSched-advance(L*N_head)=1152  real=Σaligned=608  drift=YES
+[39..40] 2 head 39  Conv_56       0x02 conv1x1   64→1      1  40×40     576    576   376352        0
+[39..40] 2 tail 40  Conv_57       0x01 conv3x3    1→1      1  40×40       9     32   376928      576
+          head N_i=576  LayerSched-advance(L*N_head)=1152  real=Σaligned=608  drift=YES
+[41..42] 2 head 41  Conv_58       0x02 conv1x1   64→1      1  20×20     576    576   376960        0
+[41..42] 2 tail 42  Conv_59       0x01 conv3x3    1→1      1  20×20       9     32   377536      576
+          head N_i=576  LayerSched-advance(L*N_head)=1152  real=Σaligned=608  drift=YES
+[43..44] 2 head 43  Conv_60       0x02 conv1x1   64→4      1  80×80    2304   2304   377568        0
+[43..44] 2 tail 44  Conv_61       0x03 depthwise   4→4      4  80×80      36     64   379872     2304
+          head N_i=2304  LayerSched-advance(L*N_head)=4608  real=Σaligned=2368  drift=YES
+[45..46] 2 head 45  Conv_62       0x02 conv1x1   64→4      1  40×40    2304   2304   379936        0
+[45..46] 2 tail 46  Conv_63       0x03 depthwise   4→4      4  40×40      36     64   382240     2304
+          head N_i=2304  LayerSched-advance(L*N_head)=4608  real=Σaligned=2368  drift=YES
+[47..48] 2 head 47  Conv_64       0x02 conv1x1   64→4      1  20×20    2304   2304   382304        0
+[47..48] 2 tail 48  Conv_65       0x03 depthwise   4→4      4  20×20      36     64   384608     2304
+          head N_i=2304  LayerSched-advance(L*N_head)=4608  real=Σaligned=2368  drift=YES
+[49..50] 2 head 49  Conv_66       0x02 conv1x1   64→1      1  80×80     576    576   384672        0
+[49..50] 2 tail 50  Conv_67       0x01 conv3x3    1→1      1  80×80       9     32   385248      576
+          head N_i=576  LayerSched-advance(L*N_head)=1152  real=Σaligned=608  drift=YES
+[51..52] 2 head 51  Conv_68       0x02 conv1x1   64→1      1  40×40     576    576   385280        0
+[51..52] 2 tail 52  Conv_69       0x01 conv3x3    1→1      1  40×40       9     32   385856      576
+          head N_i=576  LayerSched-advance(L*N_head)=1152  real=Σaligned=608  drift=YES
+[53..54] 2 head 53  Conv_70       0x02 conv1x1   64→1      1  20×20     576    576   385888        0
+[53..54] 2 tail 54  Conv_71       0x01 conv3x3    1→1      1  20×20       9     32   386464      576
+          head N_i=576  LayerSched-advance(L*N_head)=1152  real=Σaligned=608  drift=YES
+[55..56] 2 head 55  Conv_72       0x02 conv1x1   64→10     1  80×80    5760   5760   386496        0
+[55..56] 2 tail 56  Conv_73       0x03 depthwise  10→10    10  80×80      90     96   392256     5760
+          head N_i=5760  LayerSched-advance(L*N_head)=11520  real=Σaligned=5856  drift=YES
+[57..58] 2 head 57  Conv_74       0x02 conv1x1   64→10     1  40×40    5760   5760   392352        0
+[57..58] 2 tail 58  Conv_75       0x03 depthwise  10→10    10  40×40      90     96   398112     5760
+          head N_i=5760  LayerSched-advance(L*N_head)=11520  real=Σaligned=5856  drift=YES
+[59..60] 2 head 59  Conv_76       0x02 conv1x1   64→10     1  20×20    5760   5760   398208        0
+[59..60] 2 tail 60  Conv_77       0x03 depthwise  10→10    10  20×20      90     96   403968     5760
+          head N_i=5760  LayerSched-advance(L*N_head)=11520  real=Σaligned=5856  drift=YES
+
+== 帧级指针（LayerSched.wgtPtrR 口径）：逐单元 N_i（未对齐）vs ceil32(N_i) ==
+按未对齐 N_i 累加的指针与会落盘的偏移：52/53 个单元错位（第 2 个起全部错位）
+exit=0

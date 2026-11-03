@@ -1,0 +1,113 @@
+{
+ "desc_md5": "4bd68b3610bcf7754cd50d39e27c2442",
+ "outputs": [
+  {
+   "name": "cls_8",
+   "desc_idx": 61,
+   "npu": "0x01C49B40",
+   "phys": "0x81C49B40",
+   "bytes": 6400,
+   "crc32": "6f724961",
+   "md5": "6e7b6f76c2cad7b8aedec4f5901a466b"
+  },
+  {
+   "name": "cls_16",
+   "desc_idx": 62,
+   "npu": "0x01C4BA80",
+   "phys": "0x81C4BA80",
+   "bytes": 1600,
+   "crc32": "87ee95bc",
+   "md5": "2a6919d01560b4298a68aa10a5bd9e8c"
+  },
+  {
+   "name": "cls_32",
+   "desc_idx": 63,
+   "npu": "0x01C4C260",
+   "phys": "0x81C4C260",
+   "bytes": 400,
+   "crc32": "9ec233f9",
+   "md5": "607931344304c3a340a930fa43fbf556"
+  },
+  {
+   "name": "obj_8",
+   "desc_idx": 64,
+   "npu": "0x01C4DD00",
+   "phys": "0x81C4DD00",
+   "bytes": 6400,
+   "crc32": "01f3134b",
+   "md5": "90a470a8f3403657b466188112f37885"
+  },
+  {
+   "name": "obj_16",
+   "desc_idx": 65,
+   "npu": "0x01C4FC40",
+   "phys": "0x81C4FC40",
+   "bytes": 1600,
+   "crc32": "c5117d35",
+   "md5": "6ad00f47d8ad4f12005b22b2caa48f78"
+  },
+  {
+   "name": "obj_32",
+   "desc_idx": 66,
+   "npu": "0x01C50420",
+   "phys": "0x81C50420",
+   "bytes": 400,
+   "crc32": "46220d0c",
+   "md5": "a75d7d422fd00bf31208b013e74d8394"
+  },
+  {
+   "name": "bbox_8",
+   "desc_idx": 44,
+   "npu": "0x01C10DC0",
+   "phys": "0x81C10DC0",
+   "bytes": 25600,
+   "crc32": "bb7faa56",
+   "md5": "2fbe605bb592059e2b4cb54409b00e5e"
+  },
+  {
+   "name": "bbox_16",
+   "desc_idx": 46,
+   "npu": "0x01C18AC0",
+   "phys": "0x81C18AC0",
+   "bytes": 6400,
+   "crc32": "ec988a07",
+   "md5": "0616ac638b93692edc278a1748ac10ba"
+  },
+  {
+   "name": "bbox_32",
+   "desc_idx": 48,
+   "npu": "0x01C1AA00",
+   "phys": "0x81C1AA00",
+   "bytes": 1600,
+   "crc32": "408728a6",
+   "md5": "3afc92c504bc78ed39d95071abc085af"
+  },
+  {
+   "name": "kps_8",
+   "desc_idx": 56,
+   "npu": "0x01C2EC00",
+   "phys": "0x81C2EC00",
+   "bytes": 64000,
+   "crc32": "ede8cd4d",
+   "md5": "d5ae51d951704fdddb19dd667b976494"
+  },
+  {
+   "name": "kps_16",
+   "desc_idx": 58,
+   "npu": "0x01C42480",
+   "phys": "0x81C42480",
+   "bytes": 16000,
+   "crc32": "77683a60",
+   "md5": "5e8976ef1cb4e312790eec208dabffef"
+  },
+  {
+   "name": "kps_32",
+   "desc_idx": 60,
+   "npu": "0x01C472A0",
+   "phys": "0x81C472A0",
+   "bytes": 4000,
+   "crc32": "242ae893",
+   "md5": "0e58bd56aab776ec178d4fbd12da92f4"
+  }
+ ]
+}

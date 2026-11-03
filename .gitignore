@@ -1,0 +1,83 @@
+# 生成/重物：不入库
+*.jar
+*.pds
+*.sbit
+*.fs
+*.bit
+*.db
+*.rtr
+build_*/
+obj_dir*/
+sw/images/
+sim/reglogs/
+# 板级探针的交叉编译产物（源码 wakejitter.c 入库）
+sw/wakejitter/wakejitter
+# 单元装置的派生物：`run_unit.sh` 每次**从交付产物现抽**模块，负对照再生成变异副本
+sim/*/*_extracted.v
+sim/*/*_mut.v
+# 裸机探针的汇编产物（现场生成）
+sim/*.bin
+sim/*.elf
+*.log
+__pycache__/
+# 第三方仓库：pristine 克隆，不入库；PINS.md 例外（记录 SHA 与**本地改动**，必须入库）
+# ⚠️ 必须写成 `third_party/*` 而不是 `third_party/`：目录级忽略会让 `!` 例外**失效**
+#    （git 的既定行为：父目录被忽略 ⇒ 无法再包含其中任何文件）。
+third_party/*
+!third_party/PINS.md
+sw/buildroot-external/output/
+sw/buildroot-external/host/
+# buildroot 的 cpp 预处理中间产物（可由 setup 脚本重新生成）——**只忽略生成物**。
+# ⚠️ 不要用通配符：`configs/*_defconfig` 会连 `*_raw_defconfig`（必须入库的模板）一起误伤。
+sw/buildroot-external/configs/naxmini_defconfig
+sw/buildroot-external/configs/naxriscv_sim_defconfig
+sw/buildroot-external/boards/naxmini/linux/linux.config
+sw/buildroot-external/boards/naxmini/linux/linux.dts
+sw/buildroot-external/boards/naxmini/opensbi/config.mk
+sw/buildroot-external/boards/naxriscv_sim/linux/linux.config
+sw/buildroot-external/boards/naxriscv_sim/linux/linux.dts
+sw/buildroot-external/boards/naxriscv_sim/opensbi/config.mk
+
+# scala-cli / sbt 的构建产物
+src/.scala-build/
+src/.bsp/
+src/target/
+project/target/
+project/project/
+target/
+.metals/
+.bloop/
+
+# Y1 本地 Python 依赖（onnxruntime 等，本机装、不入库；用 documented 代理装）
+y1/.pydeps/
+# Y1 生成物（表/权重 blob/参考中间张量，入 .npy/.bin 大文件）
+y1/gen/
+
+# GPU 黄金生成物（用 sim/gpu/run_golden.sh 重建，不入库）
+sim/gpu/gold/
+sim/gpu/gpu2d_ref
+sim/gpu/gpu2d_ref.exe
+# GPU 2D 装置的每例配置（run_2d.sh 现生成，不入库）
+sim/gpu/tb_cfg.svh
+# GPU 3D 装置的每例配置与黄金向量（run_3d_ab.sh / gen3d_cases.sh 现生成，不入库）
+sim/gpu/tri_cfg.svh
+sim/gpu/tri3d_cfg.svh
+sim/gpu/gold3d/
+
+# ---- YeshenRiscvProject 快照补充（2026-11-04）--------------------------------
+# 130zbb 交付所需的生成网表、第三方 IP、交付物与附属工程源码随仓库归档；
+# 以下例外覆盖上面的 * 规则（顺序敏感：必须放在文件末尾）。
+!y1/gen/
+!y1/gen/**
+!third_party/ddr3_ip_200h/
+!third_party/ddr3_ip_200h/**
+!third_party/liteeth_mac/
+!third_party/liteeth_mac/**
+!third_party/eth_stack_2_11/
+!third_party/eth_stack_2_11/**
+!deliver/
+!deliver/**
+!aux-projects/
+!aux-projects/**
+!software/
+!software/**

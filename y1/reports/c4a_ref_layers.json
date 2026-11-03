@@ -1,0 +1,3583 @@
+{
+ "artifact": "c4a_ref_layers.json",
+ "frozen": {
+  "SHIFT": 6,
+  "REQUANT_Q": 24,
+  "seed": 20261010,
+  "input_shape": [
+   1,
+   3,
+   640,
+   640
+  ],
+  "onnx": "../third_party/yunet/yunet.onnx",
+  "onnx_md5": "4ae92eeb150c82ce15ac80738b3b8167",
+  "quant_ptq_md5": "dafa51fb55694641c10419c0e6b356c6",
+  "quant_ref_md5": "d1c75dc262cfd46bb6f7c66bf93ac159",
+  "calibration": "min/max + zero-inclusion (quant_ptq.affine_params)",
+  "activation_quant": "affine (calibrate/affine_params + quant/dequant+zero-inclusion)",
+  "weight_quant": "symmetric z_w=0, scale=max|w|/127 (quant_ptq.weight_params, §4.5-A)",
+  "requant": "(acc * M) >> REQUANT_Q >> SHIFT, M=round(ratio*2^(SHIFT+REQUANT_Q))",
+  "input": "deterministic synthetic U[0,1), seed=20261010 (no representative image in repo)"
+ },
+ "initializer_classification": [
+  {
+   "name": "240",
+   "role": "Resize roi — 空/不用",
+   "shape": [
+    0
+   ]
+  },
+  {
+   "name": "290",
+   "role": "int64 常量（Reshape shape）— 非 NPU 张量",
+   "shape": [
+    3
+   ]
+  },
+  {
+   "name": "362",
+   "role": "int64 常量（Reshape shape）— 非 NPU 张量",
+   "shape": [
+    3
+   ]
+  },
+  {
+   "name": "395",
+   "role": "int64 常量（Reshape shape）— 非 NPU 张量",
+   "shape": [
+    3
+   ]
+  },
+  {
+   "name": "420",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    16,
+    3,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "421",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    16
+   ]
+  },
+  {
+   "name": "423",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    16,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "424",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    16
+   ]
+  },
+  {
+   "name": "426",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    16,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "427",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    16
+   ]
+  },
+  {
+   "name": "429",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    32,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "430",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    32
+   ]
+  },
+  {
+   "name": "432",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    32,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "433",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    32
+   ]
+  },
+  {
+   "name": "435",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "436",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "438",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "439",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "441",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "442",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "444",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "445",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "447",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "448",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "450",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "451",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "453",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "454",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "456",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "457",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "459",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "460",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "462",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "463",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "464",
+   "role": "Resize scales — 不量化（浮点常量）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "465",
+   "role": "Resize scales — 不量化（浮点常量）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "backbone.model0.conv2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    16
+   ]
+  },
+  {
+   "name": "backbone.model0.conv2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    16,
+    16,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model1.conv1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    16
+   ]
+  },
+  {
+   "name": "backbone.model1.conv1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    16,
+    16,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model1.conv2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    32
+   ]
+  },
+  {
+   "name": "backbone.model1.conv2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    32,
+    16,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model2.conv1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    32
+   ]
+  },
+  {
+   "name": "backbone.model2.conv1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    32,
+    32,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model2.conv2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model2.conv2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    32,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model3.conv1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model3.conv1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model3.conv2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model3.conv2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model4.conv1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model4.conv1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model4.conv2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model4.conv2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model5.conv1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model5.conv1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "backbone.model5.conv2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "backbone.model5.conv2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.0.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.0.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    4,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.0.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.0.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    4,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    4,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.1.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.1.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    4,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    4,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.2.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    4
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_bbox.2.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    4,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.0.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.0.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.0.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.0.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.1.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.1.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.2.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_cls.2.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.0.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    10
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.0.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    10,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.0.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    10
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.0.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    10,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    10
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    10,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.1.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    10
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.1.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    10,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    10
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    10,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.2.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    10
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_kps.2.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    10,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.0.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.0.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.0.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.0.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.1.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.1.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.2.conv2.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    1
+   ]
+  },
+  {
+   "name": "bbox_head.multi_level_obj.2.conv2.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    1,
+    1,
+    3,
+    3
+   ]
+  },
+  {
+   "name": "neck.lateral_convs.0.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "neck.lateral_convs.0.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "neck.lateral_convs.1.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "neck.lateral_convs.1.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  },
+  {
+   "name": "neck.lateral_convs.2.conv1.bias",
+   "role": "NPU bias（Conv.input[2]）",
+   "shape": [
+    64
+   ]
+  },
+  {
+   "name": "neck.lateral_convs.2.conv1.weight",
+   "role": "NPU 权重（Conv.input[1]，对称 z_w≡0 / §4.5-A）",
+   "shape": [
+    64,
+    64,
+    1,
+    1
+   ]
+  }
+ ],
+ "weights": {
+  "count": 53,
+  "all_symmetric": true,
+  "aggregate_md5": "8d185e21bff2256635e85cc200293eb9",
+  "list": [
+   {
+    "name": "420",
+    "shape": [
+     16,
+     3,
+     3,
+     3
+    ],
+    "nbytes": 432,
+    "md5": "9f7599a6aae6562160d5f60542082342",
+    "scale": 3.8872491274997005e-05,
+    "zp": 0
+   },
+   {
+    "name": "423",
+    "shape": [
+     16,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 144,
+    "md5": "cdcb2091b801055be469ead8e6cdd646",
+    "scale": 0.02187723437632163,
+    "zp": 0
+   },
+   {
+    "name": "426",
+    "shape": [
+     16,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 144,
+    "md5": "cd903921120fa106d7fa26a0abe8de7c",
+    "scale": 0.014770321958647,
+    "zp": 0
+   },
+   {
+    "name": "429",
+    "shape": [
+     32,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 288,
+    "md5": "d658cabd775cce0c65476a0bbc0ebf7f",
+    "scale": 0.01664273945365365,
+    "zp": 0
+   },
+   {
+    "name": "432",
+    "shape": [
+     32,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 288,
+    "md5": "2ff1ad817a11ebf7cd365ecce12072e2",
+    "scale": 0.016269633150476172,
+    "zp": 0
+   },
+   {
+    "name": "435",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "4c50196b3f1334885657443905c9bb67",
+    "scale": 0.014305081893139936,
+    "zp": 0
+   },
+   {
+    "name": "438",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "c7f7c791288962fe2789fe68738173c0",
+    "scale": 0.02311895775982714,
+    "zp": 0
+   },
+   {
+    "name": "441",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "54ad062ffff6dbcbb5d099e46ab76bea",
+    "scale": 0.017529679095651222,
+    "zp": 0
+   },
+   {
+    "name": "444",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "042fb1d3b4a3adfdb496f5b8f073b886",
+    "scale": 0.02385413928294745,
+    "zp": 0
+   },
+   {
+    "name": "447",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "38601ae2b650ae4f11927e5ea927a56e",
+    "scale": 0.026104585392268623,
+    "zp": 0
+   },
+   {
+    "name": "450",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "7f27e7268be22446d86c5102c8160fa7",
+    "scale": 0.01674411240525133,
+    "zp": 0
+   },
+   {
+    "name": "453",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "b5c658bfb509b0745baa6f629ae1737f",
+    "scale": 0.025040789851992148,
+    "zp": 0
+   },
+   {
+    "name": "456",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "28fdc827ce5bf3730f2aaf81c6c44dcc",
+    "scale": 0.04579972469900537,
+    "zp": 0
+   },
+   {
+    "name": "459",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "b4373f6551a5b0e9f070f1d222c8910f",
+    "scale": 0.020845216090284932,
+    "zp": 0
+   },
+   {
+    "name": "462",
+    "shape": [
+     64,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 576,
+    "md5": "443a77d8d987e2ab0aee82558b376330",
+    "scale": 0.02279334931861697,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model0.conv2.conv1.weight",
+    "shape": [
+     16,
+     16,
+     1,
+     1
+    ],
+    "nbytes": 256,
+    "md5": "bbf6d1f0b0c14fa2e7c59bb0c87fd26e",
+    "scale": 0.006012908117038997,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model1.conv1.conv1.weight",
+    "shape": [
+     16,
+     16,
+     1,
+     1
+    ],
+    "nbytes": 256,
+    "md5": "734cca03ea49614996394c25e3be819a",
+    "scale": 0.010799630420414482,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model1.conv2.conv1.weight",
+    "shape": [
+     32,
+     16,
+     1,
+     1
+    ],
+    "nbytes": 512,
+    "md5": "8d799e5da0785c567f3aab86ddc8df97",
+    "scale": 0.007087248516833689,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model2.conv1.conv1.weight",
+    "shape": [
+     32,
+     32,
+     1,
+     1
+    ],
+    "nbytes": 1024,
+    "md5": "86953695e53b4b4caa0df63fa6bf557d",
+    "scale": 0.005661640110916979,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model2.conv2.conv1.weight",
+    "shape": [
+     64,
+     32,
+     1,
+     1
+    ],
+    "nbytes": 2048,
+    "md5": "705110e327933115afbbb6818edcd53a",
+    "scale": 0.003955893629179226,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model3.conv1.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "9af37276f8b96699ed6220cfa493ea1a",
+    "scale": 0.003545832915568915,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model3.conv2.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "d25575429cb62b99230718142a5e02d7",
+    "scale": 0.004456197652291125,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model4.conv1.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "eb9dd64d73c90998a6cbbb255bef6dcf",
+    "scale": 0.003351959891206636,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model4.conv2.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "f8ea74008b20336cca14a861be4b9703",
+    "scale": 0.0034890458809109185,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model5.conv1.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "4dbf13ea2582a4d538b829f046ed2bab",
+    "scale": 0.0044392140831534315,
+    "zp": 0
+   },
+   {
+    "name": "backbone.model5.conv2.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "b7e13ecbc3c2b7b3f4e29d8f714eb44d",
+    "scale": 0.005864005858503927,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_bbox.0.conv1.weight",
+    "shape": [
+     4,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 256,
+    "md5": "43266443a26fb4052934f800dba4faeb",
+    "scale": 0.004315536322556142,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_bbox.0.conv2.weight",
+    "shape": [
+     4,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 36,
+    "md5": "7365b4f3d1afb00d36fd92d0522c3d1e",
+    "scale": 0.00872834367076243,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_bbox.1.conv1.weight",
+    "shape": [
+     4,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 256,
+    "md5": "d878af9b1b2e9cf3d16216f4ec59cfc1",
+    "scale": 0.0048211066741642985,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_bbox.1.conv2.weight",
+    "shape": [
+     4,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 36,
+    "md5": "5fd68c75d71b03bc1cfe0aec98576499",
+    "scale": 0.004320857562418059,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_bbox.2.conv1.weight",
+    "shape": [
+     4,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 256,
+    "md5": "1f4c52ffbf5c11cb8ddd928fb1de8fe1",
+    "scale": 0.007069079894719161,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_bbox.2.conv2.weight",
+    "shape": [
+     4,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 36,
+    "md5": "4859956f193c0087aa383c8f998dc213",
+    "scale": 0.004355765233828327,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_cls.0.conv1.weight",
+    "shape": [
+     1,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 64,
+    "md5": "5ffe2a530bdb9836fcfb4da98a596b3f",
+    "scale": 0.0021564535737976314,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_cls.0.conv2.weight",
+    "shape": [
+     1,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 9,
+    "md5": "f82a243ebd1a26bcde379ca8909106e2",
+    "scale": 0.0024406757411055678,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_cls.1.conv1.weight",
+    "shape": [
+     1,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 64,
+    "md5": "6670103f2dc0d7242ccbb9ae59f6e8c2",
+    "scale": 0.0022504376614187645,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_cls.1.conv2.weight",
+    "shape": [
+     1,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 9,
+    "md5": "8255c8244711dcadc980d1de76bb9e19",
+    "scale": 0.003918749610270102,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_cls.2.conv1.weight",
+    "shape": [
+     1,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 64,
+    "md5": "e01065ba93e40ce2f2d18827d22596f7",
+    "scale": 0.0027698107122436284,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_cls.2.conv2.weight",
+    "shape": [
+     1,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 9,
+    "md5": "30a7906101bde0341e839d06f0f08048",
+    "scale": 0.0032726652978912114,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_kps.0.conv1.weight",
+    "shape": [
+     10,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 640,
+    "md5": "2bf9a74b49f16fc1384576781824407f",
+    "scale": 0.004380014468365767,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_kps.0.conv2.weight",
+    "shape": [
+     10,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 90,
+    "md5": "acd2b43ea8df5efe2bb21877b3989584",
+    "scale": 0.006098339407462773,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_kps.1.conv1.weight",
+    "shape": [
+     10,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 640,
+    "md5": "6ceb2839f03061855b9c2ba6903eba6a",
+    "scale": 0.002990342969969502,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_kps.1.conv2.weight",
+    "shape": [
+     10,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 90,
+    "md5": "805e57aef0618e62675753cb1a0457a7",
+    "scale": 0.003770001056626087,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_kps.2.conv1.weight",
+    "shape": [
+     10,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 640,
+    "md5": "dbb44c18b7a1a558b77c0ca4e6bb9b2e",
+    "scale": 0.005702578645991528,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_kps.2.conv2.weight",
+    "shape": [
+     10,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 90,
+    "md5": "92ec4cb406ea4ae4038cd38a186fff7d",
+    "scale": 0.005466997154115692,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_obj.0.conv1.weight",
+    "shape": [
+     1,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 64,
+    "md5": "8bb3492ec820eb73c7f67c541559ddd4",
+    "scale": 0.009338465262585737,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_obj.0.conv2.weight",
+    "shape": [
+     1,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 9,
+    "md5": "4c82c2c2b2e333f9e09f228c272223dc",
+    "scale": 0.025649175869198296,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_obj.1.conv1.weight",
+    "shape": [
+     1,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 64,
+    "md5": "f7317739da71f140f31f2f3c5beefcfe",
+    "scale": 0.007547870865018349,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_obj.1.conv2.weight",
+    "shape": [
+     1,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 9,
+    "md5": "1da388d0678da319bbbe89790a1dac32",
+    "scale": 0.018573224075197233,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_obj.2.conv1.weight",
+    "shape": [
+     1,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 64,
+    "md5": "ca2713beea90af8acf296ddabe703c43",
+    "scale": 0.007905667222390963,
+    "zp": 0
+   },
+   {
+    "name": "bbox_head.multi_level_obj.2.conv2.weight",
+    "shape": [
+     1,
+     1,
+     3,
+     3
+    ],
+    "nbytes": 9,
+    "md5": "4d8ae3565b247fb04d644b2b868191b6",
+    "scale": 0.02098922466668557,
+    "zp": 0
+   },
+   {
+    "name": "neck.lateral_convs.0.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "e8843869467f0880bf1d62d22a137456",
+    "scale": 0.003912176203539991,
+    "zp": 0
+   },
+   {
+    "name": "neck.lateral_convs.1.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "16270cd7cc0c62d4c4be70c38ff817ef",
+    "scale": 0.003541100682236078,
+    "zp": 0
+   },
+   {
+    "name": "neck.lateral_convs.2.conv1.weight",
+    "shape": [
+     64,
+     64,
+     1,
+     1
+    ],
+    "nbytes": 4096,
+    "md5": "d5a9c9fe1be14ea7752230047b236566",
+    "scale": 0.0042916846087598425,
+    "zp": 0
+   }
+  ]
+ },
+ "layers": [
+  {
+   "idx": 0,
+   "op": "Conv",
+   "name": "Conv_0",
+   "tensor": "419",
+   "shape": [
+    1,
+    16,
+    320,
+    320
+   ],
+   "nbytes": 1638400,
+   "md5": "3bab8275d8b8790c4e0f252e3de38cdf",
+   "distinct": 39,
+   "ort_max_abs_dev": 0.008585429191589333,
+   "layer_range": 2.1670480370521545,
+   "ort_dev_pct_of_range": 0.39618084346981675
+  },
+  {
+   "idx": 1,
+   "op": "Relu",
+   "name": "Relu_1",
+   "tensor": "184",
+   "shape": [
+    1,
+    16,
+    320,
+    320
+   ],
+   "nbytes": 1638400,
+   "md5": "05a5aa130a1c01399a3ba15ddb660bf8",
+   "distinct": 34,
+   "ort_max_abs_dev": 0.011003637430714627,
+   "layer_range": 0.727357804775238,
+   "ort_dev_pct_of_range": 1.5128231742993228
+  },
+  {
+   "idx": 2,
+   "op": "Conv",
+   "name": "Conv_2",
+   "tensor": "185",
+   "shape": [
+    1,
+    16,
+    320,
+    320
+   ],
+   "nbytes": 1638400,
+   "md5": "ba931b82649ea1848d6928594c2867e9",
+   "distinct": 55,
+   "ort_max_abs_dev": 0.0235800752452775,
+   "layer_range": 1.5591519474983215,
+   "ort_dev_pct_of_range": 1.5123654421951638
+  },
+  {
+   "idx": 3,
+   "op": "Conv",
+   "name": "Conv_3",
+   "tensor": "422",
+   "shape": [
+    1,
+    16,
+    320,
+    320
+   ],
+   "nbytes": 1638400,
+   "md5": "596838a673795aae0b09c3e7ac65ad32",
+   "distinct": 93,
+   "ort_max_abs_dev": 0.06351145137758818,
+   "layer_range": 5.5792319774627686,
+   "ort_dev_pct_of_range": 1.1383547347402263
+  },
+  {
+   "idx": 4,
+   "op": "Relu",
+   "name": "Relu_4",
+   "tensor": "188",
+   "shape": [
+    1,
+    16,
+    320,
+    320
+   ],
+   "nbytes": 1638400,
+   "md5": "888277ac37889bce9c7e6ded461ce945",
+   "distinct": 60,
+   "ort_max_abs_dev": 0.07000395097568923,
+   "layer_range": 2.8537983894348145,
+   "ort_dev_pct_of_range": 2.4530096882405656
+  },
+  {
+   "idx": 5,
+   "op": "MaxPool",
+   "name": "MaxPool_5",
+   "tensor": "189",
+   "shape": [
+    1,
+    16,
+    160,
+    160
+   ],
+   "nbytes": 409600,
+   "md5": "c484c00796a183147da9c050f9af7705",
+   "distinct": 42,
+   "ort_max_abs_dev": 0.07000395097568923,
+   "layer_range": 2.8537983894348145,
+   "ort_dev_pct_of_range": 2.4530096882405656
+  },
+  {
+   "idx": 6,
+   "op": "Conv",
+   "name": "Conv_6",
+   "tensor": "190",
+   "shape": [
+    1,
+    16,
+    160,
+    160
+   ],
+   "nbytes": 409600,
+   "md5": "f79dddfd9e34126b037290388751afd2",
+   "distinct": 119,
+   "ort_max_abs_dev": 0.08827957966748401,
+   "layer_range": 4.879063129425049,
+   "ort_dev_pct_of_range": 1.8093551431027888
+  },
+  {
+   "idx": 7,
+   "op": "Conv",
+   "name": "Conv_7",
+   "tensor": "425",
+   "shape": [
+    1,
+    16,
+    160,
+    160
+   ],
+   "nbytes": 409600,
+   "md5": "0c579b171bf6b017727ca0000ee03b25",
+   "distinct": 107,
+   "ort_max_abs_dev": 0.09199185161029588,
+   "layer_range": 5.5490498542785645,
+   "ort_dev_pct_of_range": 1.6577946500041996
+  },
+  {
+   "idx": 8,
+   "op": "Relu",
+   "name": "Relu_8",
+   "tensor": "193",
+   "shape": [
+    1,
+    16,
+    160,
+    160
+   ],
+   "nbytes": 409600,
+   "md5": "14ebf043a2f561fb3e979e2a03e754ae",
+   "distinct": 73,
+   "ort_max_abs_dev": 0.0998962802045486,
+   "layer_range": 2.663125991821289,
+   "ort_dev_pct_of_range": 3.7510910302907
+  },
+  {
+   "idx": 9,
+   "op": "Conv",
+   "name": "Conv_9",
+   "tensor": "194",
+   "shape": [
+    1,
+    32,
+    160,
+    160
+   ],
+   "nbytes": 819200,
+   "md5": "91e2df8597761acfb77c30a20812ee54",
+   "distinct": 162,
+   "ort_max_abs_dev": 0.11886311453931464,
+   "layer_range": 4.334903955459595,
+   "ort_dev_pct_of_range": 2.7420011091505843
+  },
+  {
+   "idx": 10,
+   "op": "Conv",
+   "name": "Conv_10",
+   "tensor": "428",
+   "shape": [
+    1,
+    32,
+    160,
+    160
+   ],
+   "nbytes": 819200,
+   "md5": "2d981dee33d86dfb699a26356bce0e6b",
+   "distinct": 169,
+   "ort_max_abs_dev": 0.2098785676208197,
+   "layer_range": 4.715022802352905,
+   "ort_dev_pct_of_range": 4.451273650597945
+  },
+  {
+   "idx": 11,
+   "op": "Relu",
+   "name": "Relu_11",
+   "tensor": "197",
+   "shape": [
+    1,
+    32,
+    160,
+    160
+   ],
+   "nbytes": 819200,
+   "md5": "e154ca863e15f01db9079928a16e7bef",
+   "distinct": 78,
+   "ort_max_abs_dev": 0.20884655082927028,
+   "layer_range": 1.7875256538391113,
+   "ort_dev_pct_of_range": 11.68355544328696
+  },
+  {
+   "idx": 12,
+   "op": "Conv",
+   "name": "Conv_12",
+   "tensor": "198",
+   "shape": [
+    1,
+    32,
+    160,
+    160
+   ],
+   "nbytes": 819200,
+   "md5": "b69d574b2699a4bb36ee9ce8e933c15c",
+   "distinct": 167,
+   "ort_max_abs_dev": 0.15587308839255687,
+   "layer_range": 3.0495322346687317,
+   "ort_dev_pct_of_range": 5.1113769718682525
+  },
+  {
+   "idx": 13,
+   "op": "Conv",
+   "name": "Conv_13",
+   "tensor": "431",
+   "shape": [
+    1,
+    32,
+    160,
+    160
+   ],
+   "nbytes": 819200,
+   "md5": "446b91b41503906a7ada2bea9c613be6",
+   "distinct": 195,
+   "ort_max_abs_dev": 0.19594890077908833,
+   "layer_range": 3.4900952577590942,
+   "ort_dev_pct_of_range": 5.614428441271325
+  },
+  {
+   "idx": 14,
+   "op": "Relu",
+   "name": "Relu_14",
+   "tensor": "201",
+   "shape": [
+    1,
+    32,
+    160,
+    160
+   ],
+   "nbytes": 819200,
+   "md5": "7ec1dc41cd0e4877221a345c6ba710db",
+   "distinct": 99,
+   "ort_max_abs_dev": 0.20173831769064363,
+   "layer_range": 1.8663005828857422,
+   "ort_dev_pct_of_range": 10.80952980139504
+  },
+  {
+   "idx": 15,
+   "op": "Conv",
+   "name": "Conv_15",
+   "tensor": "202",
+   "shape": [
+    1,
+    64,
+    160,
+    160
+   ],
+   "nbytes": 1638400,
+   "md5": "a9d02cabfd89cf5210e8f89b770e22a0",
+   "distinct": 206,
+   "ort_max_abs_dev": 0.13254990227082197,
+   "layer_range": 2.1000384092330933,
+   "ort_dev_pct_of_range": 6.311784664892271
+  },
+  {
+   "idx": 16,
+   "op": "Conv",
+   "name": "Conv_16",
+   "tensor": "434",
+   "shape": [
+    1,
+    64,
+    160,
+    160
+   ],
+   "nbytes": 1638400,
+   "md5": "39c1f167bd8ef578ec26cb0576ef325c",
+   "distinct": 246,
+   "ort_max_abs_dev": 0.2653905163793003,
+   "layer_range": 2.284647762775421,
+   "ort_dev_pct_of_range": 11.616255280284445
+  },
+  {
+   "idx": 17,
+   "op": "Relu",
+   "name": "Relu_17",
+   "tensor": "205",
+   "shape": [
+    1,
+    64,
+    160,
+    160
+   ],
+   "nbytes": 1638400,
+   "md5": "7c11ef2336e8df2370b4a180c4f55ae7",
+   "distinct": 93,
+   "ort_max_abs_dev": 0.204575945816788,
+   "layer_range": 0.8986859917640686,
+   "ort_dev_pct_of_range": 22.763896142991754
+  },
+  {
+   "idx": 18,
+   "op": "MaxPool",
+   "name": "MaxPool_18",
+   "tensor": "206",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "2fdc247c02c44c5b81ccb2d9ebd054cc",
+   "distinct": 83,
+   "ort_max_abs_dev": 0.20305862017706328,
+   "layer_range": 0.8986859917640686,
+   "ort_dev_pct_of_range": 22.595057899864553
+  },
+  {
+   "idx": 19,
+   "op": "Conv",
+   "name": "Conv_19",
+   "tensor": "207",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "0228c3f07596459d83eb471c7f250285",
+   "distinct": 249,
+   "ort_max_abs_dev": 0.13377676945106656,
+   "layer_range": 1.483957290649414,
+   "ort_dev_pct_of_range": 9.014866552697265
+  },
+  {
+   "idx": 20,
+   "op": "Conv",
+   "name": "Conv_20",
+   "tensor": "437",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "b7a4b3104fcf91e7ba686fe50e8b27c9",
+   "distinct": 181,
+   "ort_max_abs_dev": 0.2671277305659126,
+   "layer_range": 2.5178845524787903,
+   "ort_dev_pct_of_range": 10.609212813309192
+  },
+  {
+   "idx": 21,
+   "op": "Relu",
+   "name": "Relu_21",
+   "tensor": "210",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "2ea8b4b6c419fb660044ed9d5f1d4449",
+   "distinct": 107,
+   "ort_max_abs_dev": 0.24390648474880292,
+   "layer_range": 1.7893092632293701,
+   "ort_dev_pct_of_range": 13.631320742653347
+  },
+  {
+   "idx": 22,
+   "op": "Conv",
+   "name": "Conv_22",
+   "tensor": "211",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "2d569ff61092894cebd59aeb6d538a46",
+   "distinct": 221,
+   "ort_max_abs_dev": 0.1381328493941063,
+   "layer_range": 1.9922893643379211,
+   "ort_dev_pct_of_range": 6.9333728255890525
+  },
+  {
+   "idx": 23,
+   "op": "Conv",
+   "name": "Conv_23",
+   "tensor": "440",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "72bdfd5ce4fbc1a0534e2103726114c8",
+   "distinct": 183,
+   "ort_max_abs_dev": 0.2471742162517473,
+   "layer_range": 3.6001856327056885,
+   "ort_dev_pct_of_range": 6.865596429425936
+  },
+  {
+   "idx": 24,
+   "op": "Relu",
+   "name": "Relu_24",
+   "tensor": "214",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "6acae68004800113ae069bbdb8dd5ec5",
+   "distinct": 75,
+   "ort_max_abs_dev": 0.17110900580883026,
+   "layer_range": 1.7729816436767578,
+   "ort_dev_pct_of_range": 9.650918068953573
+  },
+  {
+   "idx": 25,
+   "op": "MaxPool",
+   "name": "MaxPool_25",
+   "tensor": "215",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "0a795752368960d20eee50c1981caacf",
+   "distinct": 71,
+   "ort_max_abs_dev": 0.16000128633835736,
+   "layer_range": 1.7729816436767578,
+   "ort_dev_pct_of_range": 9.02441866270828
+  },
+  {
+   "idx": 26,
+   "op": "Conv",
+   "name": "Conv_26",
+   "tensor": "216",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "4dc35d2bb63aad64b4123049b1271f1b",
+   "distinct": 202,
+   "ort_max_abs_dev": 0.10168300722451772,
+   "layer_range": 1.1357464790344238,
+   "ort_dev_pct_of_range": 8.95296697824372
+  },
+  {
+   "idx": 27,
+   "op": "Conv",
+   "name": "Conv_27",
+   "tensor": "443",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "1b9a0ade3d01e23d6006735701b9520e",
+   "distinct": 183,
+   "ort_max_abs_dev": 0.24273083236287624,
+   "layer_range": 3.1331160068511963,
+   "ort_dev_pct_of_range": 7.747266039051724
+  },
+  {
+   "idx": 28,
+   "op": "Relu",
+   "name": "Relu_28",
+   "tensor": "219",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "35efd7d73d98fa8788ebf5388af0ccf0",
+   "distinct": 87,
+   "ort_max_abs_dev": 0.23686059669536702,
+   "layer_range": 1.5353723764419556,
+   "ort_dev_pct_of_range": 15.42691534181848
+  },
+  {
+   "idx": 29,
+   "op": "Conv",
+   "name": "Conv_29",
+   "tensor": "220",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "3c9e2454e1ab70e3ef9fbdc897fddb64",
+   "distinct": 194,
+   "ort_max_abs_dev": 0.11239063023936516,
+   "layer_range": 1.4365240335464478,
+   "ort_dev_pct_of_range": 7.823790456321049
+  },
+  {
+   "idx": 30,
+   "op": "Conv",
+   "name": "Conv_30",
+   "tensor": "446",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "ccb6dd561cddd69c90945daa2d3ee771",
+   "distinct": 210,
+   "ort_max_abs_dev": 0.23715377620914402,
+   "layer_range": 3.121386170387268,
+   "ort_dev_pct_of_range": 7.597707020651038
+  },
+  {
+   "idx": 31,
+   "op": "Relu",
+   "name": "Relu_31",
+   "tensor": "223",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "ac2601dbb86953e4277744f42451e252",
+   "distinct": 115,
+   "ort_max_abs_dev": 0.2299809438340804,
+   "layer_range": 1.7763900756835938,
+   "ort_dev_pct_of_range": 12.9465339275541
+  },
+  {
+   "idx": 32,
+   "op": "MaxPool",
+   "name": "MaxPool_32",
+   "tensor": "224",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "39a6cd904d4da63d372665292e47b49f",
+   "distinct": 110,
+   "ort_max_abs_dev": 0.2299809438340804,
+   "layer_range": 1.7763900756835938,
+   "ort_dev_pct_of_range": 12.9465339275541
+  },
+  {
+   "idx": 33,
+   "op": "Conv",
+   "name": "Conv_33",
+   "tensor": "225",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "958859d11627891a8e73ef128774c4e9",
+   "distinct": 187,
+   "ort_max_abs_dev": 0.2194065676015966,
+   "layer_range": 1.8601650595664978,
+   "ort_dev_pct_of_range": 11.795005312739733
+  },
+  {
+   "idx": 34,
+   "op": "Conv",
+   "name": "Conv_34",
+   "tensor": "449",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "3f07c42234befd237c6e430380b9fc4c",
+   "distinct": 203,
+   "ort_max_abs_dev": 0.2438239459897958,
+   "layer_range": 2.2475889921188354,
+   "ort_dev_pct_of_range": 10.84824435627527
+  },
+  {
+   "idx": 35,
+   "op": "Relu",
+   "name": "Relu_35",
+   "tensor": "228",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "2071ed484aa7572982d9239c5ef2c175",
+   "distinct": 93,
+   "ort_max_abs_dev": 0.16397493829329807,
+   "layer_range": 1.1239533424377441,
+   "ort_dev_pct_of_range": 14.589123240440976
+  },
+  {
+   "idx": 36,
+   "op": "Conv",
+   "name": "Conv_36",
+   "tensor": "229",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "1590b7468404b009c4995c0dfcf37983",
+   "distinct": 229,
+   "ort_max_abs_dev": 0.11656056993147906,
+   "layer_range": 0.7943933308124542,
+   "ort_dev_pct_of_range": 14.672903889093384
+  },
+  {
+   "idx": 37,
+   "op": "Conv",
+   "name": "Conv_37",
+   "tensor": "452",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "64dff69173fd716df34a556a89216168",
+   "distinct": 225,
+   "ort_max_abs_dev": 0.2551881450064042,
+   "layer_range": 2.1921472549438477,
+   "ort_dev_pct_of_range": 11.641012912380326
+  },
+  {
+   "idx": 38,
+   "op": "Relu",
+   "name": "Relu_38",
+   "tensor": "232",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "b8398ecfff1ccc694f0b812b974a9dbc",
+   "distinct": 119,
+   "ort_max_abs_dev": 0.25444376059606966,
+   "layer_range": 1.1611405611038208,
+   "ort_dev_pct_of_range": 21.913260902210368
+  },
+  {
+   "idx": 39,
+   "op": "Conv",
+   "name": "Conv_39",
+   "tensor": "233",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "5a2f516b850eafe4ab0b9d2b9fdc6d36",
+   "distinct": 240,
+   "ort_max_abs_dev": 0.12497584323088329,
+   "layer_range": 1.3574655055999756,
+   "ort_dev_pct_of_range": 9.206557567416507
+  },
+  {
+   "idx": 40,
+   "op": "Conv",
+   "name": "Conv_40",
+   "tensor": "455",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "53aa2cada76b86fc2ff9c6766689421c",
+   "distinct": 231,
+   "ort_max_abs_dev": 0.6794448511273253,
+   "layer_range": 4.215428590774536,
+   "ort_dev_pct_of_range": 16.1180491258775
+  },
+  {
+   "idx": 41,
+   "op": "Relu",
+   "name": "Relu_41",
+   "tensor": "236",
+   "shape": [
+    1,
+    64,
+    20,
+    20
+   ],
+   "nbytes": 25600,
+   "md5": "dedce6f8c00af18ecc2171ec4239ced0",
+   "distinct": 125,
+   "ort_max_abs_dev": 0.6807880191241994,
+   "layer_range": 2.04927921295166,
+   "ort_dev_pct_of_range": 33.220852230459734
+  },
+  {
+   "idx": 42,
+   "op": "Resize",
+   "name": "Resize_43",
+   "tensor": "241",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "068fa331c65e730a542e7b8ff24fa42b",
+   "distinct": 125,
+   "ort_max_abs_dev": 0.6807880191241994,
+   "layer_range": 2.04927921295166,
+   "ort_dev_pct_of_range": 33.220852230459734
+  },
+  {
+   "idx": 43,
+   "op": "Add",
+   "name": "Add_44",
+   "tensor": "242",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "262188b871956d407a1ea2733b6c55e3",
+   "distinct": 236,
+   "ort_max_abs_dev": 0.7126682127223295,
+   "layer_range": 2.289173126220703,
+   "ort_dev_pct_of_range": 31.132123846784136
+  },
+  {
+   "idx": 44,
+   "op": "Conv",
+   "name": "Conv_45",
+   "tensor": "243",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "199adf3338c92b3c98feaf808f6cffbc",
+   "distinct": 247,
+   "ort_max_abs_dev": 0.35996044313206393,
+   "layer_range": 2.4151203632354736,
+   "ort_dev_pct_of_range": 14.904451496977744
+  },
+  {
+   "idx": 45,
+   "op": "Conv",
+   "name": "Conv_46",
+   "tensor": "458",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "e99f2ffa8a40cf7fdd96158a8f75df76",
+   "distinct": 225,
+   "ort_max_abs_dev": 0.6545995324850082,
+   "layer_range": 5.3105950355529785,
+   "ort_dev_pct_of_range": 12.326293534013491
+  },
+  {
+   "idx": 46,
+   "op": "Relu",
+   "name": "Relu_47",
+   "tensor": "246",
+   "shape": [
+    1,
+    64,
+    40,
+    40
+   ],
+   "nbytes": 102400,
+   "md5": "45facc6710c008565c8eaacf9aaff47a",
+   "distinct": 122,
+   "ort_max_abs_dev": 0.5917440645834979,
+   "layer_range": 3.0740933418273926,
+   "ort_dev_pct_of_range": 19.249385063621265
+  },
+  {
+   "idx": 47,
+   "op": "Resize",
+   "name": "Resize_49",
+   "tensor": "251",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "0be0f0630f633bbac4d81be861e7a2da",
+   "distinct": 122,
+   "ort_max_abs_dev": 0.5917440645834979,
+   "layer_range": 3.0740933418273926,
+   "ort_dev_pct_of_range": 19.249385063621265
+  },
+  {
+   "idx": 48,
+   "op": "Add",
+   "name": "Add_50",
+   "tensor": "252",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "72bdbfb42e8b125440ec13f9cf4139ff",
+   "distinct": 210,
+   "ort_max_abs_dev": 0.5970335415765351,
+   "layer_range": 3.4191486835479736,
+   "ort_dev_pct_of_range": 17.461467658581224
+  },
+  {
+   "idx": 49,
+   "op": "Conv",
+   "name": "Conv_51",
+   "tensor": "253",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "3b53f40e0ea581def776fff3a796853c",
+   "distinct": 223,
+   "ort_max_abs_dev": 0.538486647605896,
+   "layer_range": 4.529680252075195,
+   "ort_dev_pct_of_range": 11.887961569896632
+  },
+  {
+   "idx": 50,
+   "op": "Conv",
+   "name": "Conv_52",
+   "tensor": "461",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "049cfd485a6b2a73377876d65b25d87d",
+   "distinct": 213,
+   "ort_max_abs_dev": 0.6536727045096603,
+   "layer_range": 4.4618871212005615,
+   "ort_dev_pct_of_range": 14.650139879239624
+  },
+  {
+   "idx": 51,
+   "op": "Relu",
+   "name": "Relu_53",
+   "tensor": "256",
+   "shape": [
+    1,
+    64,
+    80,
+    80
+   ],
+   "nbytes": 409600,
+   "md5": "8e8e40576d7b27223b2d6b505cf6cd3e",
+   "distinct": 104,
+   "ort_max_abs_dev": 0.6550198157628377,
+   "layer_range": 2.0603082180023193,
+   "ort_dev_pct_of_range": 31.79232165554078
+  },
+  {
+   "idx": 52,
+   "op": "Conv",
+   "name": "Conv_54",
+   "tensor": "257",
+   "shape": [
+    1,
+    1,
+    80,
+    80
+   ],
+   "nbytes": 6400,
+   "md5": "d1f9f464c033e772365ea1e745c0308a",
+   "distinct": 231,
+   "ort_max_abs_dev": 0.31124238114730984,
+   "layer_range": 1.4226000010967255,
+   "ort_dev_pct_of_range": 21.878418452647523
+  },
+  {
+   "idx": 53,
+   "op": "Conv",
+   "name": "Conv_55",
+   "tensor": "258",
+   "shape": [
+    1,
+    1,
+    80,
+    80
+   ],
+   "nbytes": 6400,
+   "md5": "cd23ca57c3a52bf2cb654f0c84a69875",
+   "distinct": 234,
+   "ort_max_abs_dev": 0.5807099622254279,
+   "layer_range": 2.619871139526367,
+   "ort_dev_pct_of_range": 22.1655925539304
+  },
+  {
+   "idx": 54,
+   "op": "Conv",
+   "name": "Conv_56",
+   "tensor": "259",
+   "shape": [
+    1,
+    1,
+    40,
+    40
+   ],
+   "nbytes": 1600,
+   "md5": "31c2414c95abb32883add07b9de5852a",
+   "distinct": 221,
+   "ort_max_abs_dev": 0.1297387760936045,
+   "layer_range": 0.930605411529541,
+   "ort_dev_pct_of_range": 13.941330502298085
+  },
+  {
+   "idx": 55,
+   "op": "Conv",
+   "name": "Conv_57",
+   "tensor": "260",
+   "shape": [
+    1,
+    1,
+    40,
+    40
+   ],
+   "nbytes": 1600,
+   "md5": "9162508e878370e8c3aabbbefd9bc091",
+   "distinct": 232,
+   "ort_max_abs_dev": 0.12500714063644408,
+   "layer_range": 0.9131664931774139,
+   "ort_dev_pct_of_range": 13.689413876923444
+  },
+  {
+   "idx": 56,
+   "op": "Conv",
+   "name": "Conv_58",
+   "tensor": "261",
+   "shape": [
+    1,
+    1,
+    20,
+    20
+   ],
+   "nbytes": 400,
+   "md5": "26f21fd7c2232f401d240cf94bf4e19b",
+   "distinct": 135,
+   "ort_max_abs_dev": 0.13764161502613742,
+   "layer_range": 0.9102991819381714,
+   "ort_dev_pct_of_range": 15.120481019556294
+  },
+  {
+   "idx": 57,
+   "op": "Conv",
+   "name": "Conv_59",
+   "tensor": "262",
+   "shape": [
+    1,
+    1,
+    20,
+    20
+   ],
+   "nbytes": 400,
+   "md5": "8db6cb08b4b6f293f0db69f29dee223c",
+   "distinct": 143,
+   "ort_max_abs_dev": 0.24225573633231368,
+   "layer_range": 1.423597052693367,
+   "ort_dev_pct_of_range": 17.01715635572434
+  },
+  {
+   "idx": 58,
+   "op": "Conv",
+   "name": "Conv_60",
+   "tensor": "263",
+   "shape": [
+    1,
+    4,
+    80,
+    80
+   ],
+   "nbytes": 25600,
+   "md5": "fc292554f7f471c3e2a0b9ce8c5d8d4c",
+   "distinct": 215,
+   "ort_max_abs_dev": 0.6283946031448888,
+   "layer_range": 2.596650719642639,
+   "ort_dev_pct_of_range": 24.200197523345413
+  },
+  {
+   "idx": 59,
+   "op": "Conv",
+   "name": "Conv_61",
+   "tensor": "264",
+   "shape": [
+    1,
+    4,
+    80,
+    80
+   ],
+   "nbytes": 25600,
+   "md5": "aee18fc7566f9a547a8f51e7574be321",
+   "distinct": 208,
+   "ort_max_abs_dev": 0.6008319067020041,
+   "layer_range": 3.2792254090309143,
+   "ort_dev_pct_of_range": 18.322372870353053
+  },
+  {
+   "idx": 60,
+   "op": "Conv",
+   "name": "Conv_62",
+   "tensor": "265",
+   "shape": [
+    1,
+    4,
+    40,
+    40
+   ],
+   "nbytes": 6400,
+   "md5": "5cc623410e80800422da3ec5529529c7",
+   "distinct": 227,
+   "ort_max_abs_dev": 0.2090468903382619,
+   "layer_range": 1.1089707911014557,
+   "ort_dev_pct_of_range": 18.850531683583085
+  },
+  {
+   "idx": 61,
+   "op": "Conv",
+   "name": "Conv_63",
+   "tensor": "266",
+   "shape": [
+    1,
+    4,
+    40,
+    40
+   ],
+   "nbytes": 6400,
+   "md5": "0d7e87c692daced697637976fcec12da",
+   "distinct": 238,
+   "ort_max_abs_dev": 0.1581926877592124,
+   "layer_range": 1.1140301823616028,
+   "ort_dev_pct_of_range": 14.200036072978198
+  },
+  {
+   "idx": 62,
+   "op": "Conv",
+   "name": "Conv_64",
+   "tensor": "267",
+   "shape": [
+    1,
+    4,
+    20,
+    20
+   ],
+   "nbytes": 1600,
+   "md5": "cafa932479dd60729afbe32852833e1d",
+   "distinct": 211,
+   "ort_max_abs_dev": 0.3124108910560608,
+   "layer_range": 3.1000195741653442,
+   "ort_dev_pct_of_range": 10.07770704609744
+  },
+  {
+   "idx": 63,
+   "op": "Conv",
+   "name": "Conv_65",
+   "tensor": "268",
+   "shape": [
+    1,
+    4,
+    20,
+    20
+   ],
+   "nbytes": 1600,
+   "md5": "4b1e4e46cc28cb08714ed6694c5ca822",
+   "distinct": 214,
+   "ort_max_abs_dev": 0.44380715466013143,
+   "layer_range": 4.819099068641663,
+   "ort_dev_pct_of_range": 9.209338682162127
+  },
+  {
+   "idx": 64,
+   "op": "Conv",
+   "name": "Conv_66",
+   "tensor": "269",
+   "shape": [
+    1,
+    1,
+    80,
+    80
+   ],
+   "nbytes": 6400,
+   "md5": "75cc86200d1ce7491139a1800bece5a3",
+   "distinct": 155,
+   "ort_max_abs_dev": 2.099723217534084,
+   "layer_range": 8.844744682312012,
+   "ort_dev_pct_of_range": 23.73978326059738
+  },
+  {
+   "idx": 65,
+   "op": "Conv",
+   "name": "Conv_67",
+   "tensor": "270",
+   "shape": [
+    1,
+    1,
+    80,
+    80
+   ],
+   "nbytes": 6400,
+   "md5": "f227b46f105fe3d84e9793668630a9d8",
+   "distinct": 144,
+   "ort_max_abs_dev": 5.637899926129506,
+   "layer_range": 21.981388092041016,
+   "ort_dev_pct_of_range": 25.648516383598487
+  },
+  {
+   "idx": 66,
+   "op": "Conv",
+   "name": "Conv_68",
+   "tensor": "271",
+   "shape": [
+    1,
+    1,
+    40,
+    40
+   ],
+   "nbytes": 1600,
+   "md5": "709c8a959ce1c1ad6192ab4f7775d5db",
+   "distinct": 82,
+   "ort_max_abs_dev": 0.6210800451390881,
+   "layer_range": 2.414135217666626,
+   "ort_dev_pct_of_range": 25.72681267370727
+  },
+  {
+   "idx": 67,
+   "op": "Conv",
+   "name": "Conv_69",
+   "tensor": "272",
+   "shape": [
+    1,
+    1,
+    40,
+    40
+   ],
+   "nbytes": 1600,
+   "md5": "c070fedde3f280815a2bc489d8e902c5",
+   "distinct": 75,
+   "ort_max_abs_dev": 1.8510997547822843,
+   "layer_range": 7.727219581604004,
+   "ort_dev_pct_of_range": 23.95557334994272
+  },
+  {
+   "idx": 68,
+   "op": "Conv",
+   "name": "Conv_70",
+   "tensor": "273",
+   "shape": [
+    1,
+    1,
+    20,
+    20
+   ],
+   "nbytes": 400,
+   "md5": "dc331f6da65467d8b14c2e522b07ecfb",
+   "distinct": 120,
+   "ort_max_abs_dev": 0.5375429340437345,
+   "layer_range": 2.839597702026367,
+   "ort_dev_pct_of_range": 18.93024964980561
+  },
+  {
+   "idx": 69,
+   "op": "Conv",
+   "name": "Conv_71",
+   "tensor": "274",
+   "shape": [
+    1,
+    1,
+    20,
+    20
+   ],
+   "nbytes": 400,
+   "md5": "009836fc8a99e624661bdaed51726a63",
+   "distinct": 99,
+   "ort_max_abs_dev": 2.1119480768839516,
+   "layer_range": 10.548934936523438,
+   "ort_dev_pct_of_range": 20.020486329589367
+  },
+  {
+   "idx": 70,
+   "op": "Conv",
+   "name": "Conv_72",
+   "tensor": "275",
+   "shape": [
+    1,
+    10,
+    80,
+    80
+   ],
+   "nbytes": 64000,
+   "md5": "aeff3eacc552863d8e3ff976a22b4531",
+   "distinct": 238,
+   "ort_max_abs_dev": 0.4882835765679677,
+   "layer_range": 2.719293713569641,
+   "ort_dev_pct_of_range": 17.95626467752884
+  },
+  {
+   "idx": 71,
+   "op": "Conv",
+   "name": "Conv_73",
+   "tensor": "276",
+   "shape": [
+    1,
+    10,
+    80,
+    80
+   ],
+   "nbytes": 64000,
+   "md5": "c0e1abca94974b4250b0d71aca6bec40",
+   "distinct": 245,
+   "ort_max_abs_dev": 0.5932665740742403,
+   "layer_range": 5.475540399551392,
+   "ort_dev_pct_of_range": 10.83484972776105
+  },
+  {
+   "idx": 72,
+   "op": "Conv",
+   "name": "Conv_74",
+   "tensor": "277",
+   "shape": [
+    1,
+    10,
+    40,
+    40
+   ],
+   "nbytes": 16000,
+   "md5": "2f7eb900141a70cbf929599679b8d086",
+   "distinct": 252,
+   "ort_max_abs_dev": 0.13559726219551238,
+   "layer_range": 2.1707513332366943,
+   "ort_dev_pct_of_range": 6.246558973354647
+  },
+  {
+   "idx": 73,
+   "op": "Conv",
+   "name": "Conv_75",
+   "tensor": "278",
+   "shape": [
+    1,
+    10,
+    40,
+    40
+   ],
+   "nbytes": 16000,
+   "md5": "5500f96c6f7b100aa9a43b8ba59656d4",
+   "distinct": 218,
+   "ort_max_abs_dev": 0.0958940299118266,
+   "layer_range": 0.9900310933589935,
+   "ort_dev_pct_of_range": 9.685961436471231
+  },
+  {
+   "idx": 74,
+   "op": "Conv",
+   "name": "Conv_76",
+   "tensor": "279",
+   "shape": [
+    1,
+    10,
+    20,
+    20
+   ],
+   "nbytes": 4000,
+   "md5": "08338baea84d1bcdbddaa72f380faafa",
+   "distinct": 220,
+   "ort_max_abs_dev": 0.7338767472435446,
+   "layer_range": 4.328293800354004,
+   "ort_dev_pct_of_range": 16.955335776502093
+  },
+  {
+   "idx": 75,
+   "op": "Conv",
+   "name": "Conv_77",
+   "tensor": "280",
+   "shape": [
+    1,
+    10,
+    20,
+    20
+   ],
+   "nbytes": 4000,
+   "md5": "bbc29a014e4f503a7c88015258880c5c",
+   "distinct": 228,
+   "ort_max_abs_dev": 2.1614731059354897,
+   "layer_range": 13.894314765930176,
+   "ort_dev_pct_of_range": 15.556529000160353
+  },
+  {
+   "idx": 76,
+   "op": "Transpose",
+   "name": "Transpose_78",
+   "tensor": "281",
+   "shape": [
+    1,
+    80,
+    80,
+    1
+   ],
+   "nbytes": 6400,
+   "md5": "cd23ca57c3a52bf2cb654f0c84a69875",
+   "distinct": 234,
+   "ort_max_abs_dev": 0.5807099622254279,
+   "layer_range": 2.619871139526367,
+   "ort_dev_pct_of_range": 22.1655925539304
+  },
+  {
+   "idx": 77,
+   "op": "Reshape",
+   "name": "Reshape_84",
+   "tensor": "291",
+   "shape": [
+    1,
+    6400,
+    1
+   ],
+   "nbytes": 6400,
+   "md5": "cd23ca57c3a52bf2cb654f0c84a69875",
+   "distinct": 234,
+   "ort_max_abs_dev": 0.5807099622254279,
+   "layer_range": 2.619871139526367,
+   "ort_dev_pct_of_range": 22.1655925539304
+  },
+  {
+   "idx": 78,
+   "op": "Sigmoid",
+   "name": "Sigmoid_85",
+   "tensor": "cls_8",
+   "shape": [
+    1,
+    6400,
+    1
+   ],
+   "nbytes": 6400,
+   "md5": "52682c1e8df2938d1d1832bd40eccb3b",
+   "distinct": 120,
+   "ort_max_abs_dev": 0.13650131576201496,
+   "layer_range": 0.4770229458808899,
+   "ort_dev_pct_of_range": 28.615251517921447
+  },
+  {
+   "idx": 79,
+   "op": "Transpose",
+   "name": "Transpose_86",
+   "tensor": "293",
+   "shape": [
+    1,
+    40,
+    40,
+    1
+   ],
+   "nbytes": 1600,
+   "md5": "9162508e878370e8c3aabbbefd9bc091",
+   "distinct": 232,
+   "ort_max_abs_dev": 0.12500714063644408,
+   "layer_range": 0.9131664931774139,
+   "ort_dev_pct_of_range": 13.689413876923444
+  },
+  {
+   "idx": 80,
+   "op": "Reshape",
+   "name": "Reshape_92",
+   "tensor": "303",
+   "shape": [
+    1,
+    1600,
+    1
+   ],
+   "nbytes": 1600,
+   "md5": "9162508e878370e8c3aabbbefd9bc091",
+   "distinct": 232,
+   "ort_max_abs_dev": 0.12500714063644408,
+   "layer_range": 0.9131664931774139,
+   "ort_dev_pct_of_range": 13.689413876923444
+  },
+  {
+   "idx": 81,
+   "op": "Sigmoid",
+   "name": "Sigmoid_93",
+   "tensor": "cls_16",
+   "shape": [
+    1,
+    1600,
+    1
+   ],
+   "nbytes": 1600,
+   "md5": "661b15c3a4cc129ee6cfdadb39d84cbe",
+   "distinct": 86,
+   "ort_max_abs_dev": 0.03155441260805325,
+   "layer_range": 0.2222127914428711,
+   "ort_dev_pct_of_range": 14.200088304171997
+  },
+  {
+   "idx": 82,
+   "op": "Transpose",
+   "name": "Transpose_94",
+   "tensor": "305",
+   "shape": [
+    1,
+    20,
+    20,
+    1
+   ],
+   "nbytes": 400,
+   "md5": "8db6cb08b4b6f293f0db69f29dee223c",
+   "distinct": 143,
+   "ort_max_abs_dev": 0.24225573633231368,
+   "layer_range": 1.423597052693367,
+   "ort_dev_pct_of_range": 17.01715635572434
+  },
+  {
+   "idx": 83,
+   "op": "Reshape",
+   "name": "Reshape_100",
+   "tensor": "315",
+   "shape": [
+    1,
+    400,
+    1
+   ],
+   "nbytes": 400,
+   "md5": "8db6cb08b4b6f293f0db69f29dee223c",
+   "distinct": 143,
+   "ort_max_abs_dev": 0.24225573633231368,
+   "layer_range": 1.423597052693367,
+   "ort_dev_pct_of_range": 17.01715635572434
+  },
+  {
+   "idx": 84,
+   "op": "Sigmoid",
+   "name": "Sigmoid_101",
+   "tensor": "cls_32",
+   "shape": [
+    1,
+    400,
+    1
+   ],
+   "nbytes": 400,
+   "md5": "e9845880eca8c883df0e48cda39814a3",
+   "distinct": 77,
+   "ort_max_abs_dev": 0.04696684678395591,
+   "layer_range": 0.2964150309562683,
+   "ort_dev_pct_of_range": 15.84496124654528
+  },
+  {
+   "idx": 85,
+   "op": "Transpose",
+   "name": "Transpose_102",
+   "tensor": "317",
+   "shape": [
+    1,
+    80,
+    80,
+    1
+   ],
+   "nbytes": 6400,
+   "md5": "f227b46f105fe3d84e9793668630a9d8",
+   "distinct": 144,
+   "ort_max_abs_dev": 5.637899926129506,
+   "layer_range": 21.981388092041016,
+   "ort_dev_pct_of_range": 25.648516383598487
+  },
+  {
+   "idx": 86,
+   "op": "Reshape",
+   "name": "Reshape_108",
+   "tensor": "327",
+   "shape": [
+    1,
+    6400,
+    1
+   ],
+   "nbytes": 6400,
+   "md5": "f227b46f105fe3d84e9793668630a9d8",
+   "distinct": 144,
+   "ort_max_abs_dev": 5.637899926129506,
+   "layer_range": 21.981388092041016,
+   "ort_dev_pct_of_range": 25.648516383598487
+  },
+  {
+   "idx": 87,
+   "op": "Sigmoid",
+   "name": "Sigmoid_109",
+   "tensor": "obj_8",
+   "shape": [
+    1,
+    6400,
+    1
+   ],
+   "nbytes": 6400,
+   "md5": "7cf03ba87a3f56a08e64124638d8a2ba",
+   "distinct": 32,
+   "ort_max_abs_dev": 4.315843769148284e-06,
+   "layer_range": 7.212162017822266e-06,
+   "ort_dev_pct_of_range": 59.841192675417275
+  },
+  {
+   "idx": 88,
+   "op": "Transpose",
+   "name": "Transpose_110",
+   "tensor": "329",
+   "shape": [
+    1,
+    40,
+    40,
+    1
+   ],
+   "nbytes": 1600,
+   "md5": "c070fedde3f280815a2bc489d8e902c5",
+   "distinct": 75,
+   "ort_max_abs_dev": 1.8510997547822843,
+   "layer_range": 7.727219581604004,
+   "ort_dev_pct_of_range": 23.95557334994272
+  },
+  {
+   "idx": 89,
+   "op": "Reshape",
+   "name": "Reshape_116",
+   "tensor": "339",
+   "shape": [
+    1,
+    1600,
+    1
+   ],
+   "nbytes": 1600,
+   "md5": "c070fedde3f280815a2bc489d8e902c5",
+   "distinct": 75,
+   "ort_max_abs_dev": 1.8510997547822843,
+   "layer_range": 7.727219581604004,
+   "ort_dev_pct_of_range": 23.95557334994272
+  },
+  {
+   "idx": 90,
+   "op": "Sigmoid",
+   "name": "Sigmoid_117",
+   "tensor": "obj_16",
+   "shape": [
+    1,
+    1600,
+    1
+   ],
+   "nbytes": 1600,
+   "md5": "001f418600c5876eafb5368972366038",
+   "distinct": 37,
+   "ort_max_abs_dev": 6.7539074841667624e-06,
+   "layer_range": 4.553794860839844e-05,
+   "ort_dev_pct_of_range": 14.831382814906068
+  },
+  {
+   "idx": 91,
+   "op": "Transpose",
+   "name": "Transpose_118",
+   "tensor": "341",
+   "shape": [
+    1,
+    20,
+    20,
+    1
+   ],
+   "nbytes": 400,
+   "md5": "009836fc8a99e624661bdaed51726a63",
+   "distinct": 99,
+   "ort_max_abs_dev": 2.1119480768839516,
+   "layer_range": 10.548934936523438,
+   "ort_dev_pct_of_range": 20.020486329589367
+  },
+  {
+   "idx": 92,
+   "op": "Reshape",
+   "name": "Reshape_124",
+   "tensor": "351",
+   "shape": [
+    1,
+    400,
+    1
+   ],
+   "nbytes": 400,
+   "md5": "009836fc8a99e624661bdaed51726a63",
+   "distinct": 99,
+   "ort_max_abs_dev": 2.1119480768839516,
+   "layer_range": 10.548934936523438,
+   "ort_dev_pct_of_range": 20.020486329589367
+  },
+  {
+   "idx": 93,
+   "op": "Sigmoid",
+   "name": "Sigmoid_125",
+   "tensor": "obj_32",
+   "shape": [
+    1,
+    400,
+    1
+   ],
+   "nbytes": 400,
+   "md5": "87abe385140edfc4a887caf4358c5fbe",
+   "distinct": 32,
+   "ort_max_abs_dev": 0.0023111192619099338,
+   "layer_range": 0.0028708577156066895,
+   "ort_dev_pct_of_range": 80.50274485378083
+  },
+  {
+   "idx": 94,
+   "op": "Transpose",
+   "name": "Transpose_126",
+   "tensor": "353",
+   "shape": [
+    1,
+    80,
+    80,
+    4
+   ],
+   "nbytes": 25600,
+   "md5": "e94f925eab05f936ae161ad91f2c336e",
+   "distinct": 208,
+   "ort_max_abs_dev": 0.6008319067020041,
+   "layer_range": 3.2792254090309143,
+   "ort_dev_pct_of_range": 18.322372870353053
+  },
+  {
+   "idx": 95,
+   "op": "Reshape",
+   "name": "Reshape_132",
+   "tensor": "bbox_8",
+   "shape": [
+    1,
+    6400,
+    4
+   ],
+   "nbytes": 25600,
+   "md5": "e94f925eab05f936ae161ad91f2c336e",
+   "distinct": 208,
+   "ort_max_abs_dev": 0.6008319067020041,
+   "layer_range": 3.2792254090309143,
+   "ort_dev_pct_of_range": 18.322372870353053
+  },
+  {
+   "idx": 96,
+   "op": "Transpose",
+   "name": "Transpose_133",
+   "tensor": "364",
+   "shape": [
+    1,
+    40,
+    40,
+    4
+   ],
+   "nbytes": 6400,
+   "md5": "d3ac21ade7e741ecfdd2f01a1db7124a",
+   "distinct": 238,
+   "ort_max_abs_dev": 0.1581926877592124,
+   "layer_range": 1.1140301823616028,
+   "ort_dev_pct_of_range": 14.200036072978198
+  },
+  {
+   "idx": 97,
+   "op": "Reshape",
+   "name": "Reshape_139",
+   "tensor": "bbox_16",
+   "shape": [
+    1,
+    1600,
+    4
+   ],
+   "nbytes": 6400,
+   "md5": "d3ac21ade7e741ecfdd2f01a1db7124a",
+   "distinct": 238,
+   "ort_max_abs_dev": 0.1581926877592124,
+   "layer_range": 1.1140301823616028,
+   "ort_dev_pct_of_range": 14.200036072978198
+  },
+  {
+   "idx": 98,
+   "op": "Transpose",
+   "name": "Transpose_140",
+   "tensor": "375",
+   "shape": [
+    1,
+    20,
+    20,
+    4
+   ],
+   "nbytes": 1600,
+   "md5": "fa28dac85223fdb28881392a2bc89ca8",
+   "distinct": 214,
+   "ort_max_abs_dev": 0.44380715466013143,
+   "layer_range": 4.819099068641663,
+   "ort_dev_pct_of_range": 9.209338682162127
+  },
+  {
+   "idx": 99,
+   "op": "Reshape",
+   "name": "Reshape_146",
+   "tensor": "bbox_32",
+   "shape": [
+    1,
+    400,
+    4
+   ],
+   "nbytes": 1600,
+   "md5": "fa28dac85223fdb28881392a2bc89ca8",
+   "distinct": 214,
+   "ort_max_abs_dev": 0.44380715466013143,
+   "layer_range": 4.819099068641663,
+   "ort_dev_pct_of_range": 9.209338682162127
+  },
+  {
+   "idx": 100,
+   "op": "Transpose",
+   "name": "Transpose_147",
+   "tensor": "386",
+   "shape": [
+    1,
+    80,
+    80,
+    10
+   ],
+   "nbytes": 64000,
+   "md5": "334aa3edaf411a3e4edb87c8346af0dc",
+   "distinct": 245,
+   "ort_max_abs_dev": 0.5932665740742403,
+   "layer_range": 5.475540399551392,
+   "ort_dev_pct_of_range": 10.83484972776105
+  },
+  {
+   "idx": 101,
+   "op": "Reshape",
+   "name": "Reshape_153",
+   "tensor": "kps_8",
+   "shape": [
+    1,
+    6400,
+    10
+   ],
+   "nbytes": 64000,
+   "md5": "334aa3edaf411a3e4edb87c8346af0dc",
+   "distinct": 245,
+   "ort_max_abs_dev": 0.5932665740742403,
+   "layer_range": 5.475540399551392,
+   "ort_dev_pct_of_range": 10.83484972776105
+  },
+  {
+   "idx": 102,
+   "op": "Transpose",
+   "name": "Transpose_154",
+   "tensor": "397",
+   "shape": [
+    1,
+    40,
+    40,
+    10
+   ],
+   "nbytes": 16000,
+   "md5": "9563f0461afe1c5560dbf17373e240ee",
+   "distinct": 218,
+   "ort_max_abs_dev": 0.0958940299118266,
+   "layer_range": 0.9900310933589935,
+   "ort_dev_pct_of_range": 9.685961436471231
+  },
+  {
+   "idx": 103,
+   "op": "Reshape",
+   "name": "Reshape_160",
+   "tensor": "kps_16",
+   "shape": [
+    1,
+    1600,
+    10
+   ],
+   "nbytes": 16000,
+   "md5": "9563f0461afe1c5560dbf17373e240ee",
+   "distinct": 218,
+   "ort_max_abs_dev": 0.0958940299118266,
+   "layer_range": 0.9900310933589935,
+   "ort_dev_pct_of_range": 9.685961436471231
+  },
+  {
+   "idx": 104,
+   "op": "Transpose",
+   "name": "Transpose_161",
+   "tensor": "408",
+   "shape": [
+    1,
+    20,
+    20,
+    10
+   ],
+   "nbytes": 4000,
+   "md5": "e5c047eb3223bf1f2c590b55b05abfe6",
+   "distinct": 228,
+   "ort_max_abs_dev": 2.1614731059354897,
+   "layer_range": 13.894314765930176,
+   "ort_dev_pct_of_range": 15.556529000160353
+  },
+  {
+   "idx": 105,
+   "op": "Reshape",
+   "name": "Reshape_167",
+   "tensor": "kps_32",
+   "shape": [
+    1,
+    400,
+    10
+   ],
+   "nbytes": 4000,
+   "md5": "e5c047eb3223bf1f2c590b55b05abfe6",
+   "distinct": 228,
+   "ort_max_abs_dev": 2.1614731059354897,
+   "layer_range": 13.894314765930176,
+   "ort_dev_pct_of_range": 15.556529000160353
+  }
+ ],
+ "summary": {
+  "nodes": 106,
+  "layers_dumped": 106,
+  "final_mismatch_total": 0,
+  "final_mismatch_per_output": {
+   "cls_8": 0,
+   "cls_16": 0,
+   "cls_32": 0,
+   "obj_8": 0,
+   "obj_16": 0,
+   "obj_32": 0,
+   "bbox_8": 0,
+   "bbox_16": 0,
+   "bbox_32": 0,
+   "kps_8": 0,
+   "kps_16": 0,
+   "kps_32": 0
+  },
+  "input_distinct": 256,
+  "lastlayer": "kps_32",
+  "lastlayer_distinct": 228,
+  "ort_dev_recorded": 106,
+  "ort_dev_worst_layer": "obj_32",
+  "ort_dev_worst_pct_of_range": 80.50274485378083,
+  "weights_count": 53,
+  "weights_aggregate_md5": "8d185e21bff2256635e85cc200293eb9"
+ }
+}

@@ -1,0 +1,19 @@
+target: PhysicalDrive2 <- D:\code\PDS\VexiiYeshenLinux\sw\images\sd_score_618zbb_i20000.img
+GUARD PASS: USB Mass Storage Device (7.5GB USB)
+image 16840192 bytes = 32891 blocks
+--- diskpart ---
+
+Microsoft DiskPart 版本 10.0.26100.1150
+
+Copyright (C) Microsoft Corporation.
+在计算机上: DESKTOP-LZQ-MIN
+
+磁盘 2 现在是所选磁盘。
+
+DiskPart 成功地清除了磁盘。
+--- diskpart end ---
+WROTE 16840192 bytes
+read back 16840192 bytes
+file sha=F7407BE20A4870DF6629E1946909382FE18815F45FBBC7E8DD8F1F43A8290739
+card sha=F7407BE20A4870DF6629E1946909382FE18815F45FBBC7E8DD8F1F43A8290739
+CARD VERIFY PASS

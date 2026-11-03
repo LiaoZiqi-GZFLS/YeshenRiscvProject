@@ -1,0 +1,29 @@
+export PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+
+# ★ 2026-10-08：**关掉控制台的软件流控**（根治"控制台莫名静默"）。
+#   内核的 `tty_std_termios` 默认带 `ICRNL|IXON` ⇒ 控制台 tty 吃 ^S/^Q：
+#   RX 流里只要出现**一个杂散 0x13(^S)**，tty 就**停发**（输出队列满 ⇒ shell 阻塞在 write
+#   ⇒ 不读输入 ⇒ 什么都不回显）。此时**硬件完全空闲**（实测 LSR=0x60 THRE/TEMT=1、
+#   IIR=0xC1 无中断、IER=0x05），所以别去查波特/FIFO/RTL。
+#   证据与正反 A/B：docs/交付-2026-10-07.md §20 / scripts/uart_xoff_ab.py（^S 停、^Q 救）。
+#   只在交互式（stdin 是 tty）时设；`2>/dev/null` 挡掉非 tty 时的 ioctl 报错。
+stty -ixon -ixoff 2>/dev/null
+
+if [ "$PS1" ]; then
+	if [ "`id -u`" -eq 0 ]; then
+		export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\# '
+	else
+		export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+	fi
+fi
+
+export PAGER='/bin/more'
+export EDITOR='/bin/vi'
+
+# Source configuration files from /etc/profile.d
+for i in /etc/profile.d/*.sh ; do
+	if [ -r "$i" ]; then
+		. $i
+	fi
+done
+unset i

@@ -1,0 +1,38 @@
+== run_chain_wide_ab: 宽链（head middle* tail，chain_len ≥ 2 的宽路）—— 真表 run 形状 ==
+   nl=gen/UnitExec_tiled.v  tb=rtl_test/UnitExecWideTb.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog  vvp=/c/msys64/ucrt64/bin/vvp
+---- 0) 冻结参考自检 conv_unit_ref.py --selftest ----
+   参考自检 OK
+---- 1) iverilog 编译（UnitExecWideTb + AxiMemModel + gen/UnitExec_tiled.v）----
+    编译 OK
+---- job c16_L2: C 16→16 链长 2  32x32  n_ci=2 n_co=2  N_i=2304 B/片 ----
+    JOBGEN c16_L2 C=16->16 L=2 32x32 N_i=2304 blob=4608 gold_distinct=256 trunc_diff=16311
+   JOB c16_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 16384) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 1 片): DONE=1 ERR=0（绿时要求 DONE=1 且输出 == 截短黄金）
+---- job c64_L4: C 64→64 链长 4  20x20  n_ci=8 n_co=8  N_i=36864 B/片 ----
+    JOBGEN c64_L4 C=64->64 L=4 20x20 N_i=36864 blob=147456 gold_distinct=256 trunc_diff=24047
+   JOB c64_L4 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 25600) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 3 片): DONE=0 ERR=1（绿时要求 DONE=1 且输出 == 截短黄金）
+---- job c64_10_L2: C 64→10 链长 2  20x20  n_ci=8 n_co=2  N_i=5760 B/片 ----
+    ★ REFREFUSE：本 run 形状（C_IN≠C_OUT）**冻结参考拒绝**（无整层链黄金可对）——
+      REFREFUSE chain_l(CIN=64 COUT=10 L=2): IndexError: list index out of range
+      ⇒ 判据 1/2 这一档**在本代约束下不可判**（见 reports/ts3f_red_first.txt 的 B1）
+   JOB c64_10_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 4000) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 1 片): DONE=0 ERR=1（绿时要求 DONE=1 且输出 == 截短黄金）
+---- job c64_1_L2: C 64→1 链长 2  20x20  n_ci=8 n_co=1  N_i=576 B/片 ----
+    ★ REFREFUSE：本 run 形状（C_IN≠C_OUT）**冻结参考拒绝**（无整层链黄金可对）——
+      REFREFUSE chain_l(CIN=64 COUT=1 L=2): IndexError: list index out of range
+      ⇒ 判据 1/2 这一档**在本代约束下不可判**（见 reports/ts3f_red_first.txt 的 B1）
+   JOB c64_1_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 400) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 1 片): DONE=0 ERR=1（绿时要求 DONE=1 且输出 == 截短黄金）
+==========================================================================
+作业集合： c16_L2 c64_L4 c64_10_L2 c64_1_L2
+正对照: 绿 0 / 红(POS_RED) 4
+JUDGE-RED: 宽链（chain_len ≥ 2 的宽路）在当前网表上没有通路 ——
+  宽路的四条判据（wideGeomOk :1428 / wgtLoadOk :1451 / tilingWideC :1650 / LayerSched 派发）
+  都要求 chain_len == 1 ⇒ go 那一刻响亮 err + 零搬运（本闸门 = 先红证据）。
+  绿需要实现 plan T-S3f（宽路支持整链）；设计约束与取舍见 rtl/UnitExec.scala 文件尾「T-S3f」一节。
+RESULT: FAIL

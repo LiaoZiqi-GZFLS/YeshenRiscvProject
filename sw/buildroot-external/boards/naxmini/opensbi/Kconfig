@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: BSD-2-Clause
+#
+# Task 22（M2-b）：OpenSBI v1.6 的每个平台目录都必须带一个 Kconfig —— 根 `Kconfig`
+# 会 `source "$(OPENSBI_PLATFORM_SRC_DIR)/Kconfig"`（见 OpenSBI 1.6 的根 Kconfig），
+# 平台靠这里的 `select` 把需要的驱动编进来（对照 `platform/template/Kconfig` 与
+# `platform/kendryte/k210/Kconfig` 的写法）。符号名与目录名无关，取语义名 NAXMINI。
+#
+# 选三样（**不选 PLIC**：本 SoC 的 PLIC 归 Linux 驱动管，OpenSBI 的 irqchip_init 是空实现）：
+#   SERIAL_UART8250 -> lib/utils/serial/uart8250.c   （console，0xF0001000）
+#   IPI_MSWI        -> lib/utils/ipi/aclint_mswi.c   （CLINT +0x0000 的 msip）
+#   TIMER_MTIMER    -> lib/utils/timer/aclint_mtimer.c（CLINT +0x4000 的 mtime/mtimecmp）
+#
+# 每个驱动只在被 select 时才进 libsbiutils-objs-y（见 lib/utils/*/objects.mk），
+# 所以 "没链进去的代码" 这种事故在这版是编译期就排除掉的。
+
+config PLATFORM_NAXMINI
+	bool
+	select SERIAL_UART8250
+	select IPI_MSWI
+	select TIMER_MTIMER
+	default y

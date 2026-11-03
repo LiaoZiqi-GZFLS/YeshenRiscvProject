@@ -1,0 +1,9 @@
+# 这棵外部树是给 **Linux 上的 buildroot** 吃的，必须保持 LF。
+#
+# 本仓库（以及 NaxRiscv）的 core.autocrlf=true：默认情况下 git 会在 checkout 时把
+# 文本文件写成 CRLF，而 CRLF 会实打实地弄坏这棵树：
+#   · `configs/rv64imac.sh` 经 `source` 后 FLAGS 变成 `-DISA=rv64imac^M` ⇒ cpp 拿到带 \r 的宏；
+#   · `opensbi/config_raw.mk` 里 `FW_JUMP_ADDR=0x80400000^M` ⇒ make 的变量值带 \r；
+#   · `rootfs_overlay/etc/profile` 在目标 rootfs 里被 ash `source` 时报 `$'\r': not found`。
+# 所以这里强制 **不做任何 EOL 转换**（仓库里存的是 LF，checkout 出来就是 LF）。
+* -text

@@ -1,0 +1,40 @@
+UNITS_BASE=33 BASE_BYTES=12576000
+BYPASS_OPS maxpool=4 resize=2 add=2 sigmoid=6
+BYPASS_BYTES=6945600
+TOTAL_BYTES=19521600 FPS_AT_275_9MBps=14.1331
+SELFTEST_BYPASS_OFF=12576000
+OVERLAP_PROBE bypass_inputs=20 produced_by_fused_drop=0
+
+== 逐算子明细（int8，元素数 == 字节数；含本档 drop 后的实账） ==
+  op_type      n_ops          bytes
+  maxpool          4        4736000
+  resize           2         640000
+  add              2        1536000
+  sigmoid          6          33600
+  TOTAL            -        6945600
+
+SELFTEST_SUM_OK=1
+== SELFTEST_FROZEN：计算值必须逐字等于文件内冻结常量（破口径即红） ==
+  maxpool   computed=4736000    frozen=4736000    indep=4736000    OK
+  resize    computed=640000     frozen=640000     indep=640000     OK
+  add       computed=1536000    frozen=1536000    indep=1536000    OK
+  sigmoid   computed=33600      frozen=33600      indep=33600      OK
+  BYPASS    computed=6945600    frozen=6945600    OK
+  TOTAL     computed=19521600   frozen=19521600   OK
+SELFTEST_FROZEN_OK=1
+== SELFTEST_DROP：逐类去掉后 TOTAL 的变化量必须 == 该类冻结贡献 ==
+  drop maxpool   dTOTAL=4736000    contribution=4736000    frozen=4736000   OK
+  drop resize    dTOTAL=640000     contribution=640000     frozen=640000    OK
+  drop add       dTOTAL=1536000    contribution=1536000    frozen=1536000   OK
+  drop sigmoid   dTOTAL=33600      contribution=33600      frozen=33600     OK
+  drop ALL (旁路全关) TOTAL=12576000 BASE=12576000 OK
+SELFTEST_DROP_OK=1
+
+== 口径 ==
+  BASE_BYTES=12576000 是下界（只计 Conv 的输入/输出激活读写；见 ddr_traffic 文件头）
+  BYPASS_BYTES=6945600 是旁路算子自身激活 IO（MaxPool/Resize/Add/Sigmoid 的读+写）
+  TOTAL_BYTES=19521600（base + bypass）；隐含 fps @275.9 MB/s ≈ 14.1331
+  仍不含：12 个头张量的后处理（decode/NMS）读写、突发对齐/填充浪费、权重装载
+
+SELFTEST_OVERLAP_OK=1
+RESULT: PASS

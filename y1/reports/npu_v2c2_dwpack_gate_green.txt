@@ -1,0 +1,79 @@
+== run_dwpack_ab: NPU v2 切片 B1 —— depthwise 用满 8 条通道（AFTER1）的集成闸门 ==
+   nl=gen/UnitExec_tiled.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog  形状 C ∈ {4 8 10 16 32 64}  几何 H=8 W=16
+---- 0) 前置：参考自检 + TILING=false 三网表 md5 + 四处 additive 口的结构判据 ----
+   参考自检 OK（multipass_ref selftest：拆趟 == 整层 + 预测有牙）
+   TILING=false 三网表 md5 不变（97912901… / 618af338… / ddb9bb8a…）
+   TILED_NL_MD5=76450464a58c3a25310ccb5459f8f567（gen/UnitExec_tiled.v，只记账）
+   [struct] ④ UnitExec：`dwW := isDwW`（go 拍锁存）          hit=1
+   [struct] ② MacArray：逐 lane 2:1（lane co=0,j=2）       hit=1
+   [struct] ② MacArray：第 9 抽头行（行 co=0；C2 后 Mux 内是 A 级 p8r） hit=1
+   [struct] ③ WeightStore：dw 对角读口                      hit=3
+   [struct] ① Conv3x3Slice：dw 跳拍条件                     hit=1
+   突变锚唯一性检查：OK（3 条各 1 处）
+---- 1) iverilog 编译（UnitExecWideTb + AxiMemModel + gen/UnitExec_tiled.v；-DUE_CGEOM -DUE_X1OBS）----
+   编译 OK
+---- 2b) 内存镜像（素周期预载；DST 区与该形状黄金必须足够不同）----
+   mem_nt.hex：2621440 B（DST=2097152；预载 = 素周期模式）
+---- 3) 网表突变：dw_cut（掐 dw_mode）/ sel（2:1 反向）/ tap8（切第 9 抽头行）----
+   MUTATE mode=dw_cut  1 site：_zz_dw_mode <= 1'b0;   // DWPACK-MUT（dw_mode 掐掉 = BEFORE）
+   MUTATE mode=sel     1 site：assign _zz_ps_0_1_2 = (dw_mode ? x_2 : x_2);   // DWPACK-MUT（lane (0,2) 反向读 dense）
+   MUTATE mode=tap8    1 site：assign _zz_acc_0_8 = 18'h0;   // DWPACK-MUT（第 9 抽头行切除；C2 后切 dw 门输出）
+---- 5) 逐形状（C ∈ {4 8 10 16 32 64}）：正对照 / BEFORE（dw_cut）/ 负对照 sel / 负对照 tap8 ----
+    JOBGEN pos   C=4  n_ci=1 n_co=1 M=3000000 z_y=-1 z_pad=-128 len=512 distinct=14 PRED_NEG=26 PRED_T8=35
+   [job_C4] DST 预载 vs 黄金：差 512/512 字节（≥50%，"不写"必被抓）
+   [C=4 pos] PASS=1 MISMATCH=0 X1_BEATS=128（预测 128，= 1 拍/像素/趟；nCo=1）
+   [C=4 before] PASS=1 MISMATCH=0 X1_BEATS=1152（预测 1152，= 9 拍/像素/趟）
+   [C=4 拍比] 1152 / 128 = 9.00×（要求 9.00×）
+   [C=4 neg sel] MISMATCH=26（预测 26）X1_BEATS=128
+   [C=4 neg tap8] MISMATCH=35（预测 35）
+    JOBGEN pos   C=8  n_ci=1 n_co=1 M=3000000 z_y=-1 z_pad=-128 len=1024 distinct=20 PRED_NEG=39 PRED_T8=39
+   [job_C8] DST 预载 vs 黄金：差 1023/1024 字节（≥50%，"不写"必被抓）
+   [C=8 pos] PASS=1 MISMATCH=0 X1_BEATS=128（预测 128，= 1 拍/像素/趟；nCo=1）
+   [C=8 before] PASS=1 MISMATCH=0 X1_BEATS=1152（预测 1152，= 9 拍/像素/趟）
+   [C=8 拍比] 1152 / 128 = 9.00×（要求 9.00×）
+   [C=8 neg sel] MISMATCH=39（预测 39）X1_BEATS=128
+   [C=8 neg tap8] MISMATCH=39（预测 39）
+    JOBGEN pos   C=10 n_ci=2 n_co=2 M=3000000 z_y=-2 z_pad=-128 len=1280 distinct=19 PRED_NEG=81 PRED_T8=59
+   [job_C10] DST 预载 vs 黄金：差 1279/1280 字节（≥50%，"不写"必被抓）
+   [C=10 pos] PASS=1 MISMATCH=0 X1_BEATS=256（预测 256，= 1 拍/像素/趟；nCo=2）
+   [C=10 before] PASS=1 MISMATCH=0 X1_BEATS=2304（预测 2304，= 9 拍/像素/趟）
+   [C=10 拍比] 2304 / 256 = 9.00×（要求 9.00×）
+   [C=10 neg sel] MISMATCH=81（预测 81）X1_BEATS=256
+   [C=10 neg tap8] MISMATCH=59（预测 59）
+    JOBGEN pos   C=16 n_ci=2 n_co=2 M=3000000 z_y=0 z_pad=-128 len=2048 distinct=22 PRED_NEG=89 PRED_T8=87
+   [job_C16] DST 预载 vs 黄金：差 2042/2048 字节（≥50%，"不写"必被抓）
+   [C=16 pos] PASS=1 MISMATCH=0 X1_BEATS=256（预测 256，= 1 拍/像素/趟；nCo=2）
+   [C=16 before] PASS=1 MISMATCH=0 X1_BEATS=2304（预测 2304，= 9 拍/像素/趟）
+   [C=16 拍比] 2304 / 256 = 9.00×（要求 9.00×）
+   [C=16 neg sel] MISMATCH=89（预测 89）X1_BEATS=256
+   [C=16 neg tap8] MISMATCH=87（预测 87）
+    JOBGEN pos   C=32 n_ci=4 n_co=4 M=3000000 z_y=1 z_pad=-128 len=4096 distinct=24 PRED_NEG=178 PRED_T8=138
+   [job_C32] DST 预载 vs 黄金：差 4090/4096 字节（≥50%，"不写"必被抓）
+   [C=32 pos] PASS=1 MISMATCH=0 X1_BEATS=512（预测 512，= 1 拍/像素/趟；nCo=4）
+   [C=32 before] PASS=1 MISMATCH=0 X1_BEATS=4608（预测 4608，= 9 拍/像素/趟）
+   [C=32 拍比] 4608 / 512 = 9.00×（要求 9.00×）
+   [C=32 neg sel] MISMATCH=178（预测 178）X1_BEATS=512
+   [C=32 neg tap8] MISMATCH=138（预测 138）
+    JOBGEN pos   C=64 n_ci=8 n_co=8 M=3000000 z_y=-1 z_pad=-128 len=8192 distinct=26 PRED_NEG=263 PRED_T8=352
+   [job_C64] DST 预载 vs 黄金：差 8184/8192 字节（≥50%，"不写"必被抓）
+   [C=64 pos] PASS=1 MISMATCH=0 X1_BEATS=1024（预测 1024，= 1 拍/像素/趟；nCo=8）
+   [C=64 before] PASS=1 MISMATCH=0 X1_BEATS=9216（预测 9216，= 9 拍/像素/趟）
+   [C=64 拍比] 9216 / 1024 = 9.00×（要求 9.00×）
+   [C=64 neg sel] MISMATCH=263（预测 263）X1_BEATS=1024
+   [C=64 neg tap8] MISMATCH=352（预测 352）
+---- 6) 外科式（C=16，把被换 lane 的权重置 0 ⇒ 两个候选操作数恒等）----
+    JOBGEN surg  C=16 n_ci=2 n_co=2 M=3000000 z_y=-2 z_pad=-128 len=2048 distinct=18 PRED_NEG=0 PRED_T8=86
+   [surg pos] MISMATCH=0（应 0）X1_BEATS=256（预测 256）
+   [surg sel] MISMATCH=0（应 0 = 预测量）X1_BEATS=256
+---- 6b) 整片 dump 逐字节：BEFORE vs pos（每个形状）----
+   [C=4 ] BEFORE 与 pos 的**整片内存 dump 逐字节相同**（7864320 字节）
+   [C=8 ] BEFORE 与 pos 的**整片内存 dump 逐字节相同**（7864320 字节）
+   [C=10] BEFORE 与 pos 的**整片内存 dump 逐字节相同**（7864320 字节）
+   [C=16] BEFORE 与 pos 的**整片内存 dump 逐字节相同**（7864320 字节）
+   [C=32] BEFORE 与 pos 的**整片内存 dump 逐字节相同**（7864320 字节）
+   [C=64] BEFORE 与 pos 的**整片内存 dump 逐字节相同**（7864320 字节）
+==========================================================================
+RESULT: PASS
+  正对照：六形状 DST 逐字节 == 冻结黄金；实测 X1_BEATS == 1·nCo·H·W（1 拍/像素/趟）
+  BEFORE ：同作业掐 dw_mode ⇒ X1_BEATS == 9·nCo·H·W，逐字节不变 ⇒ **实测拍比 9.00×**
+  负对照 ：lane (0,2) 反向读 dense + 第 9 抽头行切除 —— 两条都按 python 预测量发火；外科式翻绿

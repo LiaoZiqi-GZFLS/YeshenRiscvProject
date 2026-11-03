@@ -1,0 +1,85 @@
+== run_mac_account_ab: P0/P0b 逐层 MAC 账（译码交叉 + 类账 + 负对照）==
+   py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  tool=tools/mac_account.py  frozen=tools/ddr_traffic.py
+-- 前置：desc.bin md5=fec587a13fb51ed00914e5ce9c04db02（wgt_index.json 记录=fec587a13fb51ed00914e5ce9c04db02）
+-- 前置：wgt_blob.bin md5=aa135f0f7d50780b7b13d9a1ba9c518a（wgt_index.json 记录=aa135f0f7d50780b7b13d9a1ba9c518a）
+-- 冻结工具（只读证据）：ddr_traffic.py c6adbbd8e4987fbf8e860b637a72ae0d  bypass_traffic.py 8e34437cbf7c4d282ffdaf5d0bc82360
+
+-- 正对照 A：调用冻结 tools/ddr_traffic.py（不重实现、不编辑）--
+   baseline  TOTAL_BYTES=31942400  ⇒ 31.94 MB/帧（已知数 31.94）
+   fuse_both TOTAL_BYTES=12576000  ⇒ 12.58 MB/帧（已知数 12.58）
+
+-- 正对照 B：mac_account.py 的译码独立复算冻结两锚点（现算比对）--
+CHECK payload_count_67                               PASS  67 项
+CHECK sentinel_unique                                PASS  在 decode 里断言
+CHECK desc_type_eq_wgt_type                          PASS
+CHECK desc_flags_eq_wgt_flags                        PASS
+CHECK desc_in_bytes_eq_wgt_in_bytes                  PASS
+CHECK plain_head_geom_eq_own                         PASS  链首覆盖仅 middle/tail
+CHECK in_bytes_derivation_rule                       PASS  补位单元=42:Conv_59(+16),54:Conv_71(+16),63:Sigmoid_101(+16),66:Sigmoid_125(+16)（conv 侧合计=32 B）
+CHECK align32_pad_conv_side_32B                      PASS  bypass 侧另有 Sigmoid_101/125 各 +16 B（不进出 unfused 对比）
+CHECK total_macs_eq_344224000                        PASS  344224000
+CHECK decoded_unfused_eq_frozen_31942400             PASS  31942400
+CHECK decoded_fused_eq_frozen_12576000               PASS  12576000
+CHECK decoded_table_eq_frozen_plus_32B               PASS  31942432 (= 冻结 31942400 + 32)
+CHECK read_amp_model_calibrated_on_measured          PASS  c64_40x40 model=2367488 meas=2382784; dw64_40x40 model=295936 meas=296896
+CHECK measured_amp_16x_23x                           PASS  23.27x
+CHECK dense_fullblock_issued_eq_ideal                PASS
+CHECK conv1x1_issues_9x_beats_of_ideal               PASS  14 个 1×1 满块单元
+CHECK depthwise_issues_8x_beats_of_ideal             PASS  14 个 dw 满块单元
+CHECK issued_tiled_ge_issued                         PASS  tiled=70848972 ≥ issued=45075600
+CHECK no_narrow_shape_units_all_wide                 PASS  窄形状单元 0 个 ⇒ 真表全部走宽路多趟
+CHECK class_split_covers_all_conv                    PASS  三类单元数 53 == conv 单元数 53（类型 → 类 1:1）
+CHECK class_issued_split_sums_to_total               PASS  Σ类 issued=45075600 == 总 issued=45075600
+CHECK class_macs_split_sums_to_total                 PASS  Σ类 MACs=344224000 == 344,224,000
+CHECK class_ideal_split_sums_to_total                PASS  Σ类 ideal=5378500.0 == MACs/64=5378500.0
+CHECK cf_a_eq_predicted                              PASS  A=13920400 == issued − 8·Σ_1x1(passes·H·W)=13920400（跳拍档：只留槽 0 那一拍）
+CHECK cf_b_dw_eq_ideal                               PASS  B=38036137.5 == issued − dw_issued + dw_ideal（8031600 → 992137.5 拍）
+CHECK cf_a_gt_ideal_and_lt_issued                    PASS  ideal=5378500.0 < A=13920400.0 < issued=45075600.0
+CHECK impl_a_eq_cf_a                                 PASS  IMPL_A=13920400 == CF A=13920400.0（逐单元加总 vs 自上而下减节省）
+CHECK impl_a_tag_p0b                                 PASS  P0b 价签：切片 A 落 RTL ⇒ beats=13920400（价签 13,920,400 ⇒ 3.5919 fps @50 MHz）
+CHECK cf_ab_gt_ideal_lt_a                            PASS  ideal=5378500.0 < A+B=6880937.5 < A=13920400.0
+CHECK cf_a_assumption_all_1x1_walk_9                 PASS  26 个 1×1 单元全部按 9 拍/像素/趟计
+CHECK blob_md5_eq_wgt_index_record                   PASS  blob md5=aa135f0f(记录=aa135f0f)；1×1 单元 26 个、非零权重 42697 个**全部在槽 0**；dw 单元权重散布 ≥2 槽=True
+CHECK cf_a_1x1_nonzero_only_slot0                    PASS  1×1 非零权重全部落在槽 0（= 拍序第 1 拍）⇒ 跳拍档数值不变、无需动布局
+CHECK cf_b_dw_scattered_slots_control                PASS  dw 权重散布 ≥2 槽（对照组：防布局被改成对 dw 也单槽）
+CHECK scenarios_monotone                             PASS  A=42.2986 B=23.8917 C=23.8308 E=22.6020 MB
+TOTAL_MACS=344224000
+CLASS 1x1 n=26 macs=236339200 ideal_milli=3692800000 issued=35049600
+CLASS dw n=20 macs=63496800 ideal_milli=992137500 issued=8031600
+CLASS dense3x3 n=7 macs=44388000 ideal_milli=693562500 issued=1994400
+CF A_BEATS=13920400 B_BEATS=38036137.5 AB_BEATS=6880937.5 A_TAPS=1 ISSUED_BEATS=45075600
+SELFTEST PASS
+   => 译码复算 == 冻结现跑（unfused 31942400 / fused 12576000）；MAC_TOTAL=344224000
+   证据：desc 表口径 unfused=31942432 = 冻结 31942400 + 32 B（align32 补位，CHECK 行点名 42/54）
+
+-- 正对照 D（P0b）：类账 —— 闸门按 UNIT 行现算 vs 工具 CLASS 行（两条独立路径）--
+   闸门现算：1x1 issued=35049600 macs=236339200 | dw issued=8031600 macs=63496800 | dense3x3 issued=1994400 macs=44388000
+   工具 CLASS：1x1 issued=35049600 macs=236339200 | dw issued=8031600 macs=63496800 | dense3x3 issued=1994400 macs=44388000
+   Σ三类 issued=45075600  Σ全部 UNIT issued=45075600  工具 CF ISSUED_BEATS=45075600
+   => 类账三条独立路径一致：闸门 Σ 分类 = 工具 CLASS 行 = 总 issued=45075600；A=13920400 == Σall − 8·Σ_1x1(P·H·W)
+   ★ 切片 A 实计：IMPL_A_BEATS=13920400（预测 13920400 = CF A 13920400）FPS_COMPUTE_IMPL_A=3.5919（预测 3.5919 @50 MHz）
+
+-- 负对照①（P0b）：--perturb-taps dw:3 ⇒ dw 类 issued 必须恰 == 3·Σ_dw(passes·H·W) --
+   dw 注入 9→3：pred dw_issued=2677200（=3·Σ P·H·W）  observed=2677200（未注入=8031600）
+   总 issued：pred=39721200  observed=39721200；其余两类 observed 1x1=35049600 dense3x3=1994400
+   => 发火正确：dw 归属按预测移动（8031600 → 2677200），另两类逐字不变
+
+-- 负对照②：idx 20（Conv_29，中网 1×1）注入 C_OUT += 8 ⇒ ΔMACs 必须 == 预测 --
+   unit20=UNIT 20 Conv_29 conv1x1 middle 64 64 1 40 40 1 6553600 64 921600
+   unit20(perturbed)=UNIT 20 Conv_29 conv1x1 middle 64 72 1 40 40 1 7372800 72 1036800
+   observed ΔTOTAL_MACS=819200   predicted=819200（= H·W·8·(C_in/G)·taps）
+   => 负对照按预测量发火：Δ = 819200（单元级与总量差分两条路径一致；其余 66 行逐字不变）
+   类级：1x1 issued 35049600 → 35164800（Δ=115200，pred=115200）；A 13920400 → 13933200（Δ=12800，pred=12800）
+   => 类账随几何扰动按预测量发火（1×1 类 Δ = 9·nCi·ΔnCo·H·W；A 的 Δ = 1·nCi·ΔnCo·H·W）
+
+-- 信息性：五档逐帧流量（判据写在 y1/reports/npu_v2_accounting.md；数字由同一工具生成）--
+(a) v1 as-is（宽路 tile 实测放大 + Add 4.4×）                      42298598   42.2986    153.3         6.52
+(b) +窗口片上留住（杀 nCo 重读）                                      23891671   23.8917     86.6        11.55
+(c) +平面 32B 补齐（杀 band/对齐余量）                                23830752   23.8308     86.4        11.58
+(d) +NC8HW 分块布局（字节同 c；请求 ÷4）                               23830752   23.8308     86.4        11.58
+(e) +Add 单趟化（4.4×→2.0×）                                    22601952   22.6020     81.9        12.21
+SCEN_BASE0=19521600  CONV_DELTA_A=21548198  CONV_DELTA_B=3141271  CONV_DELTA_C=3080352  ADD_DELTA=1228800
+BURSTS32 A=1321832 B=746615 C=744711 D=744711 E=706311  D_REQUESTS=C/4=186178
+
+RESULT: PASS
+EXIT=0

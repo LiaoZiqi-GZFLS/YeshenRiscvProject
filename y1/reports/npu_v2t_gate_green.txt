@@ -1,0 +1,160 @@
+Y1-Timing 轮（npu_clk 追钟）—— 闸门绿证据（本机现跑；2026-10-16）
+==========================================================================
+被测网表（修复后、t18b PnR 实际跑的字节；重生成 2× 逐字节确定）：
+  gen/UnitExec_tiled.v            3bc5d65253a5321db54bacee24112baf
+  gen/LayerSched.v                a51f298514997af9cfde4eb73d6e4348
+  gen/NpuTop.v                    6a317d18491a540b09db3dd1134aafdd
+TILING=false 三网表逐字节冻结（修复只在 TILING=true 展开里落硬件）：
+  gen/UnitExec.v                  979129017535dc82ab9e6d89bea31080   （== C2 轮记录；未变）
+  gen/UnitExec_w32.v              618af3381eadcb4d7c6964cd4338a825   （未变）
+  gen/UnitExec_w640.v             ddb9bb8addc01f94e2ea8ae8b6b898e6   （未变）
+其余 44 份 gen 产物逐字节不变（含 Conv3x3Slice.v 131a6594… / MultiPassUnit.v 9ce1323d… / DwUnit.v 9ce1323d…）。
+
+一、三条切片闸门（修复后网表上现跑；均 RESULT: PASS，exit=0）
+--------------------------------------------------------------------------
+[1] tools/run_dci_ab.sh        RESULT: PASS
+    正对照：c0(真 Conv_0) 384 拍 / c1(真 Conv_55) 128 拍 / x18(合成 1→8) 128 拍 / tap8 128 拍 —— 全部逐字节 == 冻结参考
+    实测拍比（产品网表，DCI 关的受控突变）：c0 3.00×（1,152->384）与 x18 9.00×（1,152->128），两档整片 dump 逐字节相同
+    c1 的边界（实测）：DCI 关（dw 开）128 == DCI 开 128；dw+DCI 双关 1,152 ⇒ dw 谓词先收
+    p8r 的受控 A/B：组合回读 ⇒ MISMATCH == 94 且 dump == bias-only 黄金；正规网表 == 0（必要且充分）
+    c3 路由负对照 + 外科式：MISMATCH == 90 且 dump == gold_mut；一个权重字节翻绿
+[2] tools/run_x1skip_ab.sh     RESULT: PASS
+    正对照：非 tiled TYPE=1 2304 拍 / TYPE=2 256 拍（9.00×）；tiled TYPE=1 3240 拍 / TYPE=2 360 拍（9.00×）
+    负对照 + 外科式 + 2 条突变全部按预测量发火/翻面
+[3] tools/run_dwpack_ab.sh     RESULT: PASS
+    正对照：六形状 DST 逐字节 == 冻结黄金；实测 X1_BEATS == 1·nCo·H·W（1 拍/像素/趟）
+    BEFORE ：同作业掐 dw_mode ⇒ 9·nCo·H·W，逐字节不变 ⇒ 实测拍比 9.00×
+    负对照 ：lane (0,2) 反向读 dense + 第 9 抽头行切除 —— 两条都按 python 预测量发火；外科式翻绿
+
+二、回归闸门（本机现跑；全部 exit=0）
+--------------------------------------------------------------------------
+  run_mac_account_ab.sh            exit=0        run_preflight_ab.sh              exit=0
+  run_psbound_ab.sh                exit=0        run_fuse_ab.sh                   exit=0
+  run_chaingeom_ab.sh              exit=0        run_chain_ab.sh                  exit=0
+  run_unitexec_ab.sh               exit=0        run_unitexec_wide_ab.sh          exit=0
+  run_multipass_ab.sh              exit=0        run_dw_ab.sh                     exit=0
+  run_sched_ab.sh                  exit=0        run_nputop_sched_ab.sh           exit=0
+  run_tiling2d_rtl_ab.sh           exit=0 (RESULT: PASS)
+  run_tiling2d_wide_ab.sh          exit=0 (RESULT: PASS)
+  run_wgtblob_tiled_ab.sh          exit=0 (RESULT: PASS；前置=三冻结 md5 不变 + blob→wRam 映射互证；
+                                            正对照 3/3；负对照① MISMATCH=8334(outside=0)；② 挂住=预测；③ ERR=1/0=预测)
+  tools/check_dangling.py gen/*.v  PASS（47/47 文件，0 悬空）
+
+三、dev_map（集成；pds/devmap_c4a_t1.log，同 tcl 同器件；退出 0，两收尾标记齐全）
+--------------------------------------------------------------------------
+  LUT 126,222（C2 基线 126,228 ⇒ Δ −6） / as-logic 118,352
+  FF  149,369（C2 149,368 ⇒ Δ +1）
+  APM 542（Δ 0） / DRM 247.5（Δ 0） / Dist.RAM 7,872（Δ 0） / IO 99（Δ 0）
+  Adm-4088 = 0（无违规）；Mapping Summary：LUT 126,224 / as-logic 118,352 / regs 149,382
+  ★ PDS 前端合并报文（实测，解释 Δ≈0）：Removed inst mRB1_1..7/mRBm that is redundant to mRB1_0[31:0]
+
+四、PnR（判据）
+--------------------------------------------------------------------------
+  t18b（修复后 @18.4 ns，speed 档）：All Constraints Met；npu_clk 请求 54.3478 MHz / est 56.2683 MHz（17.7720 ns，slack +0.628）
+    比特流 9,188,552 B；YESHENMINI_PNR_C4A_DONE；exit=0
+  t18a（无修复 @18.4 ns，speed 档）：定稿时仍在 4-seed 循环（place 档 slack −1.884 ns）——见报告 T-6 开口项①
+==========================================================================
+★ 收盘追加（2026-10-16 晚，认证/交付/复跑）：§五~§八；本文件"四"里 t18a 的"仍在循环"行以此后 §八 的收盘状态为准。
+==========================================================================
+
+五、比特流 ↔ 源认证（收盘复核，本机现跑）
+--------------------------------------------------------------------------
+  全量重生成：29 条 Gen 调用（23 个 Gen 对象；DwLaneGen×4 / CiPackGen×3 / BypassExecGen×2 档）对 gen/ 全量重生成 A/B 两遍：
+    - A 遍输出 == 收盘前磁盘全量（diff 空）且 A == B（diff 空）⇒ 逐字节确定；当前 gen/ == 当前 HEAD 源输出（无 stale 产物）。
+    - 覆盖 47 网表 + 2 个 SigmoidUnit LUT bin；desc.bin / wgt_blob.bin / wgt_mult.bin 为模型产物（非 Gen），md5 一并记账、未变。
+  "t18b 消费的字节"证据链（0 差）——权威记录 = t18b 自己的工程实录，sources_info.log 只是收尾时刻（15:43:41）的磁盘快照，
+  记的是没被采用的 v2 实验档（7,324,373 B @15:07:35），不能当选"编译时读的字节"（t18a 同性质：其 14:09:33 快照记的是 13:58:51 修复档）：
+    1) t18b compile 窗口 = 14:08:55–14:22:38；该窗口内磁盘 gen/NpuTop.v 唯一版本 = 13:58:51 写入（t18a sources_info@14:09:33
+       快照实拍 size = 7,325,119 B；下一写点 15:07:35）。
+    2) t18b 自己的 compile 日志合并报文 = mRB1_1..7 + mRBm + primeR_1..7（15 条）⇔ 当前 NpuTop.v 寄存器副本结构逐条一致
+       （mRB 家族 9 实例 ⇒ 恰删 8；primeR 8 实例 ⇒ 恰删 7）。
+    3) t18b compile 日志 23 个 NPU 模块声明行号 ⇔ 新重生成 NpuTop.v 逐行相等（0 差）。
+    4) t18b .rtr 最坏路径网名 conv_requant_m[1]（fanout=216）∈ 当前 NpuTop.v；devmap t1（14:59，同窗口同文件）行号图 == t18b 图。
+    5) A/B 结构可分辨：无修复（t18a）→ 修复（t18b）= UnitExec 之后全部模块 +27 行；v2 实验档（devmap t2）= 无修复 + 切片模块 +3 行。
+  ⇒ 闭合判词：CLOSED。末环口径 = 结构等价（size 7,325,119 B + 23 点行号图 + 冗余结构 + 网名）；13:58:51 原字节已被 15:07/15:52
+    两次重写覆盖、无归档副本，故不是"对原字节的 md5"（口径明写），其读取窗口内无并行写入。
+  dev_map 回归（未重跑，引用在案）：pds/devmap_c4a_t1.log LUT 126,222 / FF 149,369 / APM 542 / DRM 247.5 / Adm-4088=0（T-5）。
+
+  全量 md5（重生成 2× 逐字节确定后；A == B == 收盘前磁盘；gen/ 为 gitignore，以本表记账）：
+    82dfdfe250dd0c16caab2a4295fa557d  gen/AddUnit.v
+    1f8bc13e994ef743ac1ffa4b49e88b5e  gen/AddUnit_w5.v
+    62cb3179885ac27ab7974145b1dae119  gen/BypassExec.v
+    03a5bcfe945d96e457f6412fc5e4d8b8  gen/BypassExec_w34.v
+    239412a002293f33f304fcd2f25e646c  gen/CiPackBase.v
+    41d003eff21da8d721d54752ed67a5d6  gen/CiPackDci.v
+    d01595af6ca5796acfa8d6b43dd22e4c  gen/CiPackDciMut5.v
+    131a65944087081f7b75d064695957ba  gen/Conv3x3Slice.v
+    3c55fcf85ac97cf0eb70a6ec4f23b1b1  gen/Conv3x3Slice_g4.v
+    ecdb69cc4c18233316469943013e16c3  gen/Conv3x3Slice_g8.v
+    8d1fea0907bfb2521cc91fa404f23509  gen/DdrMaster.v
+    a6397cc61fed57ed16e6deb39c3b68fb  gen/DescFetch.v
+    8c458c3a27e0818593b74f443577f02b  gen/DmaEngine.v
+    518691e0dba3f84f44a723367add0f58  gen/DwLaneAfter1.v
+    54371a1578b0168d43cdd6c9991cc07d  gen/DwLaneAfter1Mut5.v
+    3bc55a822c2636293fbee210dc8b230b  gen/DwLaneAfter2.v
+    62ba43a8e6b0deb85d19cd7ffe3afecc  gen/DwLaneBefore.v
+    9ce1323d91eaf13599a3e5ec084b802c  gen/DwUnit.v
+    6de7a921e10757dcbde83f0de05d8974  gen/FusionBuf.v
+    1e2ea35d4a980d7d7147b9ff8a316bfd  gen/FusionBuf_w5.v
+    bfd88e06b1ae7159835556504b7c8e00  gen/GroupedMacArray.v
+    ff158b9659bf8c45dcce139426260351  gen/GroupedMacArray_g2.v
+    6af40ffc7d7993ff9daec8bf3ec97bb8  gen/GroupedMacArray_g4.v
+    c6fdc48556607ad89529a82313082686  gen/GroupedMacArray_g8.v
+    06095886abb50fb76bf61924473e2369  gen/HostRegs.v
+    a51f298514997af9cfde4eb73d6e4348  gen/LayerSched.v
+    633414b52d8c00c274434ea370ad2eef  gen/LineBuffer.v
+    658e890fe5acfd0999668e3a7e66e07e  gen/MacArray.v
+    1f65ae013ac0a471c13fee240cc081f5  gen/MaxPoolUnit.v
+    c11868fc2e7695a6ac12cfe6f778e506  gen/MaxPoolUnit_w6.v
+    9ce1323d91eaf13599a3e5ec084b802c  gen/MultiPassUnit.v
+    95494d0b358802ceed5dc7e217b5872f  gen/NpuAxiLiteCdc.v
+    16c672388d814a1804db5d4fd9cef784  gen/NpuIrqCdc.v
+    f77e102dc6e728f2e7063633e2237b82  gen/NpuMemCdc.v
+    83efc1b9ce7f41df1e3de14e8a7d3132  gen/NpuResetSync.v
+    6a317d18491a540b09db3dd1134aafdd  gen/NpuTop.v
+    36450361f7cf79d2246335e3bccbf659  gen/ResizeUnit.v
+    9b3cc823deaf8555f0e848348a48bc64  gen/ResizeUnit_w6.v
+    52d4a4d45961d004bb5206cb1a5a0ae2  gen/SigmoidUnit.v
+    f1cb125c7398baf4de775b1196038e3e  gen/SigmoidUnit.v_toplevel_lut.bin
+    6d4a8c3b0e699a9d151362a54903f691  gen/SigmoidUnit_w6.v
+    f1cb125c7398baf4de775b1196038e3e  gen/SigmoidUnit_w6.v_toplevel_lut.bin
+    979129017535dc82ab9e6d89bea31080  gen/UnitExec.v
+    3bc5d65253a5321db54bacee24112baf  gen/UnitExec_tiled.v
+    618af3381eadcb4d7c6964cd4338a825  gen/UnitExec_w32.v
+    ddb9bb8addc01f94e2ea8ae8b6b898e6  gen/UnitExec_w640.v
+    55a83e122de7170d15dfbfdd871194a5  gen/WeightStore.v
+    35aa205bbd157c6c80713f4a9826fc3a  gen/WeightStore_g4.v
+    1520c6334d37c040c71beef52c89826d  gen/WeightStore_g8.v
+    4bd68b3610bcf7754cd50d39e27c2442  gen/desc.bin
+    aa135f0f7d50780b7b13d9a1ba9c518a  gen/wgt_blob.bin
+    ff2ed3c66041e196718d9c62d8202b7d  gen/wgt_mult.bin
+
+六、交付物（比特流；报告 §T-8 同表）
+--------------------------------------------------------------------------
+  B1 轮（20.000 ns）：sim/reglogs/pds_pnr_c4a_b1_p10.000/prj_tasks/pnr_1/generate_bitstream/yeshen_mini_board_top.sbit
+    9,188,552 B；md5 125ecf8bc62f44e1d572ef4990115e45；生成时刻 2026-10-16 09:54:06
+  时序轮（18.400 ns，本交付）：sim/reglogs/pds_pnr_c4a_t18b_p10.000/prj_tasks/pnr_1/generate_bitstream/yeshen_mini_board_top.sbit
+    9,188,552 B；md5 71a9959b963637470bbd75bcd07507e3；生成时刻 2026-10-16 15:45:39
+  两轮同 size、异 md5；本比特流从未上板（板级 PLL 仍 50 MHz 配置；上板为独立排期步骤）。
+
+七、收盘裁决闸门复跑（本机现跑；env = PY(lxvenv) + PATH+=iverilog(msys64/ucrt64) + PYTHONIOENCODING=utf-8 + PYTHONPATH='./.pydeps;../third_party/yunet/deps'）
+--------------------------------------------------------------------------
+  run_x1skip_ab.sh        rc=0  RESULT: PASS  95s     （9.00××2；负对照/外科/2 突变全按预测量）
+  run_dwpack_ab.sh        rc=0  RESULT: PASS  280s    （六形状 1 拍/像素/趟 + 整片 dump 逐字节；BEFORE 9.00×；负对照 + 外科全绿）
+  run_dci_ab.sh           rc=0  RESULT: PASS  110s    （3.00×/9.00×；N1=94 / N2=90 按预测量发火 + 外科翻绿）
+  run_multipass_ab.sh     rc=0  RESULT: PASS  135s
+  run_dw_ab.sh            rc=0  RESULT: PASS  24s
+  run_dw_wide_ab.sh       rc=0  RESULT: PASS  654s
+  run_unitexec_ab.sh      rc=0  RESULT: PASS  63s
+  run_unitexec_wide_ab.sh rc=0  RESULT: PASS  62s
+  run_tiling2d_rtl_ab.sh  rc=0  RESULT: PASS  438s
+  run_tiling2d_wide_ab.sh rc=0  RESULT: PASS  1533s   （负对照①②③按预测量发火，含 631 / 20582）
+  run_wgtblob_tiled_ab.sh rc=0  RESULT: PASS  1108s   （前置 = 三冻结 md5 + blob→wRam 映射互证；负对照①/②/③全按预测量）
+  check_dangling.py gen/*.v  PASS（47/47 文件，0 悬空）
+
+八、t18a 收盘状态（更新"四"的循环行）
+--------------------------------------------------------------------------
+  seed 0 于 16:41 完成：Runner 自报 `Setup(Slow) = -0.939 ns`（`Worst Slack(place) = -1884`、`Worst Slack(pre route) = -1128`）
+  ⇒ 无修复 @18.4 ns **不闭合**（与 t18b 修复后 slack +0.628 成 A/B 对照）；四 seed 循环继续中（seed 1 起于 16:41），
+  定稿 report_timing 读数待其收尾后补记。本轮不动其进程。
+==========================================================================

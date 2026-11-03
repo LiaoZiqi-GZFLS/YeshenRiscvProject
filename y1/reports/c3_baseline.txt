@@ -1,0 +1,7 @@
+run_ddrread_ab=0
+run_ddrwrite_ab=0
+run_ddrcopy_ab=0
+run_hostregs_ab=0
+run_nputop_ab=0
+e1871260a5509c95bea0f0fd8be3bf61 *gen/DdrMaster.v
+9bc9ba6f821b36d1fe72079a3ed192e9 *gen/NpuTop.v

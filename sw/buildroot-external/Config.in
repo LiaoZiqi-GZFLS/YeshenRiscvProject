@@ -1,0 +1,2 @@
+source "$BR2_EXTERNAL_NAXMINI_PATH/package/opensbi-ext/Config.in"
+

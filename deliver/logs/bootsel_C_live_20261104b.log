@@ -1,0 +1,20 @@
+
+[Y1] L=Linux C=CoreMark > SDR 202ED0008B040003D0
+SDR 303080003B040003D0
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 3427438024
+Total time (secs): 34.274380
+Iterations/Sec   : 583.526233
+Iterations       : 20000
+Compiler version : GCC11.2.1 20211120
+Compiler flags   : -Ofast-upstream
+Memory location  : STATIC
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0x382f
+Correct operation validated. See README.md for run and reporting rules.
+CoreMark 1.0 : 583.526233 / GCC11.2.1 20211120 -Ofast-upstream / STATIC
+5.84 Coremark/MHz

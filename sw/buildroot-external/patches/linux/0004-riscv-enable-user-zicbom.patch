@@ -1,0 +1,29 @@
+diff -Naur a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+--- a/arch/riscv/kernel/process.c	2026-10-31 00:57:05.696038117 +0800
++++ b/arch/riscv/kernel/process.c	2026-10-31 00:57:05.719336510 +0800
+@@ -22,6 +22,15 @@
+ #include <asm/switch_to.h>
+ #include <asm/thread_info.h>
+ 
++/*
++ * Zicbom user access (cbo.clean / cbo.flush).  The upstream series that
++ * added CSR_SENVCFG / ENVCFG_CBCFE to <asm/csr.h> landed after this tree,
++ * so spell the two constants out here.  U-mode CBO additionally needs
++ * menvcfg.CBCFE, which OpenSBI sets once at cold boot.
++ */
++#define CSR_SENVCFG	0x10a
++#define ENVCFG_CBCFE	(1UL << 6)
++
+ register unsigned long gp_in_global __asm__("gp");
+ 
+ #ifdef CONFIG_STACKPROTECTOR
+@@ -84,6 +93,9 @@
+ 	}
+ 	regs->epc = pc;
+ 	regs->sp = sp;
++
++	/* Let user space write back its own dirty lines before DMA reads them. */
++	csr_write(CSR_SENVCFG, csr_read(CSR_SENVCFG) | ENVCFG_CBCFE);
+ }
+ 
+ void flush_thread(void)

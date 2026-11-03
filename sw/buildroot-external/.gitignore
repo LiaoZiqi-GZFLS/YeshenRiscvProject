@@ -1,0 +1,13 @@
+images
+output
+host
+# cpp 预处理中间产物（由 naxmini_setup.sh 现场生成，可重放）
+configs/naxmini_defconfig
+boards/naxmini/linux/linux.config
+boards/naxmini/linux/linux.dts
+boards/naxmini/opensbi/config.mk
+# 上游 naxriscv_sim 板（保留作参照，其生成物同样不入库）
+configs/naxriscv_sim_defconfig
+boards/naxriscv_sim/linux/linux.config
+boards/naxriscv_sim/linux/linux.dts
+boards/naxriscv_sim/opensbi/config.mk

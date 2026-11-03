@@ -1,0 +1,53 @@
+== run_dci_ab: NPU v2 切片 C2（DCI 落产品 RTL：ci 进拍/tap 进 lane + p8r 的 A 级寄存纪律）==
+   nl=gen/UnitExec_tiled.v  tb=rtl_test/UnitExecWideTb.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog
+   预测拍数：c0(Conv_0 3→16,2 趟,8x8) DCI 384 / DCI 关 1152（3.00×）；x18(合成 1→8 dense,8x16) DCI 128 / 关 1152（9.00×）
+---- 0) 前置：两条冻结参考自检 + TILING=false 三网表 md5 + 真表前提重扫 ----
+   参考自检 OK（wide_exec_ref.py --selftest + tiling_ref.py --selftest2d）
+   TILING=false 三网表 md5 不变（97912901… / 618af338… / ddb9bb8a…）
+   TILED_NL_MD5=76450464a58c3a25310ccb5459f8f567（gen/UnitExec_tiled.v，只记账）
+   真表：DCI 定义域 = 7 个单元（Conv_0,Conv_55,Conv_57,Conv_59,Conv_67,Conv_69,Conv_71）；TYPE==2 单元 26 个（C_in 全 > 4 ⇒ 互斥）
+---- 1) iverilog 编译（UnitExecWideTb + AxiMemModel + gen/UnitExec_tiled.v；-DUE_CGEOM -DUE_X1OBS）----
+   编译 OK
+---- 2) 供料（真层两档 + 合成 1→8 + 三个合成小作业）----
+    WIDE_REF Conv_0 CIN=3 COUT=16 n_ci=1 n_co=2 M=57384 ZPAD=-128 ZY=41 NCOL=128
+    WIDE_REF tiled_eq=1 distinct=24 d_pad0=98 d_nobias=1024 tile_nonzero=424 dir=C:/Users/Ziqi/AppData/Local/Temp/tmp.6e28nAkNFY/ref\lid0_Conv_0
+    WIDE_REF Conv_55 CIN=1 COUT=1 n_ci=1 n_co=1 M=1423026 ZPAD=-61 ZY=-103 NCOL=128
+    WIDE_REF tiled_eq=1 distinct=38 d_pad0=44 d_nobias=128 tile_nonzero=9 dir=C:/Users/Ziqi/AppData/Local/Temp/tmp.6e28nAkNFY/ref\lid38_Conv_55
+    WIDE_REF Synth_1_8 CIN=1 COUT=8 n_ci=1 n_co=1 M=3000000 ZPAD=-128 ZY=-1 NCOL=128
+    WIDE_REF tiled_eq=1 distinct=19 d_pad0=339 d_nobias=10 tile_nonzero=70 dir=C:/Users/Ziqi/AppData/Local/Temp/tmp.6e28nAkNFY/ref\synth_1_8
+    JOBGEN xc_tap8 variant=tap8 M=53687091 len=128 pred_p8=94 pred_n2=0
+    JOBGEN xc_lane45 variant=lane45 M=53687091 len=128 pred_p8=119 pred_n2=90
+    JOBGEN xc_surg variant=surg M=53687091 len=128 pred_p8=120 pred_n2=0
+MEMGEN lid0_Conv_0 dst_preload_vs_gold_diff=1020/1024
+MEMGEN lid38_Conv_55 dst_preload_vs_gold_diff=125/128
+---- 3) 正对照：产品网表（DCI 开）—— 真 Conv_0 / 真 Conv_55 / 合成 1→8 / tap8 ----
+   [c0 DCI] PASS=1 MISMATCH=0 X1_BEATS=384（预测 384）CYCLES=3229
+   [c1 DCI] PASS=1 MISMATCH=0 X1_BEATS=128（预测 128）CYCLES=1185
+   [x18 DCI] PASS=1 MISMATCH=0 X1_BEATS=128（预测 128）CYCLES=2375
+   [tap8 DCI] PASS=1 MISMATCH=0 X1_BEATS=128（预测 128）CYCLES=1185
+---- 4) 实测拍比（DCI 关的受控突变）+ c1 的 dw 谓词边界（三通路逐字节一致）----
+   MUTATE modes=dcioff: 1 site(s) (anchors unique)
+   [c0 DCI-OFF] PASS=1 MISMATCH=0 X1_BEATS=1152（预测 1152）整片 dump 差异=0
+   [x18 DCI-OFF] PASS=1 MISMATCH=0 X1_BEATS=1152（预测 1152）整片 dump 差异=0
+   RATIO（实测拍数）：c0 1152 -> 384（= 3.00×）；x18 1152 -> 128（= 9.00×）
+   c1（真 1→1）：DCI 关后仍是 128（dw 谓词已收）—— 再关一层 dw 验证是它：
+   MUTATE modes=dcioff,dwoff: 2 site(s) (anchors unique)
+   [c1 dw+DCI 双关] PASS=1 MISMATCH=0 X1_BEATS=1152（预测 1152 = 9 拍/像素）
+   [c1 DCI 关、dw 开] PASS=1 MISMATCH=0 X1_BEATS=128（= dw 通路，应 128）三档 dump 差异（dci/off=0、offdw/dci=0）
+---- 5) 负对照 N1（p8r 的受控 A/B）：B 级改回组合积 ⇒ tap8 作业按预测量发火 ----
+   预测量 PRED_P8 = #(gold_tap8 != gold_bias) = 94
+   MUTATE modes=p8comb: 1 site(s) (anchors unique)
+   [N1 tap8 组合回读] PASS=1 X1_BEATS=128（应 128）MISMATCH(vs 黄金)=94（预测 94）MISMATCH(vs bias-only)=0（应 0）
+---- 6) 负对照 N2（lane 4 的 w 来源改读 lane 5 的瓦片）+ 外科式（槽 5 := 槽 4）----
+   预测量 PRED_N2 = #(gold != gold_mut) = 90
+   MUTATE modes=lane45: 1 site(s) (anchors unique)
+   [N2 lane45 路由突变] PASS=1 X1_BEATS=128（应 128）MISMATCH(vs 黄金)=90（预测 90）MISMATCH(vs gold_mut)=0（应 0）
+   [S surg（槽 5 := 槽 4）] PASS=1 X1_BEATS=128（应 128）MISMATCH=0（应 0 ⇒ 翻绿）
+   SURG：槽 5 字节改变黄金 85 字节；突变网表两份 dump 差 97 字节（≥ 黄金差 —— 突变把槽 5 同时喂给 lane 4/5 两条 lane，方向一致）
+==========================================================================
+RESULT: PASS
+  正对照：c0(真 Conv_0) 384 拍 / c1(真 Conv_55) 128 拍 / x18(合成 1→8) 128 拍 / tap8 128 拍 —— 全部逐字节 == 冻结参考
+  实测拍比（产品网表，DCI 关的受控突变）：c0 3.00×（3.00×，1,152->384）与 x18 9.00×（9.00×，1,152->128），两档整片 dump 逐字节相同
+  c1 的边界（实测）：DCI 关（dw 开）128 == DCI 开 128；dw+DCI 双关 1,152 ⇒ dw 谓词先收（1、2 两条通路与 c3 逐字节一致）
+  p8r 的受控 A/B：组合回读 ⇒ MISMATCH == 94 且 dump == bias-only 黄金；正规网表 == 0（必要且充分）
+  c3 路由负对照 + 外科式：MISMATCH == 90 且 dump == gold_mut；一个权重字节翻绿

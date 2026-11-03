@@ -1,0 +1,130 @@
+== run_chain_wide_ab: 宽链（head middle* tail，chain_len ≥ 2 的宽路）—— 真表 run 形状 ==
+   nl=gen/UnitExec_tiled.v  tb=rtl_test/UnitExecWideTb.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog  vvp=/c/msys64/ucrt64/bin/vvp
+---- 0) 冻结参考自检 conv_unit_ref.py --selftest ----
+   参考自检 OK
+---- 1) iverilog 编译（UnitExecWideTb + AxiMemModel + gen/UnitExec_tiled.v）----
+    编译 OK
+---- job c16_L2: C 16→16 链长 2  32x32  n_ci=2 n_co=2  N_i=2304 B/片 ----
+    JOBGEN c16_L2 C=16->16 L=2 32x32 N_i=2304 blob=4608 gold_distinct=256 trunc_diff=16311
+   JOB c16_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 16384) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 1 片): DONE=1 ERR=0（绿时要求 DONE=1 且输出 == 截短黄金）
+---- job c64_L4: C 64→64 链长 4  20x20  n_ci=8 n_co=8  N_i=36864 B/片 ----
+    JOBGEN c64_L4 C=64->64 L=4 20x20 N_i=36864 blob=147456 gold_distinct=256 trunc_diff=24047
+   JOB c64_L4 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 25600) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 3 片): DONE=0 ERR=1（绿时要求 DONE=1 且输出 == 截短黄金）
+---- job c64_10_L2: C 64→10 链长 2  20x20  n_ci=8 n_co=2  N_i=5760 B/片 ----
+    ★ REFREFUSE：本 run 形状（C_IN≠C_OUT）**冻结参考拒绝**（无整层链黄金可对）——
+      REFREFUSE chain_l(CIN=64 COUT=10 L=2): IndexError: list index out of range
+      ⇒ 判据 1/2 这一档**在本代约束下不可判**（见 reports/ts3f_red_first.txt 的 B1）
+   JOB c64_10_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 4000) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 1 片): DONE=0 ERR=1（绿时要求 DONE=1 且输出 == 截短黄金）
+---- job c64_1_L2: C 64→1 链长 2  20x20  n_ci=8 n_co=1  N_i=576 B/片 ----
+    ★ REFREFUSE：本 run 形状（C_IN≠C_OUT）**冻结参考拒绝**（无整层链黄金可对）——
+      REFREFUSE chain_l(CIN=64 COUT=1 L=2): IndexError: list index out of range
+      ⇒ 判据 1/2 这一档**在本代约束下不可判**（见 reports/ts3f_red_first.txt 的 B1）
+   JOB c64_1_L2 = RED（响亮 err + 零搬运）：DONE=0 ERR=1 RD_BYTES=0 WR_BYTES=0 AR=0 AW=0
+      RESULT: FAIL tiled_w=1 done=0 err=1 busy=0 nfed=0/1 wr=0(期望 400) aw=0 b=0 rd_peak=0(期望 0)
+   NEG(截短 1 片): DONE=0 ERR=1（绿时要求 DONE=1 且输出 == 截短黄金）
+==========================================================================
+作业集合： c16_L2 c64_L4 c64_10_L2 c64_1_L2
+正对照: 绿 0 / 红(POS_RED) 4
+JUDGE-RED: 宽链（chain_len ≥ 2 的宽路）在当前网表上没有通路 ——
+  宽路的四条判据（wideGeomOk :1428 / wgtLoadOk :1451 / tilingWideC :1650 / LayerSched 派发）
+  都要求 chain_len == 1 ⇒ go 那一刻响亮 err + 零搬运（本闸门 = 先红证据）。
+  绿需要实现 plan T-S3f（宽路支持整链）；设计约束与取舍见 rtl/UnitExec.scala 文件尾「T-S3f」一节。
+RESULT: FAIL
+GATE_EXIT=1
+
+==============================================================================
+附 A：E1 —— 冻结链参考对 C_IN≠C_OUT 链形状的**拒绝**（直接跑冻结 conv_unit_ref）
+==============================================================================
+  chain_l(CIN=16 COUT=16 L=2): OK
+  chain_l(CIN=64 COUT=64 L=4): OK
+  chain_l(CIN=64 COUT=10 L=2): REFUSE -> IndexError: list index out of range
+  chain_l(CIN=64 COUT=1 L=2): REFUSE -> IndexError: list index out of range
+  chain_l(CIN=64 COUT=4 L=2): REFUSE -> IndexError: list index out of range
+  说明：chain_l / pair_two_stage / sched_chain 一族都是**同一 (C_IN,C_OUT) 贯穿全链**的口径；
+        链的下一段输入只有 C_OUT 个通道 ⇒ C_IN≠C_OUT 的链在参考里**无定义**（口径问题，不是夹具写错）。
+
+==============================================================================
+附 B：E2 —— 真表 blob 每片真段长 vs LayerSched 指针推进（chainLen × N_i(链首)）
+==============================================================================
+  run[ 1.. 2] L=2 head C 16->16 N_i(head)=  2304 LayerSched advance=   4608 real blob=   2464 *** DRIFT ***
+  run[ 4..11] L=8 head C 16->16 N_i(head)=  2304 LayerSched advance=  18432 real blob=  35872 *** DRIFT ***
+  run[13..16] L=4 head C 64->64 N_i(head)= 36864 LayerSched advance= 147456 real blob=  74880 *** DRIFT ***
+  run[18..21] L=4 head C 64->64 N_i(head)= 36864 LayerSched advance= 147456 real blob=  74880 *** DRIFT ***
+  run[23..28] L=6 head C 64->64 N_i(head)= 36864 LayerSched advance= 221184 real blob= 112320 *** DRIFT ***
+  run[31..32] L=2 head C 64->64 N_i(head)= 36864 LayerSched advance=  73728 real blob=  37440 *** DRIFT ***
+  run[35..36] L=2 head C 64->64 N_i(head)= 36864 LayerSched advance=  73728 real blob=  37440 *** DRIFT ***
+  run[37..38] L=2 head C 64->1 N_i(head)=   576 LayerSched advance=   1152 real blob=    608 *** DRIFT ***
+  run[39..40] L=2 head C 64->1 N_i(head)=   576 LayerSched advance=   1152 real blob=    608 *** DRIFT ***
+  run[41..42] L=2 head C 64->1 N_i(head)=   576 LayerSched advance=   1152 real blob=    608 *** DRIFT ***
+  run[43..44] L=2 head C 64->4 N_i(head)=  2304 LayerSched advance=   4608 real blob=   2368 *** DRIFT ***
+  run[45..46] L=2 head C 64->4 N_i(head)=  2304 LayerSched advance=   4608 real blob=   2368 *** DRIFT ***
+  run[47..48] L=2 head C 64->4 N_i(head)=  2304 LayerSched advance=   4608 real blob=   2368 *** DRIFT ***
+  run[49..50] L=2 head C 64->1 N_i(head)=   576 LayerSched advance=   1152 real blob=    608 *** DRIFT ***
+  run[51..52] L=2 head C 64->1 N_i(head)=   576 LayerSched advance=   1152 real blob=    608 *** DRIFT ***
+  run[53..54] L=2 head C 64->1 N_i(head)=   576 LayerSched advance=   1152 real blob=    608 *** DRIFT ***
+  run[55..56] L=2 head C 64->10 N_i(head)=  5760 LayerSched advance=  11520 real blob=   5856 *** DRIFT ***
+  run[57..58] L=2 head C 64->10 N_i(head)=  5760 LayerSched advance=  11520 real blob=   5856 *** DRIFT ***
+  run[59..60] L=2 head C 64->10 N_i(head)=  5760 LayerSched advance=  11520 real blob=   5856 *** DRIFT ***
+  说明：blob 由冻结转换器按**每片真实权重**落盘（dw 段 144/288/576 B），而 LayerSched 的
+        指针按 `chainLen × N_i(链首几何)` 推进 ⇒ **19/19 条 run 全部错位**（连 64→64 的方形链也错：
+        dw 片的真段长 << 链首 N_i）⇒ 权重流从第 2 片起就取错字节。
+==============================================================================
+附 C：B3 —— "忠实镜像窄链"的宽链设计为什么放不下（面积/带宽账，全部可核）
+==============================================================================
+  · 窄链能镜像的前提是"每片一套 576 B 权重 + 单趟"；宽层的每片权重是 **nCi×nCo 个趟瓦片**：
+      N_i(链首) = C_out·(C_in/GROUP)·9 ∈ {576, 2304, 5760, 36864} B（真表 64→64 = 36864 B/片）。
+  · 行锁步（每行作业做完该片的 nCi×nCo 趟）⇒ 每片每行的权重流量 = **N_i B/行**（WeightStore 写口
+    冻结为 8 bit ⇒ 装载 **1 B/拍**）⇒ 64→64 的一行作业 = 36,864 拍纯装载（该行的算只有 ~748 拍）
+    ⇒ 折算 ≈ **5.2 MB/tile**（40×40、L4 档）的权重 DDR 读；帧级不可接受。
+  · 若按"权重驻留"消除重载：需要 **L × N_i** 常驻 = 真表最坏 run[23..28]（L6 × 36864）= **221 KB**
+    （L4 档 147 KB）；而 wRam 现 36 KB、**DRM 余量 = 39.5 块 ≈ 178 KB**（375.5/415，4.5 KB/块）
+    ⇒ L6/C64 放不下；且"每片各一套"的存储与"零新增宽存储"（spec §5-R1）冲突。
+  · 磁盘/片上折衷的替代（**materially different**，不是镜像）：
+      (a) 切片串行 + 每 (tile, 片) 从 blob 重载 wRam（36 KB 不变）+ 全 tile 中间缓冲
+          （≤ 32×32×64 ch = 64 KB，与既有 wOutMem 乒乓）；"halo 增长"用**嵌套窗口**
+          （tile 边长 T = 34 − 2L：L2→30、L4→26、L8→18）吸收 ⇒ 无跨 tile 依赖；
+      (b) 或"行作业按 B 行突发 + 深环"—— 环深 (B+3) 行 × W_MAX × C ⇒ 与 (a) 同量级存储。
+    两者都要**先裁决**（spec 修订）：它们改变"逐片行锁步 + FusionBuf"的冻结口径与权重流量账。
+==============================================================================
+附 D：结论 / 开口项（T-S3f 状态 = **BLOCKED**，见提交信息）
+==============================================================================
+  1. 先红证据（本文件上半）：4 个真表 run 形状在 `gen/UnitExec_tiled.v` 上**全部响亮 err + 零搬运**。
+  2. **B1（表/口径级）**：真表 run 是**异形链**（片内 C_IN/C_OUT 逐片变），而描述符按冻结口径只带
+     **链首几何** ⇒ "每片按表里几何跑"数值上就不是真网的链；且 `64→1/4/10` 连**冻结参考都拒绝**
+     （附 A）⇒ 任务书写死的判据 2（"64→10 / 64→1 链长 2 逐字节 == 冻结参考"）**在冻结约束下不可判**。
+  3. **B2（blob 级）**：真 blob 的每片段长 ≠ `chainLen × N_i(链首)`（附 B，19/19 全错位）⇒ 权重流
+     从第 2 片起取错字节（连方形链也错，因为 dw 片更短）。修它必须动转换器/表/blob 口径（冻结）。
+  4. **B3**：把 WIDERUN 扩到整链的**忠实镜像**在 DRM/带宽上放不下（附 C）；可行替代是另一套调度
+     （切片串行 + 嵌套窗口 + 每 (tile,片) 重载），属"materially different" ⇒ 按任务约定 **STOP**。
+  5. 本任务已落地的**可用产物**：`tools/run_chain_wide_ab.sh`（4 个真表 run 形状的先红闸门，含
+     正对照/截短负对照骨架与退出码）、`rtl_test/UnitExecWideTb.v` 的 `+CHAINLEN=`（缺省 1 ⇒ 既有
+     闸门逐字节同形）、本证据文件。RTL/网表**一字未改**（三份 `TILING=false` 网表与
+     `gen/UnitExec_tiled.v` 的 md5 复核过：见提交说明）。
+==============================================================================
+附 E：回归证据（T-S3f 提交后；RTL/网表**一字未改**，TB 改动 additive ⇒ 缺省行为同形）
+==============================================================================
+  · run_unitexec_wide_ab.sh（用本任务改过的 UnitExecWideTb.v）：RESULT: PASS（exit 0）
+      —— `+CHAINLEN` 缺省 = 1 ⇒ 既有宽层闸门逐字节同形（改动是 inert 的直接证据）。
+  · run_tiling2d_wide_ab.sh（同一 TB + gen/UnitExec_tiled.v）：RESULT: PASS（exit 0；正对照 + 3 负对照全 OK）。
+  · run_sched_ab.sh：RESULT: PASS（exit 0）。
+  · check_dangling.py：gen/UnitExec_tiled.v / UnitExec.v / UnitExec_w32.v / UnitExec_w640.v 全部
+      零悬空（total dangling instances: 0）。
+  · 网表指纹（开工前 -> 现在，逐字节不变）：
+      gen/UnitExec.v      979129017535dc82ab9e6d89bea31080
+      gen/UnitExec_w32.v  618af3381eadcb4d7c6964cd4338a825
+      gen/UnitExec_w640.v ddb9bb8addc01f94e2ea8ae8b6b898e6
+      gen/UnitExec_tiled.v f5537afdaff5a3f1b5d3857d2b9a3d60（未重生成；与 T-S3d 记录一致）
+  · **预存在的红（不是本任务引起，如实记账）**：`run_chain_ab.sh` 的**最后一节**（第 7 节"网表文本
+    实例计数锚"）在当前 `gen/UnitExec_w32.v` 上红：
+      instances(text): Conv3x3Slice x9  FusionBuf x9  WeightStore x0  (>>>5'd30 x8 / <<<2'd2 **x9**)
+      JUDGE-RED: 期望 `<<<2'd2 == 8`、WeightStore 计数正则命中 >0
+    该节**只**读网表文本（本任务未改 `UnitExec.scala`、未重生成任何网表 ⇒ 结果与本任务之前逐字相同）；
+    前面 6 节（数值正对照 CHAIN_FIN_MISMATCH=0 / 零 DDR 中间 / 环窗 / 比较器自检 / 负对照发火 /
+    响亮 err 两档）**全过** ⇒ 属"锚位过时"（疑与 T-S1/T-S3d 期间 `Conv3x3Slice` 单份定义的文本
+    计数漂移有关；`<<<2'd2` 8→9 是单份定义内的站点数），需要 owner 一行**重锚**（或记为开口项）。

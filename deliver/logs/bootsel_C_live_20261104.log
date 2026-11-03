@@ -1,0 +1,52 @@
+[    5.594253] NAXMINI-NET: eth0 
+[    5.756778] 192.168.1.110/24
+[    5.756778] fe80::ff:fe00:1/64
+[    5.826302] YGUI-AUTOSTART pid=104
+[    5.968648] YGUI-CAMERA gui GUI_CTRL=0x1 readback=0x1
+[    5.968771] 
+[    5.995655] YGUI-BOOT
+[    5.995770] 
+[    6.015936] YGUI-VARIANT gui2 GUI buffer=0x92000000 rows=60..659 (GUI_CTRL=0x1)
+[    6.016054] 
+[    6.059454] YGUI-PRESENT async
+[    6.059585] 
+[    6.095555] YGUI-TOUCH-SVC
+[    6.095677] 
+[    6.139079] GPU-UNIT-ON
+[    6.139278] 
+[    6.159670] board_fb: LCD keeps reading bank1 (GUI_CTRL[1]=1, no flip)
+[    6.159787] 
+[    6.217798] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[    6.240447] VEXIIYESHEN-OK
+[    6.686637] YGUI-CAMSRC CAM1 CAM_CTRL=0x3 readback=0x7
+[    6.697017] 
+
+Welcome to Buildroot
+buildroot login: [    7.019810] GPU-IMG: task_area=(0..1023,0..599) clip=(0..1023,0..599) img=1024x600 stride=1024
+[    7.019943] 
+[    7.049003] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[    8.286129] IRQDBG 10: 2126 RISC-V INTC 5 Edge riscv-timer
+[    8.316935] IRQDBG 12: 68 SiFive PLIC 1 Edge ttyS0
+[    8.333513] IRQDBG 13: 16 SiFive PLIC 2 Edge eth0
+[    8.354001] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[    8.373914] IRQDBG IPI0: 0 Rescheduling interrupts
+[    8.397649] IRQDBG IPI1: 0 Function call interrupts
+[    8.419770] IRQDBG IPI2: 0 CPU stop interrupts
+[    8.438260] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[    8.457362] IRQDBG IPI4: 0 IRQ work interrupts
+[    8.481916] IRQDBG IPI5: 0 Timer broadcast interrupts
+[    8.503892] IRQDBG IPI6: 0 CPU backtrace interrupts
+[    8.734391] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[    9.000002] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[   10.142236] IRQDBG 10: 2755 RISC-V INTC 5 Edge riscv-timer
+[   10.156965] IRQDBG 12: 68 SiFive PLIC 1 Edge ttyS0
+[   10.165724] IRQDBG 13: 16 SiFive PLIC 2 Edge eth0
+[   10.177330] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[   10.185847] IRQDBG IPI0: 0 Rescheduling interrupts
+[   10.197317] IRQDBG IPI1: 0 Function call interrupts
+[   10.206009] IRQDBG IPI2: 0 CPU stop interrupts
+[   10.216926] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[   10.226527] IRQDBG IPI4: 0 IRQ work interrupts
+[   10.23749
+[Y1] L=Linux C=CoreMark > SDR 1035B0004C00000000
+SDR 42E500003B00000000

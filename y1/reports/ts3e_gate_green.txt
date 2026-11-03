@@ -1,0 +1,420 @@
+== run_bypass_tile_ab: BypassExec 空间 tile 循环（真表旁路形状 + ★ Add 两路源）逐字节闸门 —— T-S3a.2b/2d ==
+   nl=gen/BypassExec_w34.v  tb=rtl_test/BypassTb.v  ref=tools/bypass_ref.py  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog
+---- 0) 冻结参考自检 bypass_ref.py --selftest（前置；不过 exit 3）----
+   SELFTEST: PASS
+---- 1) iverilog 编译（BypassTb + AxiMemModel + gen/BypassExec_w34.v，-DBP_TILED_B）----
+   编译 OK
+--------------------------------------------------------------------------
+==== [premise_wholehole_c8_16x16] op=maxpool C_IN=C_OUT=8 输出 16x16  网表=gen/BypassExec_w34.v ====
+   JOBGEN premise_wholehole_c8_16x16 op=maxpool C=8 输出 16x16（输入 32x32）| A 平面 8192 B / B 平面 0 B / 黄金 2048 B | outPix=256 inCols=1024 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/premise_wholehole_c8_16x16/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=8 COUT=8 IMG_W=16 IMG_H=16 GROUP=1 SRC=131072 DST=1835008 INB=8192 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=256 RD_PEAK=32 AR=256 AW=16 B=16 CYCLES=7356 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/premise_wholehole_c8_16x16/dump.hex (2621440 bytes)
+    MEM rd=8192 wr=2048 bursts=272 maxburst=16
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[premise_wholehole_c8_16x16] vvp 退出码=0
+[premise_wholehole_c8_16x16] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c16_maxpool_160x160] op=maxpool C_IN=C_OUT=16 输出 160x160  网表=gen/BypassExec_w34.v ====
+   JOBGEN c16_maxpool_160x160 op=maxpool C=16 输出 160x160（输入 320x320）| A 平面 1638400 B / B 平面 0 B / 黄金 409600 B | outPix=25600 inCols=102400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c16_maxpool_160x160/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=16 COUT=16 IMG_W=160 IMG_H=160 GROUP=1 SRC=131072 DST=1835008 INB=1638400 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=51200 AW=25600 B=25600 CYCLES=1779402 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c16_maxpool_160x160/dump.hex (2621440 bytes)
+    MEM rd=1638400 wr=409600 bursts=76800 maxburst=4
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c16_maxpool_160x160] vvp 退出码=0
+[c16_maxpool_160x160] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_maxpool_80x80] op=maxpool C_IN=C_OUT=64 输出 80x80  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_maxpool_80x80 op=maxpool C=64 输出 80x80（输入 160x160）| A 平面 1638400 B / B 平面 0 B / 黄金 409600 B | outPix=6400 inCols=25600 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_maxpool_80x80/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=64 COUT=64 IMG_W=80 IMG_H=80 GROUP=1 SRC=131072 DST=1835008 INB=1638400 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=51200 AW=25600 B=25600 CYCLES=1779442 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_maxpool_80x80/dump.hex (2621440 bytes)
+    MEM rd=1638400 wr=409600 bursts=76800 maxburst=4
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_maxpool_80x80] vvp 退出码=0
+[c64_maxpool_80x80] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_maxpool_40x40] op=maxpool C_IN=C_OUT=64 输出 40x40  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_maxpool_40x40 op=maxpool C=64 输出 40x40（输入 80x80）| A 平面 409600 B / B 平面 0 B / 黄金 102400 B | outPix=1600 inCols=6400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_maxpool_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=409600 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=20480 AW=7680 B=7680 CYCLES=590818 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_maxpool_40x40/dump.hex (2621440 bytes)
+    MEM rd=655360 wr=102400 bursts=28160 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_maxpool_40x40] vvp 退出码=0
+[c64_maxpool_40x40] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_maxpool_20x20] op=maxpool C_IN=C_OUT=64 输出 20x20  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_maxpool_20x20 op=maxpool C=64 输出 20x20（输入 40x40）| A 平面 102400 B / B 平面 0 B / 黄金 25600 B | outPix=400 inCols=1600 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_maxpool_20x20/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=64 COUT=64 IMG_W=20 IMG_H=20 GROUP=1 SRC=131072 DST=1835008 INB=102400 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=7040 AW=2560 B=2560 CYCLES=187794 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_maxpool_20x20/dump.hex (2621440 bytes)
+    MEM rd=225280 wr=25600 bursts=9600 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_maxpool_20x20] vvp 退出码=0
+[c64_maxpool_20x20] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_resize_80x80] op=resize C_IN=C_OUT=64 输出 80x80  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_resize_80x80 op=resize C=64 输出 80x80（输入 40x40）| A 平面 102400 B / B 平面 0 B / 黄金 409600 B | outPix=6400 inCols=1600 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_resize_80x80/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=resize TYPE=0x00000011 CIN=64 COUT=64 IMG_W=80 IMG_H=80 GROUP=1 SRC=131072 DST=1835008 INB=102400 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=1 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=8960 AW=15360 B=15360 CYCLES=839626 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_resize_80x80/dump.hex (2621440 bytes)
+    MEM rd=286720 wr=409600 bursts=24320 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_resize_80x80] vvp 退出码=0
+[c64_resize_80x80] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_resize_40x40] op=resize C_IN=C_OUT=64 输出 40x40  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_resize_40x40 op=resize C=64 输出 40x40（输入 20x20）| A 平面 25600 B / B 平面 0 B / 黄金 102400 B | outPix=1600 inCols=400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_resize_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=resize TYPE=0x00000011 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=25600 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=1 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=3040 AW=5120 B=5120 CYCLES=247578 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_resize_40x40/dump.hex (2621440 bytes)
+    MEM rd=97280 wr=102400 bursts=8160 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_resize_40x40] vvp 退出码=0
+[c64_resize_40x40] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_add_40x40] op=add C_IN=C_OUT=64 输出 40x40  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_add_40x40 op=add C=64 输出 40x40（输入 40x40）| A 平面 102400 B / B 平面 102400 B / 黄金 102400 B | outPix=1600 inCols=1600 src2=1048576
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_add_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=add TYPE=0x00000013 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=102400 QSHIFT=6 LID=0 SRC2=1048576 SRC2K=1 PLANAR=1,1
+    TB TILED_B RTL: opMode=2 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=14080 AW=5120 B=5120 CYCLES=434498 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_add_40x40/dump.hex (2621440 bytes)
+    MEM rd=450560 wr=102400 bursts=19200 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_add_40x40] vvp 退出码=0
+[c64_add_40x40] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+--------------------------------------------------------------------------
+==== [c64_add_80x80] op=add C_IN=C_OUT=64 输出 80x80  网表=gen/BypassExec_w34.v ====
+   JOBGEN c64_add_80x80 op=add C=64 输出 80x80（输入 80x80）| A 平面 409600 B / B 平面 409600 B / 黄金 409600 B | outPix=6400 inCols=6400 src2=1048576
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_add_80x80/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=add TYPE=0x00000013 CIN=64 COUT=64 IMG_W=80 IMG_H=80 GROUP=1 SRC=131072 DST=1835008 INB=409600 QSHIFT=6 LID=0 SRC2=1048576 SRC2K=1 PLANAR=1,1
+    TB TILED_B RTL: opMode=2 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=40960 AW=15360 B=15360 CYCLES=1406938 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/c64_add_80x80/dump.hex (2621440 bytes)
+    MEM rd=1310720 wr=409600 bursts=56320 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[c64_add_80x80] vvp 退出码=0
+[c64_add_80x80] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+==========================================================================
+---- 3) 负对照①：网表突变「tNty := tNty - 1」（漏最后一个 tile 行）----
+  MUT: tNty <= _zz_tNty[15:0];  ->  tNty <= (_zz_tNty[15:0] - 16'h0001);
+--------------------------------------------------------------------------
+==== [neg1_c64_40x40] op=maxpool C_IN=C_OUT=64 输出 40x40  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_nty.v ====
+   JOBGEN neg1_c64_40x40 op=maxpool C=64 输出 40x40（输入 80x80）| A 平面 409600 B / B 平面 0 B / 黄金 102400 B | outPix=1600 inCols=6400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg1_c64_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=409600 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=16384 AW=6144 B=6144 CYCLES=472626 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg1_c64_40x40/dump.hex (2621440 bytes)
+    MEM rd=524288 wr=81920 bursts=22528 maxburst=8
+    DST_MISMATCH=20480
+    FIRST_BAD=1280
+    LAST_BAD=102399
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=32
+    BAD_ROW_MAX=39
+    BAD_PLANE_MIN=0
+    BAD_PLANE_MAX=63
+[neg1_c64_40x40] vvp 退出码=0
+[neg1_c64_40x40] 作业 = RED（装置未 PASS 或逐字节不符）
+[neg1] 突变体：DST_MISMATCH=20480（期望 >0）  FIRST_BAD=1280（期望 == 被漏行带起点 1280）  BAD_ROW_MIN=32（期望 == 32）
+  NEG_OK[漏 tile 行]: 行 0..31 逐字节正确、错配全部落在被漏的行带 [32,40) ⇒ 这一发真被抓住
+--------------------------------------------------------------------------
+==== [neg1_premise] op=maxpool C_IN=C_OUT=8 输出 16x16  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_nty.v ====
+   JOBGEN neg1_premise op=maxpool C=8 输出 16x16（输入 32x32）| A 平面 8192 B / B 平面 0 B / 黄金 2048 B | outPix=256 inCols=1024 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg1_premise/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=8 COUT=8 IMG_W=16 IMG_H=16 GROUP=1 SRC=131072 DST=1835008 INB=8192 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=256 RD_PEAK=32 AR=256 AW=16 B=16 CYCLES=7356 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg1_premise/dump.hex (2621440 bytes)
+    MEM rd=8192 wr=2048 bursts=272 maxburst=16
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[neg1_premise] vvp 退出码=0
+[neg1_premise] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+[neg1] 同一突变体 × 前提档（整层路径）：DST_MISMATCH=0（期望 0）
+  NEG_OK[外科式]: 同一突变体下整层路径逐字节不变（它根本不读 tNty）
+---- 4) 负对照②：网表突变「tPixR := tPixR + inW32」（输入窗口起点下移一行 = 2·oy0 -> 2·oy0+1）----
+  MUT: tNRR <= tNRC;
+        tPixR <= (tYBRd + tXOfs);
+        tSrcR <= (desc_4 + blkSrcR);  ->  tNRR <= tNRC;
+        tPixR <= (tYBRd + tXOfs + inW32);
+        tSrcR <= (desc_4 + blkSrcR);
+--------------------------------------------------------------------------
+==== [neg2_c64_40x40] op=maxpool C_IN=C_OUT=64 输出 40x40  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_win.v ====
+   JOBGEN neg2_c64_40x40 op=maxpool C=64 输出 40x40（输入 80x80）| A 平面 409600 B / B 平面 0 B / 黄金 102400 B | outPix=1600 inCols=6400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg2_c64_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=409600 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=20480 AW=7680 B=7680 CYCLES=590818 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg2_c64_40x40/dump.hex (2621440 bytes)
+    MEM rd=655360 wr=102400 bursts=28160 maxburst=8
+    DST_MISMATCH=51469
+    FIRST_BAD=0
+    LAST_BAD=102395
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=0
+    BAD_ROW_MAX=39
+    BAD_PLANE_MIN=0
+    BAD_PLANE_MAX=63
+[neg2_c64_40x40] vvp 退出码=0
+[neg2_c64_40x40] 作业 = RED（装置未 PASS 或逐字节不符）
+[neg2] 突变体：DST_MISMATCH=51469（期望 >0）
+  NEG_OK[窗口错一格]: 窗口起点下移一行 ⇒ 逐字节必错 ⇒ 对齐这一条真在起作用
+--------------------------------------------------------------------------
+==== [neg2_premise] op=maxpool C_IN=C_OUT=8 输出 16x16  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_win.v ====
+   JOBGEN neg2_premise op=maxpool C=8 输出 16x16（输入 32x32）| A 平面 8192 B / B 平面 0 B / 黄金 2048 B | outPix=256 inCols=1024 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg2_premise/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=8 COUT=8 IMG_W=16 IMG_H=16 GROUP=1 SRC=131072 DST=1835008 INB=8192 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=256 RD_PEAK=32 AR=256 AW=16 B=16 CYCLES=7356 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg2_premise/dump.hex (2621440 bytes)
+    MEM rd=8192 wr=2048 bursts=272 maxburst=16
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[neg2_premise] vvp 退出码=0
+[neg2_premise] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+[neg2] 同一突变体 × 前提档（整层路径）：DST_MISMATCH=0（期望 0）
+  NEG_OK[外科式]: 同一突变体下整层路径逐字节不变（它根本不读 tPixR）
+---- 6) 负对照③：网表突变「tSrc2R 丢块偏移」（B 源少 blkSrcR）⇒ Add 必发火、maxpool 不变 ----
+  MUT: tSrc2R <= (_zz_tSrc2R + blkSrcR);  ->  tSrc2R <= _zz_tSrc2R;
+--------------------------------------------------------------------------
+==== [neg3_c64_add_40x40] op=add C_IN=C_OUT=64 输出 40x40  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_src2blk.v ====
+   JOBGEN neg3_c64_add_40x40 op=add C=64 输出 40x40（输入 40x40）| A 平面 102400 B / B 平面 102400 B / 黄金 102400 B | outPix=1600 inCols=1600 src2=1048576
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg3_c64_add_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=add TYPE=0x00000013 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=102400 QSHIFT=6 LID=0 SRC2=1048576 SRC2K=1 PLANAR=1,1
+    TB TILED_B RTL: opMode=2 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=14080 AW=5120 B=5120 CYCLES=434498 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg3_c64_add_40x40/dump.hex (2621440 bytes)
+    MEM rd=450560 wr=102400 bursts=19200 maxburst=8
+    DST_MISMATCH=81996
+    FIRST_BAD=12800
+    LAST_BAD=102399
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=0
+    BAD_ROW_MAX=39
+    BAD_PLANE_MIN=8
+    BAD_PLANE_MAX=63
+[neg3_c64_add_40x40] vvp 退出码=0
+[neg3_c64_add_40x40] 作业 = RED（装置未 PASS 或逐字节不符）
+[neg3] 突变体：DST_MISMATCH=81996（期望 >0）  FIRST_BAD=12800（期望 >= 块 1 起点 12800）  BAD_PLANE_MIN=8（期望 8）
+  NEG_OK[漏块偏移]: 块 0 的平面逐字节正确、错配全部落在块 1 及以后的平面里 ⇒ 这一发真被抓住
+--------------------------------------------------------------------------
+==== [neg3_surgical_maxpool] op=maxpool C_IN=C_OUT=64 输出 40x40  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_src2blk.v ====
+   JOBGEN neg3_surgical_maxpool op=maxpool C=64 输出 40x40（输入 80x80）| A 平面 409600 B / B 平面 0 B / 黄金 102400 B | outPix=1600 inCols=6400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg3_surgical_maxpool/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=maxpool TYPE=0x00000010 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=409600 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=0 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=20480 AW=7680 B=7680 CYCLES=590818 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg3_surgical_maxpool/dump.hex (2621440 bytes)
+    MEM rd=655360 wr=102400 bursts=28160 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[neg3_surgical_maxpool] vvp 退出码=0
+[neg3_surgical_maxpool] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+[neg3] 同一突变体 × maxpool C=64 40×40（走 tile、但没有第二路源）：DST_MISMATCH=0（期望 0）
+  NEG_OK[外科式]: 同一突变体下 maxpool tile 作业逐字节不变（它根本不读 tSrc2R）
+---- 7) 负对照④：per-plane 索引退回共享 plane-0（40×40 必红 / 80×80 不提）----
+IDX0_HITS=63 (期望 >=14)
+--------------------------------------------------------------------------
+==== [neg4_c64_resize_40x40] op=resize C_IN=C_OUT=64 输出 40x40  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_idx0.v ====
+   JOBGEN neg4_c64_resize_40x40 op=resize C=64 输出 40x40（输入 20x20）| A 平面 25600 B / B 平面 0 B / 黄金 102400 B | outPix=1600 inCols=400 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg4_c64_resize_40x40/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=resize TYPE=0x00000011 CIN=64 COUT=64 IMG_W=40 IMG_H=40 GROUP=1 SRC=131072 DST=1835008 INB=25600 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=1 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=3040 AW=5120 B=5120 CYCLES=247578 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg4_c64_resize_40x40/dump.hex (2621440 bytes)
+    MEM rd=97280 wr=102400 bursts=8160 maxburst=8
+    DST_MISMATCH=49744
+    FIRST_BAD=1600
+    LAST_BAD=102399
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=0
+    BAD_ROW_MAX=39
+    BAD_PLANE_MIN=1
+    BAD_PLANE_MAX=63
+[neg4_c64_resize_40x40] vvp 退出码=0
+[neg4_c64_resize_40x40] 作业 = RED（装置未 PASS 或逐字节不符）
+--------------------------------------------------------------------------
+==== [neg4_c64_resize_80x80] op=resize C_IN=C_OUT=64 输出 80x80  网表=/tmp/tmp.DshkAiT8uR/mut/BypassExec_idx0.v ====
+   JOBGEN neg4_c64_resize_80x80 op=resize C=64 输出 80x80（输入 40x40）| A 平面 102400 B / B 平面 0 B / 黄金 409600 B | outPix=6400 inCols=1600 src2=0
+    MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg4_c64_resize_80x80/mem.hex (2621440 bytes modelled)
+    TB TILED_B_EN=1 GOT=1
+    TB TILED_B: OP=resize TYPE=0x00000011 CIN=64 COUT=64 IMG_W=80 IMG_H=80 GROUP=1 SRC=131072 DST=1835008 INB=102400 QSHIFT=6 LID=0 SRC2=0 SRC2K=0 PLANAR=1,1
+    TB TILED_B RTL: opMode=1 RD_BYTES=0 WR_BYTES=32 RD_PEAK=32 AR=8960 AW=15360 B=15360 CYCLES=839626 DONE=1 ERR=0 BUSY=0
+    RESULT: PASS
+    MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.DshkAiT8uR/neg4_c64_resize_80x80/dump.hex (2621440 bytes)
+    MEM rd=286720 wr=409600 bursts=24320 maxburst=8
+    DST_MISMATCH=0
+    FIRST_BAD=-1
+    LAST_BAD=-1
+    NEIGH_MISMATCH=0
+    SRC_MISMATCH=0
+    SRC2_MISMATCH=0
+    BAD_ROW_MIN=-1
+    BAD_ROW_MAX=-1
+    BAD_PLANE_MIN=-1
+    BAD_PLANE_MAX=-1
+[neg4_c64_resize_80x80] vvp 退出码=0
+[neg4_c64_resize_80x80] 作业 = GREEN（装置 PASS + DST 逐字节 == 黄金 + 两个源区/邻居未动）
+[neg4] 突变体：40×40 DST_MISMATCH=49744（须 >0）  80×80 DST_MISMATCH=0（须 ==0）
+  NEG_OK[共享索引两侧]: 40×40（inCols%32=16）MISMATCH=49744（>0、装置 PASS）；80×80（inCols%32=0）MISMATCH=0 ⇒ per-plane 索引这一条真在起作用
+---- 5) 结构判据：check_dangling.py gen/BypassExec_w34.v ----
+    RESULT: PASS
+==========================================================================
+前提档（cIn=8 整层路径）+ 真表旁路形状（maxpool 16/64ch 160×160/80×80/40×40/20×20、resize 64ch 80×80/
+★★ 40×40（Resize_43、inCols%32=16），全部走 tile）+ ★★ Add 的两路源（C=64 40×40/80×80，走 tile 的两趟；B 在 SRC2）：
+  冻结参考自检 = OK（bypass_ref --selftest）
+  正对照       = OK（9 个作业：装置 PASS + DST 逐字节 == 冻结参考黄金 + 源/SRC2/邻居未动；MISMATCH=0）
+  负对照①      = OK（漏最后一个 tile 行 ⇒ 错配全部落在被漏的行带；整层路径不变 = 外科式）
+  负对照②      = OK（输入窗口错一格 ⇒ 必红；整层路径不变 = 外科式）
+  负对照③      = OK（B 源丢块偏移 ⇒ add 从块 1 起必错、maxpool 不变 = 外科式）
+  负对照④      = OK（per-plane 索引退回共享 plane-0 ⇒ 40×40/inCols%32=16 必红、80×80/inCols%32=0 不提；两侧）
+  结构         = OK（check_dangling.py：零悬空）
+RESULT: PASS

@@ -1,0 +1,752 @@
+# listening COM7 @115200 for 480.0s (raw -> D:\code\PDS\VexiiYeshenLinux\sim\reglogs\fv_raw.bin)
+[23:24:05] 
+[23:24:06] [Y1] L=Linux C=CoreMark > SDR 205640008B04000830
+[23:24:06] SDR 202920008B04018B88
+[23:24:06] SDR 20F9D0008B04018B88
+[23:24:06] SDR 20C980008B04018B88
+[23:24:06] SDR 209840009B04018B88
+[23:24:06] SDR 2068F0008B04018B88
+[23:24:07] SDR 2038A0008B04018B88
+[23:24:07] SDR 200750008B04018B88
+[23:24:07] SDR 20D700008B04018B88
+[23:24:07] SDR 20A7C0008B04018B88
+[23:24:07] SDR 207670008B04018B88
+[23:24:07] SDR 204620008B04018B88
+[23:24:07] SDR 2016D0008B04018B88
+[23:24:07] SDR 20E680008B04018B88
+[23:24:07] SDR 20B530008B04018B88
+[23:24:07] SDR 2085F0008B04018B88
+[23:24:08] SDR 2055A0008B04018B88
+[23:24:08] SDR 202450008B04018B88
+[23:24:08] SDR 20F400008B04018B88
+[23:24:08] SDR 20C4B0008B04018B88
+[23:24:08] SDR 209370008B04018B88
+[23:24:08] SDR 206320008B04018B88
+[23:24:08] SDR 2033D0008B04018B88
+[23:24:08] SDR 200380008B04018B88
+[23:24:08] SDR 20D230008B04018B88
+[23:24:08] SDR 20A2E0008B04018B88
+[23:24:09] SDR 207290008B04018B88
+[23:24:09] SDR 204150008B04018B88
+[23:24:09] SDR 201100008B04018B88
+[23:24:09] SDR 20D1B0008B04018B88
+[23:24:09] SDR 20A060008B04018B88
+[23:24:09] SDR 207010008B04018B88
+[23:24:09] SDR 2040D0008B04018B88
+[23:24:09] SDR 201080008B04018B88
+[23:24:09] SDR 20EF30008B04018B88
+[23:24:09] SDR 20BFE0008B04018B88
+[23:24:10] SDR 208F90008B04018B88
+[23:24:10] SDR 205E40008B04018B88
+[23:24:10] SDR 202E00008B04018B88
+[23:24:10] SDR 20FEB0008B04018B88
+[23:24:10] SDR 20CD60008B04018B88
+[23:24:10] SDR 209D10008B04018B88
+[23:24:10] SDR 206DC0008B04018B88
+[23:24:10] SDR 203C70008B04018B88
+[23:24:10] SDR 201210008B040397B8
+[23:24:10] SDR 20E2D0008B040397B8
+[23:24:11] SDR 20B280008B040397B8
+[23:24:11] SDR 208130008B040397B8
+[23:24:11] SDR 2041E0008B040397B8
+[23:24:11] SDR 201190008B040397B8
+[23:24:11] SDR 20E050008B040397B8
+[23:24:11] SDR 20B000008B040397B8
+[23:24:11] SDR 2080B0008B040397B8
+[23:24:11] SDR 205F60008B040397B8
+[23:24:11] SDR 202F10008B040397B8
+[23:24:11] SDR 20FFC0008B040397B8
+[23:24:11] SDR 20CE80008B040397B8
+[23:24:12] SDR 209E30008B040397B8
+[23:24:12] SDR 206EE0008B040397B8
+[23:24:12] SDR 203E90008B040397B8
+[23:24:12] SDR 200D40008B040397B8
+[23:24:12] SDR 20DDF0008B040397B8
+[23:24:12] SDR 20ADA0008B040397B8
+[23:24:12] SDR 207C60008B040397B8
+[23:24:12] SDR 204C10008B040397B8
+[23:24:12] SDR 201CC0008B040397B8
+[23:24:12] SDR 20EB70008B040397B8
+[23:24:13] SDR 20BB20008B040397B8
+[23:24:13] SDR 208BE0008B040397B8
+[23:24:13] SDR 205B90008B040397B8
+[23:24:13] SDR 202A40008B040397B8
+[23:24:13] SDR 20FAF0008B040397B8
+[23:24:13] SDR 20CAA0008B040397B8
+[23:24:13] SDR 209950008B040397B8
+[23:24:13] SDR 206900008B040397B8
+[23:24:13] SDR 2039C0008B040397B8
+[23:24:13] SDR 200870008B040397B8
+[23:24:14] SDR 20D820008B040397B8
+[23:24:14] SDR 20A8D0008B040397B8
+[23:24:14] SDR 207880008B040397B8
+[23:24:14] SDR 204740008B040397B8
+[23:24:14] SDR 2017F0008B040397B8
+[23:24:14] SDR 20E7A0008B040397B8
+[23:24:14] SDR 20B650008B040397B8
+[23:24:14] SDR 208600008B040397B8
+[23:24:14] SDR 2056B0008B040397B8
+[23:24:14] SDR 202570008B040397B8
+[23:24:15] SDR 20F520008B040397B8
+[23:24:15] SDR 20C5D0008B040397B8
+[23:24:15] SDR 209580008B040397B8
+[23:24:15] SDR 206430008B040397B8
+[23:24:15] SDR 2034F0008B040397B8
+[23:24:15] SDR 2004A0008B040397B8
+[23:24:15] SDR 20D350008B040397B8
+[23:24:15] SDR 20A300008B040397B8
+[23:24:15] SDR 2073B0008B040397B8
+[23:24:15] SDR 204260008B040397B8
+[23:24:16] SDR 201210008B040397B8
+[23:24:16] SDR 20E2D0008B040397B8
+[23:24:16] SDR 20B280008B040397B8
+[23:24:16] SDR 208130008B040397B8
+[23:24:16] SDR 2041E0008B040397B8
+[23:24:16] SDR 201190008B040397B8
+[23:24:16] SDR 20E050008B040397B8
+[23:24:16] SDR 20B000008B040397B8
+[23:24:17] SDR 2080B0008B040397B8
+[23:24:17] SDR 205F60008B040397B8
+[23:24:17] SDR 202F10008B040397B8
+[23:24:17] SDR 20FFC0008B040397B8
+[23:24:17] SDR 20CE80008B040397B8
+[23:24:17] SDR 209E30008B040397B8
+[23:24:17] SDR 206EE0008B040397B8
+[23:24:17] SDR 203E90008B040397B8
+[23:24:17] SDR 200D40008B040397B8
+[23:24:17] SDR 20DDF0008B040397B8
+[23:24:18] SDR 20ADA0008B040397B8
+[23:24:18] SDR 207C60008B040397B8
+[23:24:18] SDR 204C10008B040397B8
+[23:24:18] SDR 201CC0008B040397B8
+[23:24:18] SDR 20EB70008B040397B8
+[23:24:18] SDR 20BB20008B040397B8
+[23:24:18] SDR 208BE0008B040397B8
+[23:24:18] SDR 205B90008B040397B8
+[23:24:18] SDR 202A40008B040397B8
+[23:24:18] SDR 20FAF0008B040397B8
+[23:24:19] SDR 20CAA0008B040397B8
+[23:24:19] SDR 209950008B040397B8
+[23:24:19] SDR 206900008B040397B8
+[23:24:19] SDR 2039C0008B040397B8
+[23:24:19] SDR 200870008B040397B8
+[23:24:19] SDR 20D820008B040397B8
+[23:24:19] SDR 20A8D0008B040397B8
+[23:24:19] SDR 207880008B040397B8
+[23:24:19] SDR 204740008B040397B8
+[23:24:19] SDR 2017F0008B040397B8
+[23:24:19] SDR 20E7A0008B040397B8
+[23:24:20] SDR 20B650008B040397B8
+[23:24:20] SDR 208600008B040397B8
+[23:24:20] SDR 2056B0008B040397B8
+[23:24:20] SDR 2025700080040397B8
+[23:24:20] SDR 20F520008B040397B8
+[23:24:20] SDR 20C5D0008B040397B8
+[23:24:20] SDR 209580008B040397B8
+[23:24:20] SDR 206430008B040397B8
+[23:24:20] SDR 2034F0008B040397B8
+[23:24:20] SDR 2005D0008B04006FB0
+[23:24:21] SDR 20D580008B04006FB0
+[23:24:21] SDR 20A430008B04006FB0
+[23:24:21] SDR 2074F0008B04006FB0
+[23:24:21] SDR 2044A0008B04006FB0
+[23:24:21] SDR 201350008B04006FB0
+[23:24:21] SDR 20E300008B04006FB0
+[23:24:21] SDR 20B3B0008B04006FB0
+[23:24:21] SDR 208260008B04006FB0
+[23:24:21] SDR 205210008B04006FB0
+[23:24:21] SDR 2022D0008B04006FB0
+[23:24:22] SDR 20F280008B04006FB0
+[23:24:22] SDR 30D200003B04006FB0
+[23:24:22] ??k
+[23:24:22] Platform Console Device     : uart8250
+[23:24:22] Platform HSM Device         : ---
+[23:24:22] Platform PMU Device         : ---
+[23:24:22] Platform Reboot Device      : ---
+[23:24:22] Platform Shutdown Device    : ---
+[23:24:22] Platform Suspend Device     : ---
+[23:24:22] Platform CPPC Device        : ---
+[23:24:22] Firmware Base               : 0x80000000
+[23:24:22] Firmware Size               : 180 KB
+[23:24:22] Firmware RW Offset          : 0x20000
+[23:24:22] Firmware RW Size            : 52 KB
+[23:24:22] Firmware Heap Offset        : 0x24000
+[23:24:22] Firmware Heap Size          : 36 KB (total), 2 KB (reserved), 10 KB (used), 23 KB (free)
+[23:24:22] Firmware Scratch Size       : 4096 B (total), 252 B (used), 3844 B (free)
+[23:24:22] Runtime SBI Version         : 2.0
+[23:24:22] Standard SBI Extensions     : time,rfnc,ipi,base,hsm,pmu,dbcn,legacy
+[23:24:22] Experimental SBI Extensions : fwft,sse
+[23:24:22] 
+[23:24:22] Domain0 Name                : root
+[23:24:22] Domain0 Boot HART           : 0
+[23:24:22] Domain0 HARTs               : 0*
+[23:24:22] Domain0 Region00            : 0xf0001000-0xf0001fff M: (I,R,W) S/U: (R,W)
+[23:24:22] Domain0 Region01            : 0xf0018000-0xf001bfff M: (I,R,W) S/U: ()
+[23:24:22] Domain0 Region02            : 0xf0010000-0xf0017fff M: (I,R,W) S/U: ()
+[23:24:22] Domain0 Region03            : 0x80020000-0x8002ffff M: (R,W) S/U: ()
+[23:24:22] Domain0 Region04            : 0x80000000-0x8001ffff M: (R,X) S/U: ()
+[23:24:22] Domain0 Region05            : 0x00000000-0xffffffff M: () S/U: (R,W,X)
+[23:24:22] Domain0 Next Address        : 0x82000000
+[23:24:22] Domain0 Next Arg1           : 0x82f80000
+[23:24:22] Domain0 Next Mode           : S-mode
+[23:24:22] Domain0 SysReset            : yes
+[23:24:22] Domain0 SysSuspend          : yes
+[23:24:22] 
+[23:24:22] Boot HART ID                : 0
+[23:24:22] Boot HART Domain            : root
+[23:24:22] Boot HART Priv Version      : v1.12
+[23:24:22] Boot HART Base ISA          : rv32imac
+[23:24:22] Boot HART ISA Extensions    : smaia,zicntr,sdtrig
+[23:24:22] Boot HART PMP Count         : 0
+[23:24:22] Boot HART PMP Granularity   : 0 bits
+[23:24:22] Boot HART PMP Address Bits  : 0
+[23:24:22] Boot HART MHPM Info         : 0 (0x00000000)
+[23:24:22] Boot HART Debug Triggers    : 0 triggers
+[23:24:22] Boot HART MIDELEG           : 0x00000222
+[23:24:22] Boot HART MEDELEG           : 0x0000b108
+[23:24:22] [    0.000000] Booting Linux on hartid 0
+[23:24:22] [    0.000000] Linux version 6.18.60 (lazybones@DESKTOP-LZQ-MINI) (riscv32-buildroot-linux-uclibc-gcc.br_real (Buildroot 2026.02.3) 13.4.0, GNU ld (GNU Binutils) 2.44) #1 SMP PREEMPT Tue Nov  3 00:00:36 CST 2026
+[23:24:22] [    0.000000] OF: fdt: Ignoring memory range 0x80400000 - 0x82000000
+[23:24:22] [    0.000000] Machine model: spinal,vexiiriscv_vexiiyeshenlinux
+[23:24:22] [    0.000000] SBI specification v2.0 detected
+[23:24:22] [    0.000000] SBI implementation ID=0x1 Version=0x10006
+[23:24:22] [    0.000000] SBI TIME extension detected
+[23:24:22] [    0.000000] SBI IPI extension detected
+[23:24:22] [    0.000000] SBI RFENCE extension detected
+[23:24:22] [    0.000000] SBI DBCN extension detected
+[23:24:22] [    0.000000] earlycon: sbi0 at I/O port 0x0 (options '')
+[23:24:22] [    0.000000] printk: legacy bootconsole [sbi0] enabled
+[23:24:22] [    0.000000] efi: UEFI not found.
+[23:24:22] [    0.000000] OF: reserved mem: 0x80400000..0x81ffffff (28672 KiB) nomap non-reusable npu_arena@80400000
+[23:24:22] [    0.000000] Zone ranges:
+[23:24:22] [    0.000000]   Normal   [mem 0x0000000082000000-0x000000008fffffff]
+[23:24:22] [    0.000000] Movable zone start for each node
+[23:24:22] [    0.000000] Early memory node ranges
+[23:24:22] [    0.000000]   node   0: [mem 0x0000000082000000-0x000000008fffffff]
+[23:24:22] [    0.000000] Initmem setup node 0 [mem 0x0000000082000000-0x000000008fffffff]
+[23:24:22] [    0.000000] SBI HSM extension detected
+[23:24:22] [    0.000000] riscv: base ISA extensions acim
+[23:24:22] [    0.000000] riscv: ELF capabilities acim
+[23:24:22] [    0.000000] Ticket spinlock: enabled
+[23:24:22] [    0.000000] percpu: Embedded 12 pages/cpu s27916 r0 d21236 u49152
+[23:24:22] [    0.000000] Kernel command line: rootwait console=ttyS0,115200 earlycon=sbi root=/dev/ram0 init=/init
+[23:24:22] [    0.000000] printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
+[23:24:22] [    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072 bytes, linear)
+[23:24:22] [    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 bytes, linear)
+[23:24:22] [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 57344
+[23:24:22] [    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[23:24:22] [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[23:24:22] [    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[23:24:22] [    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=1.
+[23:24:22] [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[23:24:22] [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[23:24:22] [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[23:24:22] [    0.000000] riscv-intc: 32 local interrupts mapped
+[23:24:22] [    0.000000] riscv: providing IPIs using SBI IPI extension
+[23:24:22] [    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[23:24:22] [    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[23:24:22] [    0.000000] clocksource: riscv_clocksource: mask: 0xffffffffffffffff max_cycles: 0x171024e7e0, max_idle_ns: 440795205315 ns
+[23:24:22] [    0.000010] sched_clock: 64 bits at 100MHz, resolution 10ns, wraps every 4398046511100ns
+[23:24:22] [    0.009836] Console: colour dummy device 80x25
+[23:24:22] [    0.015250] Calibrating delay loop (skipped), value calculated using timer frequency.. 200.00 BogoMIPS (lpj=400000)
+[23:24:22] [    0.026924] pid_max: default: 32768 minimum: 301
+[23:24:22] [    0.033445] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[23:24:22] [    0.041831] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[23:24:22] [    0.072104] ASID allocator disabled (0 bits)
+[23:24:22] [    0.078796] rcu: Hierarchical SRCU implementation.
+[23:24:22] [    0.084346] rcu: 	Max phase no-delay instances is 1000.
+[23:24:22] [    0.095668] EFI services will not be available.
+[23:24:22] [    0.102437] smp: Bringing up secondary CPUs ...
+[23:24:22] [    0.107786] smp: Brought up 1 node, 1 CPU
+[23:24:22] [    0.113800] Memory: 187144K/229376K available (4524K kernel code, 572K rwdata, 921K rodata, 301K init, 210K bss, 41584K reserved, 0K cma-reserved)
+[23:24:22] [    0.131900] devtmpfs: initialized
+[23:24:22] [    0.149841] posixtimers hash table entries: 512 (order: 0, 4096 bytes, linear)
+[23:24:22] [    0.158396] futex hash table entries: 256 (16384 bytes on 1 NUMA nodes, total 16 KiB, linear).
+[23:24:22] [    0.169145] DMI not present or invalid.
+[23:24:22] [    0.177335] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[23:24:22] [    0.186846] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[23:24:23] [    0.260684] cpu0: Ratio of byte access time to unaligned word access is 0.00, unaligned accesses are slow
+[23:24:23] [    0.310513] clocksource: Switched to clocksource riscv_clocksource
+[23:24:23] [    0.451526] NET: Registered PF_INET protocol family
+[23:24:23] [    0.459388] IP idents hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[23:24:23] [    0.475313] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 4096 bytes, linear)
+[23:24:23] [    0.485175] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[23:24:23] [    0.494068] TCP established hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[23:24:23] [    0.502929] TCP bind hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[23:24:23] [    0.511554] TCP: Hash tables configured (established 2048 bind 2048)
+[23:24:23] [    0.519796] UDP hash table entries: 256 (order: 2, 14336 bytes, linear)
+[23:24:23] [    0.527675] UDP-Lite hash table entries: 256 (order: 2, 14336 bytes, linear)
+[23:24:23] [    0.544306] Unpacking initramfs...
+[23:24:23] [    0.551055] workingset: timestamp_bits=30 max_order=16 bucket_order=0
+[23:24:23] [    0.570247] io scheduler mq-deadline registered
+[23:24:23] [    0.586784] io scheduler kyber registered
+[23:24:23] [    0.606825] riscv-plic: interrupt-controller@f0c00000: mapped 5 interrupts with 1 handlers for 2 contexts.
+[23:24:24] [    2.039765] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+[23:24:24] [    2.096157] printk: legacy console [ttyS0] disabled
+[23:24:24] [    2.115410] f0001000.serial: ttyS0 at MMIO 0xf0001000 (irq = 12, base_baud = 6250000) is a 16550A
+[23:24:24] [    2.139199] printk: legacy console [ttyS0] enabled
+[23:24:24] [    2.139199] printk: legacy console [ttyS0] enabled
+[23:24:24] [    2.163300] printk: legacy bootconsole [sbi0] disabled
+[23:24:24] [    2.163300] printk: legacy bootconsole [sbi0] disabled
+[23:24:25] [    2.213765] liteeth f0003000.ethernet eth0: irq 13 slots: tx 2 rx 4 size 2048
+[23:24:25] [    2.243840] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[23:24:25] [    2.275598] i2c_dev: i2c /dev entries driver
+[23:24:25] [    2.303844] NET: Registered PF_INET6 protocol family
+[23:24:25] [    2.336284] Segment Routing with IPv6
+[23:24:25] [    2.347425] In-situ OAM (IOAM) with IPv6
+[23:24:25] [    2.359565] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[23:24:25] [    2.384113] NET: Registered PF_PACKET protocol family
+[23:24:25] [    2.556960] Initramfs unpacking failed: invalid magic at start of compressed archive
+[23:24:25] [    2.681321] Goodix-TS 0-0014: ID 911, version: 1060
+[23:24:25] [    2.697156] i2c-gpio i2c-ctp: using lines 521 (SDA) and 520 (SCL)
+[23:24:25] [    2.719691] clk: Disabling unused clocks
+[23:24:25] [    3.229530] Freeing initrd memory: 32768K
+[23:24:25] [    3.235225] Goodix-TS 0-0014: Direct firmware load for goodix_911_cfg.bin failed with error -2
+[23:24:25] [    3.259519] Freeing unused kernel image (initmem) memory: 296K
+[23:24:26] [    3.274661] Kernel memory protection not selected by kernel config.
+[23:24:26] [    3.290644] Run /init as init process
+[23:24:26] [    3.319520] input: Goodix Capacitive TouchScreen as /devices/platform/i2c-ctp/i2c-0/0-0014/input/input1
+[23:24:26] Saving 256 bits of non-creditable seed for next boot
+[23:24:26] Starting syslogd: OK
+[23:24:27] Starting klogd: OK
+[23:24:27] Running sysctl: OK
+[23:24:27] Starting network: OK
+[23:24:27] Starting crond: OK
+[23:24:27] Jan  1 00:00:04 crond[82]: crond (busybox 1.37.0) started, log level 8
+[23:24:27] 
+[23:24:28] Starting dropbear sshd: OK
+[23:24:28] [    5.267414] IRQDBG start
+[23:24:28] [    5.413861] IRQDBG 10: 1308 RISC-V INTC 5 Edge riscv-timer
+[23:24:28] [    5.437331] IRQDBG 12: 62 SiFive PLIC 1 Edge ttyS0
+[23:24:28] [    5.457394] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[23:24:28] [    5.477121] IRQDBG IPI0: 0 Rescheduling interrupts
+[23:24:28] [    5.493315] IRQDBG IPI1: 0 Function call interrupts
+[23:24:28] [    5.521161] IRQDBG IPI2: 0 CPU stop interrupts
+[23:24:28] [    5.533538] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[23:24:28] [    5.557164] IRQDBG IPI4: 0 IRQ work interrupts
+[23:24:28] [    5.573319] IRQDBG IPI5: 0 Timer broadcast interrupts
+[23:24:28] [    5.589959] NAXMINI-NET: eth0 
+[23:24:28] [    5.594163] IRQDBG IPI6: 0 CPU backtrace interrupts
+[23:24:28] [    5.637122] IRQDBG IPI7: 0 KGDB roundup interrupts
+[23:24:28] [    5.759775] 192.168.1.110/24
+[23:24:28] [    5.759775] fe80::ff:fe00:1/64
+[23:24:28] [    5.823981] YGUI-AUTOSTART pid=104
+[23:24:28] [    5.964216] YGUI-CAMERA gui GUI_CTRL=0x1 readback=0x1
+[23:24:28] [    5.964339] 
+[23:24:28] [    5.991213] YGUI-BOOT
+[23:24:28] [    5.991324] 
+[23:24:28] [    6.006308] YGUI-VARIANT gui2 GUI buffer=0x92000000 rows=60..659 (GUI_CTRL=0x1)
+[23:24:28] [    6.015549] 
+[23:24:28] [    6.051637] YGUI-PRESENT async
+[23:24:28] [    6.051761] 
+[23:24:28] [    6.091780] YGUI-TOUCH-SVC
+[23:24:28] [    6.091901] 
+[23:24:28] [    6.133084] GPU-UNIT-ON
+[23:24:28] [    6.133208] 
+[23:24:29] [    6.151791] board_fb: LCD keeps reading bank1 (GUI_CTRL[1]=1, no flip)
+[23:24:29] [    6.151906] 
+[23:24:29] [    6.242167] VEXIIYESHEN-OK
+[23:24:29] [    6.257426] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[23:24:29] [    6.695346] YGUI-CAMSRC CAM1 CAM_CTRL=0x3 readback=0x7
+[23:24:29] [    6.695475] 
+[23:24:29] 
+[23:24:29] Welcome to Buildroot
+[23:24:29] buildroot login: [    7.017301] GPU-IMG: task_area=(0..1023,0..599) clip=(0..1023,0..599) img=1024x600 stride=1024
+[23:24:29] [    7.017439] 
+[23:24:29] [    7.092444] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[23:24:31] [    8.325010] IRQDBG 10: 2134 RISC-V INTC 5 Edge riscv-timer
+[23:24:31] [    8.345394] IRQDBG 12: 68 SiFive PLIC 1 Edge ttyS0
+[23:24:31] [    8.365162] IRQDBG 13: 16 SiFive PLIC 2 Edge eth0
+[23:24:31] [    8.381255] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[23:24:31] [    8.401202] IRQDBG IPI0: 0 Rescheduling interrupts
+[23:24:31] [    8.417168] IRQDBG IPI1: 0 Function call interrupts
+[23:24:31] [    8.437237] IRQDBG IPI2: 0 CPU stop interrupts
+[23:24:31] [    8.463524] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[23:24:31] [    8.481288] IRQDBG IPI4: 0 IRQ work interrupts
+[23:24:31] [    8.505259] IRQDBG IPI5: 0 Timer broadcast interrupts
+[23:24:31] [    8.525431] IRQDBG IPI6: 0 CPU backtrace interrupts
+[23:24:31] [    8.778172] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[23:24:31] [    9.039949] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[23:24:32] [   10.183819] IRQDBG 10: 2767 RISC-V INTC 5 Edge riscv-timer
+[23:24:32] [   10.196566] IRQDBG 12: 68 SiFive PLIC 1 Edge ttyS0
+[23:24:32] [   10.205332] IRQDBG 13: 16 SiFive PLIC 2 Edge eth0
+[23:24:32] [   10.216817] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[23:24:32] [   10.225331] IRQDBG IPI0: 0 Rescheduling interrupts
+[23:24:32] [   10.236632] IRQDBG IPI1: 0 Function call interrupts
+[23:24:32] [   10.245999] IRQDBG IPI2: 0 CPU stop interrupts
+[23:24:32] [   10.256952] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[23:24:32] [   10.268386] IRQDBG IPI4: 0 IRQ work interrupts
+[23:24:33] [   10.277204] IRQDBG IPI5: 0 Timer broadcast interrupts
+[23:24:33] [   10.288809] IRQDBG IPI6: 0 CPU backtrace interrupts
+[23:24:33] [   10.501864] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[23:24:33] [   10.757738] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[23:24:34] [   11.753854] YGUI-FPS 5 lvth=523ms/418max blit=30ms/29max blits=5 gt=12 gpx=1338476
+[23:24:34] [   11.753980] 
+[23:24:34] [   11.907913] IRQDBG 10: 3354 RISC-V INTC 5 Edge riscv-timer
+[23:24:34] [   11.918025] IRQDBG 12: 68 SiFive PLIC 1 Edge ttyS0
+[23:24:34] [   11.929305] IRQDBG 13: 18 SiFive PLIC 2 Edge eth0
+[23:24:34] [   11.941420] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[23:24:34] [   11.950010] IRQDBG IPI0: 0 Rescheduling interrupts
+[23:24:34] [   11.961035] IRQDBG IPI1: 0 Function call interrupts
+[23:24:34] [   11.969798] IRQDBG IPI2: 0 CPU stop interrupts
+[23:24:34] [   11.981060] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[23:24:34] [   11.993440] IRQDBG IPI4: 0 IRQ work interrupts
+[23:24:34] [   12.001721] IRQDBG IPI5: 0 Timer broadcast interrupts
+[23:24:34] [   12.013170] IRQDBG IPI6: 0 CPU backtrace interrupts
+[23:24:35] [   12.344039] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[23:24:35] [   12.765721] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[23:24:36] [   13.962164] IRQDBG 10: 4051 RISC-V INTC 5 Edge riscv-timer
+[23:24:36] [   13.982250] IRQDBG 12: 68 SiFive PLIC 1 Edge ttyS0
+[23:24:36] [   14.001389] IRQDBG 13: 18 SiFive PLIC 2 Edge eth0
+[23:24:36] [   14.022284] IRQDBG 14: 5 SiFive PLIC 5 Edge gt911
+[23:24:36] [   14.041887] IRQDBG IPI0: 0 Rescheduling interrupts
+[23:24:36] [   14.062213] IRQDBG IPI1: 0 Function call interrupts
+[23:24:36] [   14.081320] IRQDBG IPI2: 0 CPU stop interrupts
+[23:24:36] [   14.108472] IRQDBG IPI3: 0 CPU stop (for crash dump) interrupts
+[23:24:36] [   14.128830] IRQDBG IPI4: 0 IRQ work interrupts
+[23:24:37] [   14.145328] IRQDBG IPI5: 0 Timer broadcast interrupts
+[23:24:37] [   14.158047] IRQDBG IPI6: 0 CPU backtrace interrupts
+[23:24:37] [   14.377919] UARTDBG IER=0x00000005 IIR=0x000000C1 LCR=0x00000013 LSR=0x00000060 MCR=0x0000000B
+[23:24:37] [   14.633537] PLICDBG pri1=0x00000001 pri2=0x00000001 en_ctx1=0x00000026 pend=0x00000010 thr_ctx1=0x00000000 claim_ctx1=
+[23:24:38] [   15.688969] IRQDBG end
+[23:24:39] [   16.756249] YGUI-FPS 5 lvth=89ms/13max blit=12ms/10max blits=5 gt=10 gpx=39815
+[23:24:39] [   16.756379] 
+[23:24:44] [   21.771807] YGUI-FPS 6 lvth=82ms/12max blit=3ms/1max blits=6 gt=12 gpx=47778
+[23:24:44] [   21.771943] 
+[23:24:49] [   26.756597] YGUI-FPS 4 lvth=71ms/5max blit=3ms/1max blits=4 gt=8 gpx=31852
+[23:24:49] [   26.756729] 
+[23:24:54] [   31.763694] YGUI-FPS 5 lvth=93ms/11max blit=0ms/0max blits=5 gt=10 gpx=39815
+[23:24:54] [   31.763837] 
+[23:24:59] [   36.771519] YGUI-FPS 5 lvth=91ms/17max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:24:59] [   36.771647] 
+[23:25:04] [   41.779817] YGUI-FPS 5 lvth=82ms/8max blit=7ms/5max blits=5 gt=10 gpx=39815
+[23:25:04] [   41.779945] 
+[23:25:09] [   46.784194] YGUI-FPS 5 lvth=67ms/9max blit=4ms/1max blits=5 gt=10 gpx=39815
+[23:25:09] [   46.784322] 
+[23:25:14] [   51.790737] YGUI-FPS 5 lvth=77ms/8max blit=8ms/5max blits=5 gt=10 gpx=39815
+[23:25:14] [   51.790881] 
+[23:25:19] [   56.795301] YGUI-FPS 5 lvth=80ms/8max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:25:19] [   56.795424] 
+[23:25:24] [   61.803618] YGUI-FPS 5 lvth=71ms/9max blit=8ms/6max blits=5 gt=10 gpx=39815
+[23:25:24] [   61.803746] 
+[23:25:29] [   66.803253] YGUI-FPS 5 lvth=85ms/15max blit=5ms/5max blits=5 gt=10 gpx=39815
+[23:25:29] [   66.803382] 
+[23:25:34] [   71.811499] YGUI-FPS 5 lvth=83ms/8max blit=5ms/5max blits=5 gt=10 gpx=39815
+[23:25:34] [   71.811635] 
+[23:25:39] [   76.815903] YGUI-FPS 5 lvth=87ms/12max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:25:39] [   76.816032] 
+[23:25:44] [   81.823718] YGUI-FPS 5 lvth=84ms/16max blit=6ms/5max blits=5 gt=10 gpx=39815
+[23:25:44] [   81.823847] 
+[23:25:49] [   86.831239] YGUI-FPS 5 lvth=89ms/17max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:25:49] [   86.831372] 
+[23:25:54] [   91.831539] YGUI-FPS 5 lvth=75ms/8max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:25:54] [   91.831666] 
+[23:25:59] [   96.831803] YGUI-FPS 5 lvth=86ms/8max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:25:59] [   96.831928] 
+[23:26:04] [  101.831479] YGUI-FPS 5 lvth=91ms/15max blit=4ms/1max blits=5 gt=10 gpx=39815
+[23:26:04] [  101.831643] 
+[23:26:09] [  106.835524] YGUI-FPS 5 lvth=76ms/8max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:26:09] [  106.835646] 
+[23:26:14] [  111.844789] YGUI-FPS 5 lvth=93ms/9max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:26:14] [  111.844918] 
+[23:26:19] [  116.850696] YGUI-FPS 5 lvth=92ms/12max blit=4ms/1max blits=5 gt=10 gpx=39815
+[23:26:19] [  116.850861] 
+[23:26:24] [  121.852071] YGUI-FPS 5 lvth=80ms/8max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:26:24] [  121.852197] 
+[23:26:29] [  126.856479] YGUI-FPS 5 lvth=74ms/8max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:26:29] [  126.856603] 
+[23:26:34] [  131.859652] YGUI-FPS 5 lvth=71ms/8max blit=4ms/2max blits=5 gt=10 gpx=39815
+[23:26:34] [  131.859786] 
+[23:26:39] [  136.859117] YGUI-FPS 5 lvth=81ms/10max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:26:39] [  136.859244] 
+[23:26:44] [  141.861535] YGUI-FPS 5 lvth=82ms/15max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:26:44] [  141.861667] 
+[23:26:49] [  146.866067] YGUI-FPS 5 lvth=84ms/8max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:26:49] [  146.866199] 
+[23:26:54] [  151.870805] YGUI-FPS 5 lvth=91ms/8max blit=8ms/5max blits=5 gt=10 gpx=39815
+[23:26:54] [  151.870977] 
+[23:26:59] [  156.871105] YGUI-FPS 5 lvth=67ms/8max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:26:59] [  156.871236] 
+[23:27:04] [  161.876048] YGUI-FPS 5 lvth=70ms/7max blit=0ms/0max blits=5 gt=10 gpx=39815
+[23:27:04] [  161.876176] 
+[23:27:09] [  166.879044] YGUI-FPS 5 lvth=80ms/9max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:27:09] [  166.879172] 
+[23:27:14] [  171.884849] YGUI-FPS 5 lvth=79ms/21max blit=0ms/0max blits=5 gt=10 gpx=39815
+[23:27:14] [  171.884991] 
+[23:27:19] [  176.891848] YGUI-FPS 5 lvth=86ms/16max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:27:19] [  176.891975] 
+[23:27:24] [  181.895809] YGUI-FPS 5 lvth=88ms/8max blit=7ms/5max blits=5 gt=10 gpx=39815
+[23:27:24] [  181.895938] 
+[23:27:29] [  186.895477] YGUI-FPS 5 lvth=96ms/12max blit=8ms/5max blits=5 gt=10 gpx=39815
+[23:27:29] [  186.895612] 
+[23:27:34] [  191.897349] YGUI-FPS 5 lvth=76ms/8max blit=3ms/2max blits=5 gt=10 gpx=39815
+[23:27:34] [  191.897475] 
+[23:27:39] [  196.901167] YGUI-FPS 5 lvth=92ms/14max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:27:39] [  196.901300] 
+[23:27:44] [  201.911034] YGUI-FPS 5 lvth=77ms/12max blit=10ms/9max blits=5 gt=10 gpx=39815
+[23:27:44] [  201.911167] 
+[23:27:49] [  206.914818] YGUI-FPS 5 lvth=86ms/9max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:27:49] [  206.914985] 
+[23:27:54] [  211.923162] YGUI-FPS 5 lvth=87ms/13max blit=8ms/5max blits=5 gt=10 gpx=39815
+[23:27:54] [  211.923297] 
+[23:27:59] [  216.923144] YGUI-FPS 5 lvth=80ms/8max blit=8ms/5max blits=5 gt=10 gpx=39815
+[23:27:59] [  216.923273] 
+[23:28:04] [  221.926335] YGUI-FPS 5 lvth=84ms/13max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:28:04] [  221.926803] 
+[23:28:09] [  226.931608] YGUI-FPS 5 lvth=84ms/9max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:28:09] [  226.931736] 
+[23:28:14] [  231.940348] YGUI-FPS 5 lvth=74ms/8max blit=4ms/1max blits=5 gt=10 gpx=39815
+[23:28:14] [  231.940478] 
+[23:28:19] [  236.946057] YGUI-FPS 5 lvth=93ms/22max blit=8ms/5max blits=5 gt=10 gpx=39815
+[23:28:19] [  236.946190] 
+[23:28:24] [  241.952861] YGUI-FPS 5 lvth=87ms/9max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:28:24] [  241.952988] 
+[23:28:29] [  246.961075] YGUI-FPS 5 lvth=76ms/8max blit=6ms/5max blits=5 gt=10 gpx=39815
+[23:28:29] [  246.961201] 
+[23:28:34] [  251.966742] YGUI-FPS 5 lvth=85ms/19max blit=10ms/9max blits=5 gt=10 gpx=39815
+[23:28:34] [  251.966908] 
+[23:28:39] [  256.969026] YGUI-FPS 5 lvth=89ms/16max blit=3ms/1max blits=5 gt=10 gpx=39815
+[23:28:39] [  256.969157] 
+[23:28:44] [  261.972121] YGUI-FPS 5 lvth=104ms/12max blit=11ms/9max blits=5 gt=10 gpx=39815
+[23:28:44] [  261.972251] 
+[23:28:49] [  266.972948] YGUI-FPS 5 lvth=92ms/13max blit=5ms/1max blits=5 gt=10 gpx=39815
+[23:28:49] [  266.973079] 
+[23:28:54] [  271.976900] YGUI-FPS 5 lvth=80ms/11max blit=1ms/1max blits=5 gt=10 gpx=39815
+[23:28:54] [  271.977032] 
+[23:28:59] [  276.983110] YGUI-FPS 5 lvth=65ms/8max blit=7ms/5max blits=5 gt=10 gpx=39815
+[23:28:59] [  276.983238] 
+[23:29:04] [  281.985526] YGUI-FPS 5 lvth=88ms/15max blit=4ms/1max blits=5 gt=10 gpx=39815
+[23:29:04] [  281.985659] 
+[23:29:09] [  286.991284] YGUI-FPS 5 lvth=98ms/17max blit=4ms/1max blits=5 gt=10 gpx=39815
+[23:29:09] [  286.991416] 
+[23:29:14] [  292.000443] YGUI-FPS 5 lvth=84ms/17max blit=2ms/1max blits=5 gt=10 gpx=39815
+[23:29:14] [  292.000573] 
+[23:29:49] 
+[23:29:50] [Y1] L=Linux C=CoreMark > SDR 208110008B04000830
+[23:29:50] SDR 2054F0008B04018B88
+[23:29:50] SDR 2024A0008B04018B88
+[23:29:50] SDR 20F350008B04018B88
+[23:29:50] SDR 20C300008B04018B88
+[23:29:50] SDR 2093C0008B04018B88
+[23:29:50] SDR 206270008B04018B88
+[23:29:50] SDR 203220008B04018B88
+[23:29:50] SDR 2002D0008B04018B88
+[23:29:51] SDR 20D280008B04018B88
+[23:29:51] SDR 20A130008B04018B88
+[23:29:51] SDR 2061F0008B04018B88
+[23:29:51] SDR 2031A0008B04018B88
+[23:29:51] SDR 200050008B04018B88
+[23:29:51] SDR 20D000008B04018B88
+[23:29:51] SDR 20A0B0008B04018B88
+[23:29:51] SDR 207F70008B04018B88
+[23:29:51] SDR 204F20008B04018B88
+[23:29:51] SDR 201FD0008B04018B88
+[23:29:52] SDR 20EF80008B04018B88
+[23:29:52] SDR 20BE30008B04018B88
+[23:29:52] SDR 208EE0008B04018B88
+[23:29:52] SDR 205E90008B04018B88
+[23:29:52] SDR 202D50008B04018B88
+[23:29:52] SDR 20FD00008B04018B88
+[23:29:52] SDR 20CDB0008B04018B88
+[23:29:52] SDR 209C60008B04018B88
+[23:29:52] SDR 206C10008B04018B88
+[23:29:52] SDR 203CC0008B04018B88
+[23:29:53] SDR 200C80008B04018B88
+[23:29:53] SDR 20DB30008B04018B88
+[23:29:53] SDR 20ABE0008B04018B88
+[23:29:53] SDR 207B90008B04018B88
+[23:29:53] SDR 204A40008B04018B88
+[23:29:53] SDR 201A00008B04018B88
+[23:29:53] SDR 20EAB0008B04018B88
+[23:29:53] SDR 20B960008B04018B88
+[23:29:54] SDR 208910008B04018B88
+[23:29:54] SDR 2059C0008B04018B88
+[23:29:54] SDR 202870008B04018B88
+[23:29:54] SDR 20F820008B04018B88
+[23:29:54] SDR 20C8E0008B04018B88
+[23:29:54] SDR 209890008B04018B88
+[23:29:54] SDR 206740008B04018B88
+[23:29:54] SDR 2037F0008B04018B88
+[23:29:54] SDR 200DA0008B040397B8
+[23:29:54] SDR 20DC50008B040397B8
+[23:29:55] SDR 20AC00008B040397B8
+[23:29:55] SDR 207CB0008B040397B8
+[23:29:55] SDR 204B60008B040397B8
+[23:29:55] SDR 201B10008B040397B8
+[23:29:55] SDR 20EBD0008B040397B8
+[23:29:55] SDR 20BB80008B040397B8
+[23:29:55] SDR 208A30008B040397B8
+[23:29:55] SDR 205AE0008B040397B8
+[23:29:55] SDR 202A90008B040397B8
+[23:29:55] SDR 20F950008B040397B8
+[23:29:56] SDR 20C900008B040397B8
+[23:29:56] SDR 2099B0008B040397B8
+[23:29:56] SDR 206860008B040397B8
+[23:29:56] SDR 203810008B040397B8
+[23:29:56] SDR 2008C0008B040397B8
+[23:29:56] SDR 20D780008B040397B8
+[23:29:56] SDR 20A730008B040397B8
+[23:29:56] SDR 2077E0008B040397B8
+[23:29:56] SDR 204790008B040397B8
+[23:29:56] SDR 201640008B040397B8
+[23:29:57] SDR 20E6F0008B040397B8
+[23:29:57] SDR 20B6A0008B040397B8
+[23:29:57] SDR 208560008B040397B8
+[23:29:57] SDR 205510008B040397B8
+[23:29:57] SDR 2025C0008B040397B8
+[23:29:57] SDR 20F470008B040397B8
+[23:29:57] SDR 20C420008B040397B8
+[23:29:57] SDR 2094E0008B040397B8
+[23:29:57] SDR 206490008B040397B8
+[23:29:57] SDR 203340008B040397B8
+[23:29:57] SDR 2003F0008B040397B8
+[23:29:58] SDR 20D3A0008B040397B8
+[23:29:58] SDR 20A250008B040397B8
+[23:29:58] SDR 207200008B040397B8
+[23:29:58] SDR 2042C0008B040397B8
+[23:29:58] SDR 201170008B040397B8
+[23:29:58] SDR 20E120008B040397B8
+[23:29:58] SDR 20A1D0008B040397B8
+[23:29:58] SDR 207180008B040397B8
+[23:29:58] SDR 204040008B040397B8
+[23:29:58] SDR 2010F0008B040397B8
+[23:29:59] SDR 20E0A0008B040397B8
+[23:29:59] SDR 20BF50008B040397B8
+[23:29:59] SDR 208F00008B040397B8
+[23:29:59] SDR 205FB0008B040397B8
+[23:29:59] SDR 202E70008B040397B8
+[23:29:59] SDR 20FE20008B040397B8
+[23:29:59] SDR 20CED0008B040397B8
+[23:29:59] SDR 209E80008B040397B8
+[23:29:59] SDR 206D30008B040397B8
+[23:29:59] SDR 203DF0008B040397B8
+[23:30:00] SDR 200DA0008B040397B8
+[23:30:00] SDR 20DC50008B040397B8
+[23:30:00] SDR 20AC00008B040397B8
+[23:30:00] SDR 207CB0008B040397B8
+[23:30:00] SDR 204B60008B040397B8
+[23:30:00] SDR 201B10008B040397B8
+[23:30:00] SDR 20EBD0008B040397B8
+[23:30:00] SDR 20BB80008B040397B8
+[23:30:00] SDR 208A30008B040397B8
+[23:30:00] SDR 205AE0008B040397B8
+[23:30:01] SDR 202A90008B040397B8
+[23:30:01] SDR 20F950008B040397B8
+[23:30:01] SDR 20C900008B040397B8
+[23:30:01] SDR 2099B0008B040397B8
+[23:30:01] SDR 206860008B040397B8
+[23:30:01] SDR 203810008B040397B8
+[23:30:01] SDR 2008C0008B040397B8
+[23:30:01] SDR 20D780008B040397B8
+[23:30:01] SDR 20A730008B040397B8
+[23:30:01] SDR 2077E0008B040397B8
+[23:30:02] SDR 204790008B040397B8
+[23:30:02] SDR 201640008B040397B8
+[23:30:02] SDR 20E6F0008B040397B8
+[23:30:02] SDR 20B6A0008B040397B8
+[23:30:02] SDR 208560008B040397B8
+[23:30:02] SDR 205510008B040397B8
+[23:30:02] SDR 2025C0008B040397B8
+[23:30:02] SDR 20F470008B040397B8
+[23:30:02] SDR 20C420008B040397B8
+[23:30:02] SDR 2094E0008B040397B8
+[23:30:03] SDR 206490008B040397B8
+[23:30:03] SDR 203340008B040397B8
+[23:30:03] SDR 2003F0008B040397B8
+[23:30:03] SDR 20D3A0008B040397B8
+[23:30:03] SDR 20A250008B040397B8
+[23:30:03] SDR 207200008B040397B8
+[23:30:03] SDR 2042C0008B040397B8
+[23:30:03] SDR 201170008B040397B8
+[23:30:03] SDR 20E120008B040397B8
+[23:30:03] SDR 20A1D0008B040397B8
+[23:30:04] SDR 207180008B040397B8
+[23:30:04] SDR 204040008B040397B8
+[23:30:04] SDR 2010F0008B040397B8
+[23:30:04] SDR 20E0A0008B040397B8
+[23:30:04] SDR 20BF50008B040397B8
+[23:30:04] SDR 208F00008B040397B8
+[23:30:04] SDR 205FB0008B040397B8
+[23:30:04] SDR 2020A0008B04006FB0
+[23:30:04] SDR 20FF50008B04006FB0
+[23:30:04] SDR 20CF00008B04006FB0
+[23:30:04] SDR 209FB0008B04006FB0
+[23:30:05] SDR 206E70008B04006FB0
+[23:30:05] SDR 203E20008B04006FB0
+[23:30:05] SDR 200ED0008B04006FB0
+[23:30:05] SDR 20DE80008B04006FB0
+[23:30:05] SDR 20AD30008B04006FB0
+[23:30:05] SDR 207DF0008B04006FB0
+[23:30:05] SDR 204DA0008B04006FB0
+[23:30:05] SDR 201C50008B04006FB0
+[23:30:05] SDR 307300003B04006FB0
+[23:30:05] ???k
+[23:30:05] Platform Console Device     : uart8250
+[23:30:05] Platform HSM Device         : ---
+[23:30:05] Platform PMU Device         : ---
+[23:30:05] Platform Reboot Device      : ---
+[23:30:05] Platform Shutdown Device    : ---
+[23:30:05] Platform Suspend Device     : ---
+[23:30:05] Platform CPPC Device        : ---
+[23:30:05] Firmware Base               : 0x80000000
+[23:30:05] Firmware Size               : 180 KB
+[23:30:05] Firmware RW Offset          : 0x20000
+[23:30:05] Firmware RW Size            : 52 KB
+[23:30:05] Firmware Heap Offset        : 0x24000
+[23:30:06] Firmware Heap Size          : 36 KB (total), 2 KB (reserved), 10 KB (used), 23 KB (free)
+[23:30:06] Firmware Scratch Size       : 4096 B (total), 252 B (used), 3844 B (free)
+[23:30:06] Runtime SBI Version         : 2.0
+[23:30:06] Standard SBI Extensions     : time,rfnc,ipi,base,hsm,pmu,dbcn,legacy
+[23:30:06] Experimental SBI Extensions : fwft,sse
+[23:30:06] 
+[23:30:06] Domain0 Name                : root
+[23:30:06] Domain0 Boot HART           : 0
+[23:30:06] Domain0 HARTs               : 0*
+[23:30:06] Domain0 Region00            : 0xf0001000-0xf0001fff M: (I,R,W) S/U: (R,W)
+[23:30:06] Domain0 Region01            : 0xf0018000-0xf001bfff M: (I,R,W) S/U: ()
+[23:30:06] Domain0 Region02            : 0xf0010000-0xf0017fff M: (I,R,W) S/U: ()
+[23:30:06] Domain0 Region03            : 0x80020000-0x8002ffff M: (R,W) S/U: ()
+[23:30:06] Domain0 Region04            : 0x80000000-0x8001ffff M: (R,X) S/U: ()
+[23:30:06] Domain0 Region05            : 0x00000000-0xffffffff M: () S/U: (R,W,X)
+[23:30:06] Domain0 Next Address        : 0x82000000
+[23:30:06] Domain0 Next Arg1           : 0x82f80000
+[23:30:06] Domain0 Next Mode           : S-mode
+[23:30:06] Domain0 SysReset            : yes
+[23:30:06] Domain0 SysSuspend          : yes
+[23:30:06] 
+[23:30:06] Boot HART ID                : 0
+[23:30:06] Boot HART Domain            : root
+[23:30:06] Boot HART Priv Version      : v1.12
+[23:30:06] Boot HART Base ISA          : rv32imac
+[23:30:06] Boot HART ISA Extensions    : smaia,zicntr,sdtrig
+[23:30:06] Boot HART PMP Count         : 0
+[23:30:06] Boot HART PMP Granularity   : 0 bits
+[23:30:06] Boot HART PMP Address Bits  : 0
+[23:30:06] Boot HART MHPM Info         : 0 (0x00000000)
+[23:30:06] Boot HART Debug Triggers    : 0 triggers
+[23:30:06] Boot HART MIDELEG           : 0x00000222
+[23:30:06] Boot HART MEDELEG           : 0x0000b108
+[23:30:06] [    0.000000] Booting Linux on hartid 0
+[23:30:06] [    0.000000] Linux version 6.18.60 (lazybones@DESKTOP-LZQ-MINI) (riscv32-buildroot-linux-uclibc-gcc.br_real (Buildroot 2026.02.3) 13.4.0, GNU ld (GNU Binutils) 2.44) #1 SMP PREEMPT Tue Nov  3 00:00:36 CST 2026
+[23:30:06] [    0.000000] OF: fdt: Ignoring memory range 0x80400000 - 0x82000000
+[23:30:06] [    0.000000] Machine model: spinal,vexiiriscv_vexiiyeshenlinux
+[23:30:06] [    0.000000] SBI specification v2.0 detected
+[23:30:06] [    0.000000] SBI implementation ID=0x1 Version=0x10006
+[23:30:06] [    0.000000] SBI TIME extension detected
+[23:30:06] [    0.000000] SBI IPI extension detected
+[23:30:06] [    0.000000] SBI RFENCE extension detected
+[23:30:06] [    0.000000] SBI DBCN extension detected
+[23:30:06] [    0.000000] earlycon: sbi0 at I/O port 0x0 (options '')
+[23:30:06] [    0.000000] printk: legacy bootconsole [sbi0] enabled
+[23:30:06] [    0.000000] efi: UEFI not found.
+[23:30:06] [    0.000000] OF: reserved mem: 0x80400000..0x81ffffff (28672 KiB) nomap non-reusable npu_arena@80400000
+[23:30:06] [    0.000000] Zone ranges:
+[23:30:06] [    0.000000]   Normal   [mem 0x0000000082000000-0x000000008fffffff]
+[23:30:06] [    0.000000] Movable zone start for each node
+[23:30:06] [    0.000000] Early memory node ranges
+[23:30:06] [    0.000000]   node   0: [mem 0x0000000082000000-0x000000008fffffff]
+[23:30:06] [    0.000000] Initmem setup node 0 [mem 0x0000000082000000-0x000000008fffffff]
+[23:30:06] [    0.000000] SBI HSM extension detected
+[23:30:06] [    0.000000] riscv: base ISA extensions acim
+[23:30:06] [    0.000000] riscv: ELF capabilities acim
+# 750 lines captured from COM7 (raw bytes -> D:\code\PDS\VexiiYeshenLinux\sim\reglogs\fv_raw.bin)

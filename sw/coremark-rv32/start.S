@@ -1,0 +1,41 @@
+/* start.S -- CoreMark entry for VexiiYeshenLinux (RV32, bare metal).  Reset vector = 0x80000000. */
+.section .init
+.globl _start
+.type _start,@function
+
+_start:
+    .option push
+    .option norelax
+    la gp, __global_pointer$
+    .option pop
+
+    la sp, _sp
+
+    /* .data is loaded in place (LMA == VMA), so this copy is a no-op; kept for parity. */
+    la a0, _data_lma
+    la a1, _data
+    la a2, _edata
+    bgeu a1, a2, 2f
+1:  lw t0, (a0)
+    sw t0, (a1)
+    addi a0, a0, 4
+    addi a1, a1, 4
+    bltu a1, a2, 1b
+2:
+
+    /* clear .bss */
+    la a0, __bss_start
+    la a1, _end
+    bgeu a0, a1, 2f
+1:  sw zero, (a0)
+    addi a0, a0, 4
+    bltu a0, a1, 1b
+2:
+
+    call main
+
+1:  j 1b          /* MAIN_HAS_NORETURN: main never returns; park here if it does */
+
+    .globl _init
+_init:
+    ret

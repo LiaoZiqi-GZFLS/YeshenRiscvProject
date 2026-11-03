@@ -1,0 +1,486 @@
+--- a/drivers/net/ethernet/Kconfig
++++ b/drivers/net/ethernet/Kconfig
+@@ -116,6 +116,7 @@
+ 	  Support for the PMAC of the Gigabit switch (GSWIP) inside the
+ 	  Lantiq / Intel VRX200 VDSL SoC
+ 
++source "drivers/net/ethernet/litex/Kconfig"
+ source "drivers/net/ethernet/marvell/Kconfig"
+ source "drivers/net/ethernet/mediatek/Kconfig"
+ source "drivers/net/ethernet/mellanox/Kconfig"
+--- a/drivers/net/ethernet/Makefile
++++ b/drivers/net/ethernet/Makefile
+@@ -50,6 +50,7 @@
+ obj-$(CONFIG_KORINA) += korina.o
+ obj-$(CONFIG_LANTIQ_ETOP) += lantiq_etop.o
+ obj-$(CONFIG_LANTIQ_XRX200) += lantiq_xrx200.o
++obj-$(CONFIG_NET_VENDOR_LITEX) += litex/
+ obj-$(CONFIG_NET_VENDOR_MARVELL) += marvell/
+ obj-$(CONFIG_NET_VENDOR_MEDIATEK) += mediatek/
+ obj-$(CONFIG_NET_VENDOR_MELLANOX) += mellanox/
+--- /dev/null
++++ b/drivers/net/ethernet/litex/Kconfig
+@@ -0,0 +1,28 @@
++#
++# LiteX device configuration
++#
++
++config NET_VENDOR_LITEX
++	bool "LiteX devices"
++	default y
++	help
++	  If you have a network (Ethernet) card belonging to this class, say Y.
++
++	  Note that the answer to this question doesn't directly affect the
++	  kernel: saying N will just cause the configurator to skip all
++	  the questions about LiteX devices. If you say Y, you will be asked
++	  for your specific card in the following questions.
++
++if NET_VENDOR_LITEX
++
++config LITEX_LITEETH
++	tristate "LiteX Ethernet support"
++	depends on OF_NET
++	help
++	  If you wish to compile a kernel for hardware with a LiteX LiteEth
++	  device then you should answer Y to this.
++
++	  LiteX is a soft system-on-chip that targets FPGAs. LiteETH is a basic
++	  network device that is commonly used in LiteX designs.
++
++endif # NET_VENDOR_LITEX
+
+--- /dev/null
++++ b/drivers/net/ethernet/litex/Makefile
+@@ -0,0 +1,5 @@
++#
++# Makefile for the LiteX network device drivers.
++#
++
++obj-$(CONFIG_LITEX_LITEETH) += litex_liteeth.o
+
+--- /dev/null
++++ b/drivers/net/ethernet/litex/litex_liteeth.c
+@@ -0,0 +1,335 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * LiteX Liteeth Ethernet
++ *
++ * Copyright 2017 Joel Stanley <joel@jms.id.au>
++ *
++ */
++
++#include <linux/etherdevice.h>
++#include <linux/interrupt.h>
++#include <linux/litex.h>
++#include <linux/module.h>
++#include <linux/of_net.h>
++#include <linux/platform_device.h>
++
++#define LITEETH_WRITER_SLOT       0x00
++#define LITEETH_WRITER_LENGTH     0x04
++#define LITEETH_WRITER_ERRORS     0x08
++#define LITEETH_WRITER_EV_STATUS  0x0C
++#define LITEETH_WRITER_EV_PENDING 0x10
++#define LITEETH_WRITER_EV_ENABLE  0x14
++#define LITEETH_READER_START      0x18
++#define LITEETH_READER_READY      0x1C
++#define LITEETH_READER_LEVEL      0x20
++#define LITEETH_READER_SLOT       0x24
++#define LITEETH_READER_LENGTH     0x28
++#define LITEETH_READER_EV_STATUS  0x2C
++#define LITEETH_READER_EV_PENDING 0x30
++#define LITEETH_READER_EV_ENABLE  0x34
++#define LITEETH_PREAMBLE_CRC      0x38
++#define LITEETH_PREAMBLE_ERRORS   0x3C
++#define LITEETH_CRC_ERRORS        0x40
++
++#define LITEETH_PHY_CRG_RESET     0x00
++#define LITEETH_MDIO_W            0x04
++#define LITEETH_MDIO_R            0x0C
++
++#define DRV_NAME	"liteeth"
++
++struct liteeth {
++	void __iomem *base;
++	struct net_device *netdev;
++	struct device *dev;
++	u32 slot_size;
++
++	/* Tx */
++	u32 tx_slot;
++	u32 num_tx_slots;
++	void __iomem *tx_base;
++
++	/* Rx */
++	u32 rx_slot;
++	u32 num_rx_slots;
++	void __iomem *rx_base;
++};
++
++static int liteeth_rx(struct net_device *netdev)
++{
++	struct liteeth *priv = netdev_priv(netdev);
++	struct sk_buff *skb;
++	unsigned char *data;
++	u8 rx_slot;
++	int len;
++
++	rx_slot = litex_read8(priv->base + LITEETH_WRITER_SLOT);
++	len = litex_read32(priv->base + LITEETH_WRITER_LENGTH);
++
++	if (len == 0 || len > 2048)
++		goto rx_drop;
++
++	skb = netdev_alloc_skb_ip_align(netdev, len);
++	if (!skb) {
++		netdev_err(netdev, "couldn't get memory\n");
++		goto rx_drop;
++	}
++
++	data = skb_put(skb, len);
++	memcpy_fromio(data, priv->rx_base + rx_slot * priv->slot_size, len);
++	skb->protocol = eth_type_trans(skb, netdev);
++
++	netdev->stats.rx_packets++;
++	netdev->stats.rx_bytes += len;
++
++	return netif_rx(skb);
++
++rx_drop:
++	netdev->stats.rx_dropped++;
++	netdev->stats.rx_errors++;
++
++	return NET_RX_DROP;
++}
++
++static irqreturn_t liteeth_interrupt(int irq, void *dev_id)
++{
++	struct net_device *netdev = dev_id;
++	struct liteeth *priv = netdev_priv(netdev);
++	u8 reg;
++	int i;
++
++	reg = litex_read8(priv->base + LITEETH_READER_EV_PENDING);
++	if (reg) {
++		if (netif_queue_stopped(netdev))
++			netif_wake_queue(netdev);
++		litex_write8(priv->base + LITEETH_READER_EV_PENDING, reg);
++	}
++
++	reg = litex_read8(priv->base + LITEETH_WRITER_EV_PENDING);
++	/* ★ 2026-10-07：**一次中断要把待处理的帧全排干**（原来是"一次中断只搬一帧"）。
++	 * 为什么：MAC 的 WRITER_EV_PENDING 是 sticky —— 突发里第 2 帧之后的事件会被合并进
++	 * 同一个 pending 位，于是中断次数远少于帧数（实测 50 帧只来 13 次中断、只搬走 4 帧；
++	 * 而带间隔发 20 帧则 20/20 全收）。按 pending 位循环搬，直到读到 0。
++	 * 每轮配对必须保持：先读 SLOT/LENGTH（在 rx() 里），**再写 pending 清位** —— 清位那一拍
++	 * 同时 pop 掉 MAC 内部的 stat_fifo（LiteEth sram.py：stat_fifo.source.ready.eq(
++	 * ev.available.clear)）。上界 128 只是防呆，别指望打满。
++	 * ⚠️ 本内核按 **C89** 编（`for (int i…)` 会报 "only allowed in C99"）⇒ i 在函数头声明。 */
++	for (i = 0; i < 128; i++) {
++		reg = litex_read8(priv->base + LITEETH_WRITER_EV_PENDING);
++		if (!reg)
++			break;
++		liteeth_rx(netdev);
++		litex_write8(priv->base + LITEETH_WRITER_EV_PENDING, reg);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int liteeth_open(struct net_device *netdev)
++{
++	struct liteeth *priv = netdev_priv(netdev);
++	int err;
++
++	/* Clear pending events */
++	litex_write8(priv->base + LITEETH_WRITER_EV_PENDING, 1);
++	litex_write8(priv->base + LITEETH_READER_EV_PENDING, 1);
++
++	err = request_irq(netdev->irq, liteeth_interrupt, 0, netdev->name, netdev);
++	if (err) {
++		netdev_err(netdev, "failed to request irq %d\n", netdev->irq);
++		return err;
++	}
++
++	/* Enable IRQs */
++	litex_write8(priv->base + LITEETH_WRITER_EV_ENABLE, 1);
++	litex_write8(priv->base + LITEETH_READER_EV_ENABLE, 1);
++
++	netif_carrier_on(netdev);
++	netif_start_queue(netdev);
++
++	return 0;
++}
++
++static int liteeth_stop(struct net_device *netdev)
++{
++	struct liteeth *priv = netdev_priv(netdev);
++
++	netif_stop_queue(netdev);
++	netif_carrier_off(netdev);
++
++	litex_write8(priv->base + LITEETH_WRITER_EV_ENABLE, 0);
++	litex_write8(priv->base + LITEETH_READER_EV_ENABLE, 0);
++
++	free_irq(netdev->irq, netdev);
++
++	return 0;
++}
++
++static int liteeth_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++{
++	struct liteeth *priv = netdev_priv(netdev);
++	void __iomem *txbuffer;
++
++	if (!litex_read8(priv->base + LITEETH_READER_READY)) {
++		if (net_ratelimit())
++			netdev_err(netdev, "LITEETH_READER_READY not ready\n");
++
++		netif_stop_queue(netdev);
++
++		return NETDEV_TX_BUSY;
++	}
++
++	/* Reject oversize packets */
++	if (unlikely(skb->len > priv->slot_size)) {
++		if (net_ratelimit())
++			netdev_err(netdev, "tx packet too big\n");
++
++		dev_kfree_skb_any(skb);
++		netdev->stats.tx_dropped++;
++		netdev->stats.tx_errors++;
++
++		return NETDEV_TX_OK;
++	}
++
++	txbuffer = priv->tx_base + priv->tx_slot * priv->slot_size;
++	memcpy_toio(txbuffer, skb->data, skb->len);
++	litex_write8(priv->base + LITEETH_READER_SLOT, priv->tx_slot);
++	litex_write16(priv->base + LITEETH_READER_LENGTH, skb->len);
++	litex_write8(priv->base + LITEETH_READER_START, 1);
++
++	netdev->stats.tx_bytes += skb->len;
++	netdev->stats.tx_packets++;
++
++	priv->tx_slot = (priv->tx_slot + 1) % priv->num_tx_slots;
++	dev_kfree_skb_any(skb);
++
++	return NETDEV_TX_OK;
++}
++
++static const struct net_device_ops liteeth_netdev_ops = {
++	.ndo_open		= liteeth_open,
++	.ndo_stop		= liteeth_stop,
++	.ndo_start_xmit         = liteeth_start_xmit,
++};
++
++static void liteeth_setup_slots(struct liteeth *priv)
++{
++	struct device_node *np = priv->dev->of_node;
++	int err;
++
++	err = of_property_read_u32(np, "litex,rx-slots", &priv->num_rx_slots);
++	if (err) {
++		dev_dbg(priv->dev, "unable to get litex,rx-slots, using 2\n");
++		priv->num_rx_slots = 2;
++	}
++
++	err = of_property_read_u32(np, "litex,tx-slots", &priv->num_tx_slots);
++	if (err) {
++		dev_dbg(priv->dev, "unable to get litex,tx-slots, using 2\n");
++		priv->num_tx_slots = 2;
++	}
++
++	err = of_property_read_u32(np, "litex,slot-size", &priv->slot_size);
++	if (err) {
++		dev_dbg(priv->dev, "unable to get litex,slot-size, using 0x800\n");
++		priv->slot_size = 0x800;
++	}
++}
++
++static int liteeth_probe(struct platform_device *pdev)
++{
++	struct net_device *netdev;
++	void __iomem *buf_base;
++	struct liteeth *priv;
++	const void *mac;
++	int irq, err;
++
++	netdev = devm_alloc_etherdev(&pdev->dev, sizeof(*priv));
++	if (!netdev)
++		return -ENOMEM;
++
++	SET_NETDEV_DEV(netdev, &pdev->dev);
++	platform_set_drvdata(pdev, netdev);
++
++	priv = netdev_priv(netdev);
++	priv->netdev = netdev;
++	priv->dev = &pdev->dev;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(&pdev->dev, "Failed to get IRQ %d\n", irq);
++		return irq;
++	}
++	netdev->irq = irq;
++
++	priv->base = devm_platform_ioremap_resource_byname(pdev, "mac");
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	buf_base = devm_platform_ioremap_resource_byname(pdev, "buffer");
++	if (IS_ERR(buf_base))
++		return PTR_ERR(buf_base);
++
++	liteeth_setup_slots(priv);
++
++	/* Rx slots */
++	priv->rx_base = buf_base;
++	priv->rx_slot = 0;
++
++	/* Tx slots come after Rx slots */
++	priv->tx_base = buf_base + priv->num_rx_slots * priv->slot_size;
++	priv->tx_slot = 0;
++
++	/*
++	 * ⚠️ 本仓内核是 **5.10.1**（SpinalHDL/linux `dev`），它的 `of_get_mac_address()` 还是
++	 * **一参**形式（`const void *of_get_mac_address(struct device_node *np)`，失败返回 ERR_PTR）。
++	 * 主线 v5.15 那份驱动写的是二参形式（内核 6.x 才变成 `(struct device *, u8 *)`）⇒ 直接搬会
++	 * `error: too many arguments to function 'of_get_mac_address'`（2026-10-06 实测）。
++	 */
++	mac = of_get_mac_address(pdev->dev.of_node);
++	if (IS_ERR(mac))
++		eth_hw_addr_random(netdev);
++	else
++		memcpy(netdev->dev_addr, mac, ETH_ALEN);
++
++	netdev->netdev_ops = &liteeth_netdev_ops;
++
++	err = register_netdev(netdev);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to register netdev %d\n", err);
++		return err;
++	}
++
++	netdev_info(netdev, "irq %d slots: tx %d rx %d size %d\n",
++		    netdev->irq, priv->num_tx_slots, priv->num_rx_slots, priv->slot_size);
++
++	return 0;
++}
++
++static int liteeth_remove(struct platform_device *pdev)
++{
++	struct net_device *netdev = platform_get_drvdata(pdev);
++
++	unregister_netdev(netdev);
++	free_netdev(netdev);
++
++	return 0;
++}
++
++static const struct of_device_id liteeth_of_match[] = {
++	{ .compatible = "litex,liteeth" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, liteeth_of_match);
++
++static struct platform_driver liteeth_driver = {
++	.probe = liteeth_probe,
++	.remove = liteeth_remove,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = liteeth_of_match,
++	},
++};
++module_platform_driver(liteeth_driver);
++
++MODULE_AUTHOR("Joel Stanley <joel@jms.id.au>");
++MODULE_LICENSE("GPL");
+
+--- /dev/null
++++ b/include/linux/litex.h
+@@ -0,0 +1,83 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Common LiteX header providing
++ * helper functions for accessing CSRs.
++ *
++ * Copyright (C) 2019-2020 Antmicro <www.antmicro.com>
++ */
++
++#ifndef _LINUX_LITEX_H
++#define _LINUX_LITEX_H
++
++#include <linux/io.h>
++
++static inline void _write_litex_subregister(u32 val, void __iomem *addr)
++{
++	writel((u32 __force)cpu_to_le32(val), addr);
++}
++
++static inline u32 _read_litex_subregister(void __iomem *addr)
++{
++	return le32_to_cpu((__le32 __force)readl(addr));
++}
++
++/*
++ * LiteX SoC Generator, depending on the configuration, can split a single
++ * logical CSR (Control&Status Register) into a series of consecutive physical
++ * registers.
++ *
++ * For example, in the configuration with 8-bit CSR Bus, a 32-bit aligned,
++ * 32-bit wide logical CSR will be laid out as four 32-bit physical
++ * subregisters, each one containing one byte of meaningful data.
++ *
++ * For Linux support, upstream LiteX enforces a 32-bit wide CSR bus, which
++ * means that only larger-than-32-bit CSRs will be split across multiple
++ * subregisters (e.g., a 64-bit CSR will be spread across two consecutive
++ * 32-bit subregisters).
++ *
++ * For details see: https://github.com/enjoy-digital/litex/wiki/CSR-Bus
++ */
++
++static inline void litex_write8(void __iomem *reg, u8 val)
++{
++	_write_litex_subregister(val, reg);
++}
++
++static inline void litex_write16(void __iomem *reg, u16 val)
++{
++	_write_litex_subregister(val, reg);
++}
++
++static inline void litex_write32(void __iomem *reg, u32 val)
++{
++	_write_litex_subregister(val, reg);
++}
++
++static inline void litex_write64(void __iomem *reg, u64 val)
++{
++	_write_litex_subregister(val >> 32, reg);
++	_write_litex_subregister(val, reg + 4);
++}
++
++static inline u8 litex_read8(void __iomem *reg)
++{
++	return _read_litex_subregister(reg);
++}
++
++static inline u16 litex_read16(void __iomem *reg)
++{
++	return _read_litex_subregister(reg);
++}
++
++static inline u32 litex_read32(void __iomem *reg)
++{
++	return _read_litex_subregister(reg);
++}
++
++static inline u64 litex_read64(void __iomem *reg)
++{
++	return ((u64)_read_litex_subregister(reg) << 32) |
++		_read_litex_subregister(reg + 4);
++}
++
++#endif /* _LINUX_LITEX_H */

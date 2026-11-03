@@ -1,0 +1,16 @@
+rtl_src/
+models/
+gen/
+*.log
+deps_export/
+# sbt/BSP 的构建产物：`port/.bsp/sbt.json` 由 sbt 首次运行生成，内容是**本机绝对路径**
+# （JDK、coursier 缓存、sbt-launch.jar），换机即失效 —— 与根 .gitignore 的 `src/.bsp/` 同类，不入库
+.bsp/
+
+# 克隆的 Mul/DSP 里的 genTcl 会往 Config.filePath（"./verilog"）写 Xilinx IP tcl；
+# fork 的 JVM 工作目录是 port/，于是落在 port/verilog/。B9 会停用这段生成，届时一并删除。
+port/verilog/
+
+# B10：独立 NPU dev_map 的 PDS 工程目录（DB / 中间产物，与根 .gitignore 的 `sim/reglogs/`
+# 同类）。工程由 ai_npu_exp/pds/devmap_npu.tcl 现场重建，不入库。
+pds/pds_m0_npu.000/

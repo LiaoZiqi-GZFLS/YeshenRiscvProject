@@ -1,0 +1,32 @@
+{
+ "nrxslots": 4,
+ "ntxslots": 2,
+ "dw": 32,
+ "with_sys_datapath": true,
+ "rx_cdc_depth": 2048,
+ "tx_cdc_depth": 2048,
+ "csrs": [
+  "sram_writer_slot",
+  "sram_writer_length",
+  "sram_writer_errors",
+  "sram_writer_ev_status",
+  "sram_writer_ev_pending",
+  "sram_writer_ev_enable",
+  "sram_reader_start",
+  "sram_reader_ready",
+  "sram_reader_level",
+  "sram_reader_slot",
+  "sram_reader_length",
+  "sram_reader_ev_status",
+  "sram_reader_ev_pending",
+  "sram_reader_ev_enable",
+  "preamble_crc",
+  "rx_datapath_preamble_errors",
+  "rx_datapath_crc_errors"
+ ],
+ "csr_bank_bytes": 2048,
+ "wb_csr_bits": 32,
+ "wb_addressing": "word",
+ "wb_slot_bits": 32,
+ "wb_slot_addressing": "word"
+}

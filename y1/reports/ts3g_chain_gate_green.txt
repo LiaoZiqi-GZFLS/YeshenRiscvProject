@@ -1,0 +1,184 @@
+== run_chain_ab: A-1b L 切片片上融合链（四个相邻条目 0b00,0b10,0b10,0b11 ⇒ chainLen=4）：切片0->片上->切片1->片上->切片2->片上->切片3->DDR，中间张量零 DDR ==
+   tb  =/d/code/PDS/VexiiYeshenLinux/y1/tools/../rtl_test/UnitExecTb.v
+   mem =/d/code/PDS/VexiiYeshenLinux/y1/tools/../rtl_test/AxiMemModel.v
+   nl  =/d/code/PDS/VexiiYeshenLinux/y1/tools/../gen/UnitExec_w32.v
+   ref =/d/code/PDS/VexiiYeshenLinux/y1/tools/conv_unit_ref.py
+   py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog  vvp=/c/msys64/ucrt64/bin/vvp
+   tmp =/tmp/tmp.36JA9rnd8U
+   用例 SRC=131072 DEC1=196608 DEC2=262144 DST=1441792  L_MAX=8 用例链长=4
+        几何 C_IN=8 C_OUT=8 W=32 H=8 GROUP=1 SHIFT=6 中间=2048 B SEED=20265793
+---- 0) tools/conv_unit_ref.py --selftest（复用 mac_ref 算术 + 布局置换 + L 段链双实现交叉对账）----
+[conv_unit_ref] selftest（复用 mac_ref 算术 + 布局置换 + 独立朴素实现交叉对账）
+  PASS  requant(-1) == -1（>>6 是**算术**右移，不是逻辑）
+  PASS  requant(-64) == -1（floor(-1) ）
+  PASS  requant 上/下 clamp 到 +127/-128
+  PASS  requant 大数照样 clamp（不会越出 int8）
+  PASS  置换保持多重集（1:1）
+  PASS  置换真的动了顺序（不是恒等）
+  PASS  逆置换还原原序（permute 不是自逆，逆是另一个函数）
+  PASS  置换落位手工核对（c1y2x3）
+  PASS  wgt 长度 = C_OUT*(C_IN/GROUP)*9 = 576，得到 576
+  PASS  x 长度 = C_IN*H*W = 2048，得到 2048
+  PASS  y 长度 = C_OUT*H*W = 2048，得到 2048
+  PASS  x_ddr 逆置换回通道主序 == mac_ref 原始 X
+  PASS  独立朴素 NHWC 实现 == mac_ref 派生的黄金（逐元素 0 差，得到 0）
+  PASS  输入非常数
+  PASS  黄金非常数
+  PASS  黄金不是整片 clamp（clamp 点 = 0 < 2048）
+  PASS  SHIFT 6->5 会让黄金变值（差 2009/2048 个字节）⇒ 负对照 A 有牙
+  PASS  权重翻一个字节会让黄金变值（差 231/2048 个字节）⇒ 负对照 B 有牙
+  PASS  centre_tap：非中心抽头全为 0（得到 0 个非 0）
+  PASS  centre_tap：中心抽头逐值保留（不是把权重清零）
+  PASS  centre_tap：中心抽头里确实有权重
+  PASS  融合对：mac_ref 链 == 朴素 NHWC 链（中间差 0、最终差 0）
+  PASS  中间张量非常数
+  PASS  最终张量非常数
+  PASS  最终张量不是全 0
+  PASS  尾的 3x3 非中心抽头确实起作用（尾换 1x1 会让最终张量变值：差 1614）
+  PASS  调度链：mac_ref 链 == 朴素 NHWC 链（A1 差 0、MID 差 0、A2 差 0）
+  PASS  A1 非常数
+  PASS  A1 不是全 0
+  PASS  A1 不是整片 clamp（clamp 点 0 < 2048）
+  PASS  MID 非常数
+  PASS  MID 不是全 0
+  PASS  MID 不是整片 clamp（clamp 点 0 < 2048）
+  PASS  A2 非常数
+  PASS  A2 不是全 0
+  PASS  A2 不是整片 clamp（clamp 点 0 < 2048）
+  PASS  尾的 1x1（中心抽头）确实起作用（换成普通 3x3 会让 A2 变值）
+  PASS  L=4 链：mac_ref 链 == 朴素 NHWC 链（中间差 [0, 0, 0]、最终差 0）
+  PASS  L=4 链 mid0 有分辨率（distinct=255 >= 8）
+  PASS  L=4 链 mid0 非 0 字节 >= 1/4
+  PASS  L=4 链 mid0 不是整片 clamp（clamp 点 244 < 2048）
+  PASS  L=4 链 mid1 有分辨率（distinct=170 >= 8）
+  PASS  L=4 链 mid1 非 0 字节 >= 1/4
+  PASS  L=4 链 mid1 不是整片 clamp（clamp 点 0 < 2048）
+  PASS  L=4 链 mid2 有分辨率（distinct=211 >= 8）
+  PASS  L=4 链 mid2 非 0 字节 >= 1/4
+  PASS  L=4 链 mid2 不是整片 clamp（clamp 点 9 < 2048）
+  PASS  L=4 链 fin 有分辨率（distinct=33 >= 8）
+  PASS  L=4 链 fin 非 0 字节 >= 1/4
+  PASS  L=4 链 fin 不是整片 clamp（clamp 点 0 < 2048）
+SELFTEST: PASS
+---- 0b) tools/check_dangling.py（gen/UnitExec_w32.v ⇒ 零悬空）----
+--- no dangling instances ---
+total dangling instances: 0
+RESULT: PASS
+---- 1) 造向量：激活/4 段权重 + 链黄金（双实现）+ 内存模式（seed=20265793）----
+MEMGEN bytes=2621440 src=131072 dec1=196608 dec2=262144 dst=1441792 period=251 seed=20265793 SEG=4 L_MAX=8
+GOLD_AB: 链黄金两条独立实现：中间差 [0, 0, 0]、最终差 0（必须都是 0）
+NONZERO: 激活无 0 字节（distinct=255/256）；各段 distinct=[255, 183, 208, 32]；最终非 0=1849/2048
+NONALIAS: 周期恰 251 且与 128 互素；DST 预载与最终黄金差 2045/2048；DEC1 预载与 mid0 差 2038/2048；最终黄金 != 整行/整列平移
+ENTRIES: 0b00(head) 0b10(middle) 0b10(middle) 0b11(tail) ⇒ chainLen=4
+DESC pos  w0=0x00000001 (链描述符 = 链首 0b00 的字 + 链尾的 DST；chainLen=4 由 +CHAINLEN=4 给)
+DESC neg  w0=0x00000101 (链首 bit0 强行置 1 ⇒ 切片0 的中间落 DDR, dst=DEC1)
+DESC err  w0=0x00000001 (+CHAINLEN=9 ⇒ chainLen=9 > L_MAX=8 ⇒ 响亮 err)
+DESC resv w0=0x00000401 (FLAGS[7:2] 非 0 ⇒ 保留位非法 ⇒ 响亮 err)
+   条目对账 OK：0b00(head) 0b10 0b10 0b11(tail) ⇒ 链描述符 w0=1 (chainLen=4, SRC=131072, DST=1441792)
+---- 2) iverilog 编译（UnitExecTb + AxiMemModel + gen/UnitExec_w32.v）----
+    编译告警（留意）：
+D:/code/PDS/VexiiYeshenLinux/y1/tools/../rtl_test/UnitExecTb.v:152: warning: Port 14 (wgt_addr) of module UnitExec expects 24 bit(s), given 10.
+D:/code/PDS/VexiiYeshenLinux/y1/tools/../rtl_test/UnitExecTb.v:152: warning: Port 57 (mid_rd_col) of module UnitExec expects 5 bit(s), given 6.
+    编译 OK
+---- 3) 正对照[链 4 切片 = 四个相邻条目 0b00,0b10,0b10,0b11；+CHAINLEN=4]：一个 go 跑 4 个切片，中间张量零 DDR ----
+   MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/mem.hex (2621440 bytes modelled)
+   TB UNITEXEC: IMG_W=32 IMG_H=8 C_IN=8 C_OUT=8 GROUP=1 IN_BYTES=2048 QUANT_SHIFT=6
+   TB UNITEXEC: SRC=131072 DST=1441792 TYPE=0x01 FLAGS=0x00
+   TB UNITEXEC: HEAD_DESC=1 MIDREAD=0
+   TB UNITEXEC: TAIL_DESC=1
+   TB UNITEXEC: NENTRY=576 (权重 576 字节) HAS_WGT_T=1 HAS_WGT2=1 HAS_WGT3=1
+   TB UNITEXEC: RTL_SHIFT=6 RTL_GRP=1 RTL_IMGW=32 RTL_IMGC=8 RTL_MAXPIX=256
+   DONE_SEEN=1 ERR_SEEN=0 BUSY=0 GO_COUNT=1 BUSY_AT_GO2=0
+   RD_BYTES_PEAK=2048 WR_BYTES=2048
+   AR_BURSTS=16 AW_BURSTS=16 B_OK=16
+   HEAD_MODE=1 MID_ROWS=9
+   TAIL_MODE=1 TAIL_ROWS=9
+   CHAIN_LEN=4 CHAIN_LEN_REP=4 LMAX=8
+   MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/pos.dump (2621440 bytes)
+   MEM rd=2048 wr=2048 bursts=32 maxburst=16
+   自报 OK：TB UNITEXEC: IMG_W=32 IMG_H=8 C_IN=8 C_OUT=8 GROUP=1 IN_BYTES=2048 QUANT_SHIFT=6 / CHAIN_LEN=4 CHAIN_LEN_REP=4 LMAX=8 / HEAD_MODE=1 MID_ROWS=9 / TAIL_MODE=1 TAIL_ROWS=9
+   判据 1(b) OK（零 DDR 中间，字节计数三方一致）：AR_BURSTS=16 AW_BURSTS=16 B_OK=16 / RD_BYTES_PEAK=2048 WR_BYTES=2048 / MEM rd=2048 wr=2048 bursts=32 maxburst=16
+      = rd(chain_input=2048) / wr(chain_output=2048)；中间三张的 3x2048 读 + 3x2048 写都不在
+   CHAIN_FIN_MISMATCH=0
+   CHAIN_FIN_FIRST_OFF=-1
+   判据 1(a) OK：CHAIN_FIN_MISMATCH=0（DST 区 2048 字节逐字节 == 链黄金）
+   WHOLE_DUMP=2621440 PRE=2621440
+   WHOLE_MISMATCH=2045
+   OTHER_BAD=0
+   OTHER_FIRST_OFF=-1
+   SRC_UNCHANGED_BAD=0
+   DEC1_UNCHANGED_BAD=0
+   DEC1_FIRST_OFF=-1
+   DEC2_UNCHANGED_BAD=0
+   XBYTES=0
+   判据 1(c) OK：DEC1/DEC2 诱饵区未动、SRC 未改、整片只有 DST 那一区变了
+---- 3e) 判据 1(d)：读回 bufs(1)（切片0↔切片1 的片上中间缓冲）的 3 行环窗 ----
+   MIDDUMP rows=3 cols=32 bytes=768 file=C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/mid_pos.hex
+   MID_RING_MISMATCH=0
+   MID_RING_FIRST_OFF=-1
+   MID_RING_LEN_DUMP=768 MID_RING_LEN_GOLD=768
+   判据 1(d) OK：MID_RING_MISMATCH=0（bufs(1) 环窗 = mid0 行 6/7 + pad 行）⇒ 中间张量在片上
+---- 4) 比较器自检：扰动最终黄金一个期望字节 ⇒ CHAIN_FIN_MISMATCH 必须恰好 1 ----
+CMP_SELFTEST_PERTURB idx=1024
+   CMP_SELFTEST CHAIN_FIN_MISMATCH=1（期望恰好 1）
+---- 5) 负对照[链首条目 bit0 强行置 1：切片0 的中间也落 DDR]：wr 变大 + DEC1 被写（两面发火）----
+   MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/mem.hex (2621440 bytes modelled)
+   TB UNITEXEC: IMG_W=32 IMG_H=8 C_IN=8 C_OUT=8 GROUP=1 IN_BYTES=2048 QUANT_SHIFT=6
+   TB UNITEXEC: SRC=131072 DST=196608 TYPE=0x01 FLAGS=0x01
+   TB UNITEXEC: HEAD_DESC=0 MIDREAD=0
+   TB UNITEXEC: TAIL_DESC=1
+   TB UNITEXEC: NENTRY=576 (权重 576 字节) HAS_WGT_T=1 HAS_WGT2=1 HAS_WGT3=1
+   TB UNITEXEC: RTL_SHIFT=6 RTL_GRP=1 RTL_IMGW=32 RTL_IMGC=8 RTL_MAXPIX=256
+   DONE_SEEN=1 ERR_SEEN=0 BUSY=0 GO_COUNT=1 BUSY_AT_GO2=0
+   RD_BYTES_PEAK=2048 WR_BYTES=4096
+   AR_BURSTS=16 AW_BURSTS=32 B_OK=32
+   HEAD_MODE=0 MID_ROWS=9
+   TAIL_MODE=1 TAIL_ROWS=9
+   CHAIN_LEN=4 CHAIN_LEN_REP=4 LMAX=8
+   MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/neg.dump (2621440 bytes)
+   MEM rd=2048 wr=4096 bursts=48 maxburst=16
+   DEC1_UNCHANGED_BAD=2038
+   DEC1_FIRST_OFF=196608
+   DEC1_EQ_MID0=0
+   SRC_UNCHANGED_BAD=0
+   NEG_OK[链首 bit0=1]: wr 变大（RD_BYTES_PEAK=2048 WR_BYTES=4096 / MEM rd=2048 wr=4096 bursts=48 maxburst=16）+ DEC1 被写（DEC1_UNCHANGED_BAD=2038，
+                   且那 2048 字节正是切片0 的中间张量 mid0）⇒ 判据两面都发火
+   = 原始红证据：同一用例、同一装置，只要把**链首条目**的 FLAGS.bit0 从 0 变 1（0b00 -> 0b01），
+     判据 1(b)/1(c) 就同时红 ⇒ 切片0 的中间张量去了 DDR（合法表里 bit0=1 只出现在 tail）
+---- 6a) 响亮 err[链长 8 越限]：+CHAINLEN=9 > L_MAX=8 ⇒ RTL err + 零搬运 ----
+   MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/mem.hex (2621440 bytes modelled)
+   DONE_SEEN=0 ERR_SEEN=1 BUSY=0 GO_COUNT=1 BUSY_AT_GO2=0
+   RD_BYTES_PEAK=0 WR_BYTES=0
+   AR_BURSTS=0 AW_BURSTS=0 B_OK=0
+   RESULT: PASS
+   MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/err.dump (2621440 bytes)
+   MEM rd=0 wr=0 bursts=0 maxburst=0
+   ERR_OK[+CHAINLEN=9 > L_MAX]: RTL err + 零搬运（DONE_SEEN=0 ERR_SEEN=1 BUSY=0 GO_COUNT=1 BUSY_AT_GO2=0；AR_BURSTS=0 AW_BURSTS=0 B_OK=0）
+---- 6b) 响亮 err[FLAGS[7:2] 保留位非 0]：w0=0x1025（bit2=1）⇒ 非法编码 ⇒ RTL err + 零搬运 ----
+   MEM LOADED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/mem.hex (2621440 bytes modelled)
+   DONE_SEEN=0 ERR_SEEN=1 BUSY=0 GO_COUNT=1 BUSY_AT_GO2=0
+   RD_BYTES_PEAK=0 WR_BYTES=0
+   AR_BURSTS=0 AW_BURSTS=0 B_OK=0
+   RESULT: PASS
+   MEM DUMPED C:/Users/Ziqi/AppData/Local/Temp/tmp.36JA9rnd8U/resv.dump (2621440 bytes)
+   MEM rd=0 wr=0 bursts=0 maxburst=0
+   ERR_OK[FLAGS[7:2] != 0]: RTL err + 零搬运（DONE_SEEN=0 ERR_SEEN=1 BUSY=0 GO_COUNT=1 BUSY_AT_GO2=0；AR_BURSTS=0 AW_BURSTS=0 B_OK=0）
+---- 7) 网表规模 / 实例计数（gen/UnitExec_w32.v；L_MAX=8）----
+   netsize: lines=72392 bytes=3695790
+   instances(text): Conv3x3Slice x9  FusionBuf x9  WeightStore x1  (requant >>>5'd30 x8 / <<<2'd2 x8; 作用域=Conv3x3Slice 模块体)
+   instances(elaborated): Conv3x3Slice x9 (= L_MAX 自身 + 宽层 MultiPassUnit 内 1 片), FusionBuf x9 (= L_MAX+1),
+                          WeightStore x9, LineBuffer x9, MacArray/GroupedMacArray x9
+==========================================================================
+正对照     = OK（CHAIN_FIN_MISMATCH=0：链输出 2048 B 逐字节 == 链黄金；CHAIN_LEN=4 CHAIN_LEN_REP=4 LMAX=8）
+零 DDR 中间= OK（MEM rd=2048 wr=2048 bursts=32 maxburst=16 / RD_BYTES_PEAK=2048 WR_BYTES=2048 / AR_BURSTS=16 AW_BURSTS=16 B_OK=16（三方一致）：中间三张的 3x2048 读 + 3x2048 写都不在 DDR）
+诱饵未动   = OK（DEC1/DEC2 == 预载；SRC 未改；整片只有 DST 那一区变了）
+中间在片上 = OK（MID_RING_MISMATCH=0：bufs(1) 环窗 = mid0 行 6/7 + pad 行）
+行锁步     = OK（MID_ROWS=TAIL_ROWS=9 = IMG_H+1；占用性自证见 rtl/UnitExec.scala 文件头）
+负对照     = OK（bit0=1 ⇒ wr 2048->4096、DEC1_UNCHANGED_BAD=2038 ⇒ 两面发火）
+响亮 err   = OK（chainLen>8 ⇒ RTL err 且零搬运）
+非退化     = OK（激活无 0；各段 distinct>=8、非 0>=1/4、非整片 clamp；黄金 != 整行/整列平移）
+比较器     = OK（扰动 1 个最终黄金字节 ⇒ CHAIN_FIN_MISMATCH 恰为 1）
+结构       = OK（check_dangling.py：gen/UnitExec_w32.v 零悬空）
+实例计数   = Conv3x3Slice x9 / FusionBuf x9 / WeightStore x9（elaborated）
+RESULT: PASS
+EXIT=0

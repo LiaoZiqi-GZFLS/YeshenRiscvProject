@@ -1,0 +1,43 @@
+T-S3e 回归闸门尾（2026-10-16，网表 = 本次 per-plane band 重生成档）
+
+== run_bypass_ab  (/tmp/reg_run_bypass_ab.log) ==
+  装置自检 = OK（扰动黄金 ⇒ 装置自己 FAIL；+IW 不符 ⇒ time 0 $fatal；+OP 配错网表 ⇒ 不 PASS/编译期报错）
+  比较器   = OK（扰动 1 / 长度不等 / 缺文件 三分支）
+  结构     = OK（check_dangling.py：八个网表零悬空）
+RESULT: PASS
+
+== run_bypass_cblk_ab  (/tmp/reg_run_bypass_cblk_ab.log) ==
+  负对照①      = OK（块数钉成 1 ⇒ 只跑块 0：块 1 的平面必错、首坏字节 ≥ 8·outPix；单块档仍绿 = 外科式）
+  负对照②      = OK（折分母 >>3->>4 ⇒ 折档三作业 DST_MISMATCH>0；非折档不变 = 外科式）
+  结构         = OK（check_dangling.py：零悬空）
+RESULT: PASS
+
+== run_bypass_tile_ab  (reports/ts3e_gate_green.txt) ==
+  负对照③      = OK（B 源丢块偏移 ⇒ add 从块 1 起必错、maxpool 不变 = 外科式）
+  负对照④      = OK（per-plane 索引退回共享 plane-0 ⇒ 40×40/inCols%32=16 必红、80×80/inCols%32=0 不提；两侧）
+  结构         = OK（check_dangling.py：零悬空）
+RESULT: PASS
+
+== run_sched_ab  (/tmp/reg_run_sched_ab.log) ==
+                 另注：SRC 对齐这一档与 DdrMaster.CHK **冗余**（摘掉本预检后仍被它拦下，已如实打印））
+链塌缩         = OK（head 0b00 + tail 0b11 两个相邻条目 ⇒ **一次 go**（chainLen=2）；中间张量零 DDR）
+非退化         = OK（各档黄金非常数/非全 0；maxpool 黄金 != 四个整块平移；add SAT>0；防混叠三区预载与黄金 >=1900 不同）
+RESULT: PASS
+
+== run_nputop_sched_ab  (/tmp/reg_run_nputop_sched_ab.log) ==
+                          W2 8 片链 MISMATCH=0（chainLen=8，切片 4..7 权重互不相同）
+                          W2 负[别名折叠] 四种折叠假设 + 全零 全部 MISMATCH>0 ⇒ 8 个 WeightStore 各自独立
+C2 回归：run_nputop_ab.sh = PASS；run_ddrcopy_ab.sh = PASS
+RESULT: PASS
+
+== run_tiling2d_wide_ab  (/tmp/reg_run_tiling2d_wide_ab.log) ==
+[2] 负对照① 漏一趟（tNtx-1->tNtx-2）        : PASS（MISMATCH=1274>0，定位 XMIN=32）
+[3] 负对照② 不给 halo（tWinLo+1/tWinHi-1）   : PASS（MISMATCH=631>0，错列 4 ⇒ 接缝类）
+[4] 负对照③ 共享 plane-0 索引（T-S3b）        : PASS（20×20 MISMATCH=20582>0；40×40 MISMATCH=0 不提）
+RESULT: PASS
+
+== md5（同档重生成 2× 逐字节一致） ==
+62cb3179885ac27ab7974145b1dae119 *gen/BypassExec.v
+03a5bcfe945d96e457f6412fc5e4d8b8 *gen/BypassExec_w34.v
+e85fa9963324a966a1bb63d84279de8e *gen/LayerSched.v
+2d89712c2a8e9164b5371eaecb4864cd *gen/NpuTop.v

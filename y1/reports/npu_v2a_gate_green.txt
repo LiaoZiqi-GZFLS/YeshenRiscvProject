@@ -1,0 +1,35 @@
+== run_x1skip_ab: NPU v2 §4.6-5 切片 A（1×1 只发 1 个 tap-beat；跳拍读法①）==
+   nl=gen/UnitExec_tiled.v  py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  iverilog=/c/msys64/ucrt64/bin/iverilog
+   预测拍数：非 tiled  TYPE=1: 2304  TYPE=2: 256  |  tiled  TYPE=1: 3240  TYPE=2: 360
+---- 0) 前置：参考自检 + TILING=false 三网表 md5 + 真 blob 前提重扫 ----
+   参考自检 OK（tiling_ref.py --selftest2d）
+   TILING=false 三网表 md5 不变（97912901… / 618af338… / ddb9bb8a…）
+   TILED_NL_MD5=2b2e067ef3b1d889b899cdc28c2245a9（gen/UnitExec_tiled.v，只记账）
+   真 blob：26 个 1×1 单元、42697 个非零字节**全在槽 0**；无 8→8 的 1×1（窄通路不参与）
+---- 1) iverilog 编译（UnitExecWideTb + AxiMemModel + gen/UnitExec_tiled.v；-DUE_CGEOM -DUE_X1OBS）----
+   编译 OK
+    JOBGEN x1_base variant=base inj=0 n_ci=2 n_co=2 M=53687091 len=1024 pred_mm=0 d_gold0=0
+    JOBGEN x1_neg variant=neg inj=7 n_ci=2 n_co=2 M=53687091 len=1024 pred_mm=57 d_gold0=57
+    JOBGEN x1_surg variant=surg inj=7 n_ci=2 n_co=2 M=53687091 len=1024 pred_mm=0 d_gold0=0
+---- 4) 正对照：base 作业（槽 0 单抽头），同一 blob/几何/黄金，只换描述符 TYPE ----
+   [nt TYPE=1] PASS=1 MISMATCH=0 X1_BEATS=2304（预测 2304） CYCLES=6601
+   [nt TYPE=2] PASS=1 MISMATCH=0 X1_BEATS=256（预测 256） CYCLES=4553
+   [tiled TYPE=1] PASS=1 MISMATCH=0 X1_BEATS=3240（预测 3240） CYCLES=12043
+   [tiled TYPE=2] PASS=1 MISMATCH=0 X1_BEATS=360（预测 360） CYCLES=9163
+   BYTE-ID：TYPE=1 与 TYPE=2 的**整片内存 dump 逐字节相同**（非 tiled 与 tiled 两档）
+   RATIO：非 tiled 实测 2304 -> 256（= 9.00×）；tiled 实测 3240 -> 360（= 9.00×）
+---- 5) 负对照（槽 4 有非零字节，跳拍必发火且按预测量）+ 外科式（同字节搬槽 0，必翻绿）----
+   预测量：PRED_MM=57（gold_full ≠ gold_slot0only 的字节数）；D_GOLD0=57
+   [N1 neg TYPE=2 跳拍] MISMATCH=57（预测 57）X1_BEATS=256
+   [N1' neg TYPE=1 跳拍关] MISMATCH=0（应 0）X1_BEATS=2304（应 2304）
+   [N2 surg TYPE=2 同字节搬槽 0] MISMATCH=0（应 0；该 job 的黄金与 base 不同 ⇒ 槽 0 真被吃到）
+   SURG：槽 0 字节改变黄金 44 字节，DUT 两份 dump 同样差 44 字节（槽 0 真被吃到、且只差在这些字节）
+---- 6) 网表突变（外科锚）：拆跳拍条件 / 拆 TYPE 译码 ⇒ 拍数必须回到 9× 且输出逐字节不变 ----
+   MUTATE mode=skip: 1 site (anchor unique)
+   [M-skip TYPE=2] PASS=1 MISMATCH=0 X1_BEATS=2304（预测回到 2304）
+   MUTATE mode=type: 1 site (anchor unique)
+   [M-type TYPE=2] PASS=1 MISMATCH=0 X1_BEATS=2304（预测回到 2304）
+==========================================================================
+RESULT: PASS
+  正对照：非 tiled TYPE=1 2304 拍 / TYPE=2 256 拍（9.00×）；tiled TYPE=1 3240 拍 / TYPE=2 360 拍（9.00×）
+  负对照 + 外科式 + 2 条突变全部按预测量发火/翻面

@@ -1,0 +1,21 @@
+== 全部 19 run 的链黄金（自造输入 seed=20261015；逐片 md5 + final md5）==
+run[ 1.. 2] L=2 Conv_2     ..Conv_3      H=320 W=320 CI=16: mids=4800c2b8 final=db5665f1c4930def278d2cf462d4f9d0
+run[ 4..11] L=8 Conv_6     ..Conv_16     H=160 W=160 CI=16: mids=801e44d0,e80146d6,ea7223cd,41972626,d2e4dac2,ce92f92d,8699b0db final=b177ca80170239a819008337caf4f7f1
+run[13..16] L=4 Conv_19    ..Conv_23     H=80 W=80 CI=64: mids=34825d82,e4777265,fd8ad7b8 final=04ddb08ac2bb5a073f8c8fa151b6f3ae
+run[18..21] L=4 Conv_26    ..Conv_30     H=40 W=40 CI=64: mids=88e92891,851f91f0,c185d2e8 final=503e822604b9f4095219b474c7241a37
+run[23..28] L=6 Conv_33    ..Conv_40     H=20 W=20 CI=64: mids=2f42cf1d,09ff507e,772a19d3,a955adde,120b47ef final=127083fe52234f99c26a2e742b051e60
+run[31..32] L=2 Conv_45    ..Conv_46     H=40 W=40 CI=64: mids=4d0c3ca2 final=64367c781dccfe7b6c12c84eb3a7569a
+run[35..36] L=2 Conv_51    ..Conv_52     H=80 W=80 CI=64: mids=cd2a8813 final=eab5f098e83935242d892e3182638527
+run[37..38] L=2 Conv_54    ..Conv_55     H=80 W=80 CI=64: mids=6e811986 final=2759245482afc47b2a5da248b5d75a5a
+run[39..40] L=2 Conv_56    ..Conv_57     H=40 W=40 CI=64: mids=f57cd44d final=22f70291750d836d3442fa66f5da7973
+run[41..42] L=2 Conv_58    ..Conv_59     H=20 W=20 CI=64: mids=6567a7d6 final=170882296fb6e17dbba981b43151ff9e
+run[43..44] L=2 Conv_60    ..Conv_61     H=80 W=80 CI=64: mids=5a3dedca final=4e174105f6da633a2a6926879e89935f
+run[45..46] L=2 Conv_62    ..Conv_63     H=40 W=40 CI=64: mids=b3c50ff4 final=f2a1c523b9f4c4c6b42c89c6001108cf
+run[47..48] L=2 Conv_64    ..Conv_65     H=20 W=20 CI=64: mids=b5f62bf7 final=59358af9ff04af67f60e402a7c1c6dfc
+run[49..50] L=2 Conv_66    ..Conv_67     H=80 W=80 CI=64: mids=b0ac5c49 final=5055429aa412bb9e89647428f9245541
+run[51..52] L=2 Conv_68    ..Conv_69     H=40 W=40 CI=64: mids=e36ebd90 final=5878aa8471281b1c4beb7233bdbd4297
+run[53..54] L=2 Conv_70    ..Conv_71     H=20 W=20 CI=64: mids=8cfd9248 final=9e91141fe01c2bf7d3c54ef6535b6b8d
+run[55..56] L=2 Conv_72    ..Conv_73     H=80 W=80 CI=64: mids=ad1cc683 final=0bcebf845fd1d6dd651ce14819127364
+run[57..58] L=2 Conv_74    ..Conv_75     H=40 W=40 CI=64: mids=108f325e final=762c49af75435dfd83bb3ca67acc4b77
+run[59..60] L=2 Conv_76    ..Conv_77     H=20 W=20 CI=64: mids=6744544d final=778fe49e63c6d4e6acf0cd20c8a85f49
+exit=0

@@ -1,0 +1,51 @@
+== run_mac_account_ab: P0 逐层 MAC 账（译码交叉 + 负对照）==
+   py=/d/code/PDS/NaxYeshenLinux/sim/reglogs/lxvenv/Scripts/python.exe  tool=tools/mac_account.py  frozen=tools/ddr_traffic.py
+-- 前置：desc.bin md5=fec587a13fb51ed00914e5ce9c04db02（wgt_index.json 记录=fec587a13fb51ed00914e5ce9c04db02）
+-- 冻结工具（只读证据）：ddr_traffic.py c6adbbd8e4987fbf8e860b637a72ae0d  bypass_traffic.py 8e34437cbf7c4d282ffdaf5d0bc82360
+
+-- 正对照 A：调用冻结 tools/ddr_traffic.py（不重实现、不编辑）--
+   baseline  TOTAL_BYTES=31942400  ⇒ 31.94 MB/帧（已知数 31.94）
+   fuse_both TOTAL_BYTES=12576000  ⇒ 12.58 MB/帧（已知数 12.58）
+
+-- 正对照 B：mac_account.py 的译码独立复算冻结两锚点（现算比对）--
+CHECK payload_count_67                               PASS  67 项
+CHECK sentinel_unique                                PASS  在 decode 里断言
+CHECK desc_type_eq_wgt_type                          PASS
+CHECK desc_flags_eq_wgt_flags                        PASS
+CHECK desc_in_bytes_eq_wgt_in_bytes                  PASS
+CHECK plain_head_geom_eq_own                         PASS  链首覆盖仅 middle/tail
+CHECK in_bytes_derivation_rule                       PASS  补位单元=42:Conv_59(+16),54:Conv_71(+16),63:Sigmoid_101(+16),66:Sigmoid_125(+16)（conv 侧合计=32 B）
+CHECK align32_pad_conv_side_32B                      PASS  bypass 侧另有 Sigmoid_101/125 各 +16 B（不进出 unfused 对比）
+CHECK total_macs_eq_344224000                        PASS  344224000
+CHECK decoded_unfused_eq_frozen_31942400             PASS  31942400
+CHECK decoded_fused_eq_frozen_12576000               PASS  12576000
+CHECK decoded_table_eq_frozen_plus_32B               PASS  31942432 (= 冻结 31942400 + 32)
+CHECK read_amp_model_calibrated_on_measured          PASS  c64_40x40 model=2367488 meas=2382784; dw64_40x40 model=295936 meas=296896
+CHECK measured_amp_16x_23x                           PASS  23.27x
+CHECK dense_fullblock_issued_eq_ideal                PASS
+CHECK conv1x1_issues_9x_beats_of_ideal               PASS  14 个 1×1 满块单元
+CHECK depthwise_issues_8x_beats_of_ideal             PASS  14 个 dw 满块单元
+CHECK issued_tiled_ge_issued                         PASS  tiled=70848972 ≥ issued=45075600
+CHECK no_narrow_shape_units_all_wide                 PASS  窄形状单元 0 个 ⇒ 真表全部走宽路多趟
+CHECK scenarios_monotone                             PASS  A=42.2986 B=23.8917 C=23.8308 E=22.6020 MB
+TOTAL_MACS=344224000
+SELFTEST PASS
+   => 译码复算 == 冻结现跑（unfused 31942400 / fused 12576000）；MAC_TOTAL=344224000
+   证据：desc 表口径 unfused=31942432 = 冻结 31942400 + 32 B（align32 补位，CHECK 行点名 42/54）
+
+-- 负对照：idx 20（Conv_29，中网 1×1）注入 C_OUT += 8 ⇒ ΔMACs 必须 == 预测 --
+   unit20=UNIT 20 Conv_29 conv1x1 middle 64 64 1 40 40 1 6553600 64 921600
+   unit20(perturbed)=UNIT 20 Conv_29 conv1x1 middle 64 72 1 40 40 1 7372800 72 1036800
+   observed ΔTOTAL_MACS=819200   predicted=819200（= H·W·8·(C_in/G)·taps）
+   => 负对照按预测量发火：Δ = 819200（单元级与总量差分两条路径一致；其余 66 行逐字不变）
+
+-- 信息性：五档逐帧流量（判据写在 y1/reports/npu_v2_accounting.md；数字由同一工具生成）--
+(a) v1 as-is（宽路 tile 实测放大 + Add 4.4×）                      42298598   42.2986    153.3         6.52
+(b) +窗口片上留住（杀 nCo 重读）                                      23891671   23.8917     86.6        11.55
+(c) +平面 32B 补齐（杀 band/对齐余量）                                23830752   23.8308     86.4        11.58
+(d) +NC8HW 分块布局（字节同 c；请求 ÷4）                               23830752   23.8308     86.4        11.58
+(e) +Add 单趟化（4.4×→2.0×）                                    22601952   22.6020     81.9        12.21
+SCEN_BASE0=19521600  CONV_DELTA_A=21548198  CONV_DELTA_B=3141271  CONV_DELTA_C=3080352  ADD_DELTA=1228800
+BURSTS32 A=1321832 B=746615 C=744711 D=744711 E=706311  D_REQUESTS=C/4=186178
+
+RESULT: PASS
